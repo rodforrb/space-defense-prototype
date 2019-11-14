@@ -70,6 +70,7 @@ public class Grid : TileMap
 					if (this.selected != null)
 					{
 						this.selected.SetPosition(MapToWorld(cell));
+						GD.Print(this.selected, " moved to ", cell);
 					}
 				}
 			}
