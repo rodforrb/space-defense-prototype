@@ -42,22 +42,46 @@ public class Grid : TileMap
 				Vector2 cell = WorldToMap(mouseClick.Position);
 				GD.Print("Mouse Click at: ", mouseClick.Position, ", Cell: ", cell);
 				
-				if (this.selected == null)
+				// check if user clicked on something
+				for (int i = 0; i < GetChildCount(); i++)
 				{
-					// check if user clicked on something
-					for (int i = 0; i < GetChildCount(); i++)
+					Node2D child = (Node2D)GetChild(i);
+					// if user clicked on a child
+					if (cell == WorldToMap(child.GetPosition()))
 					{
-						Node2D child = (Node2D)GetChild(i);
-						if (cell == WorldToMap(child.GetPosition()))
+						if (this.selected == null)
 						{
 							this.selected = child;
 							GD.Print("Selected: ", child);
 							break;
+						} else {
+							// something was previously selected, decide what to do
+							// clicked new child: update current selection
+							if (this.selected != child)
+							{
+								this.selected = child;
+								GD.Print("Selected: ", child);
+								break;
+							}
 						}
 					}
-				} else {
-					// something was previously selected, decide what to do
-					
+					// clicked any other cell: move the selected ship
+					// MapToWorld converts grid to pixel coordinates
+					if (this.selected != null)
+					{
+						this.selected.SetPosition(MapToWorld(cell));
+					}
+				}
+			}
+			
+			// right click
+			if (mouseClick.IsPressed() && mouseClick.GetButtonIndex() == 2)
+			{
+				// eg. clear selection
+				if (this.selected != null)
+				{
+					GD.Print("Deselected ", this.selected);
+					this.selected = null;
 				}
 			}
 		}

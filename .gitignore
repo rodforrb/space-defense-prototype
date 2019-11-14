@@ -1,2 +1,3 @@
 builds/*
-.mono/temp
+.mono/*
+mono_crash.*
