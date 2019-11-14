@@ -5,8 +5,6 @@ using System;
 
 public class Grid : TileMap
 {
-	// where the mouse was last clicked (for click and drag)
-	private int mouseClick;
 	// currently selected node/sprite
 	private Node2D selected = null;
 	
