@@ -17,6 +17,7 @@ public class Grid : TileMap
 			Node2D child = (Node2D)GetChild(i);
 			// WorldToMap converts pixel coordinates to grid coordinates
 			GD.Print("Node loaded: ", child, " at ", WorldToMap(child.GetPosition()));
+			GD.Print(child.Call("GetRange"));
 		}
     }
 
@@ -27,6 +28,54 @@ public class Grid : TileMap
 //  }
 	
 	// Called when there is input
+
+
+	private int SumOfPrevious(int startNum)
+	{
+		int final = 0;
+		for (int i = startNum; i > 0; i--)
+		{
+			final += i;
+		}
+
+		return final;
+	}
+	private Vector2[] RangeCheck(int range, Vector2 currentPos)
+	{
+		 Vector2[] possibleLocations = new Vector2[((range+range+1) * (range+range+1)) - (SumOfPrevious(range)*4)];
+		 int iterator = 0;
+		 for (int i = 0; i <= range; i++)
+		 {	
+			for(int j = range-i; j >= 0;j--)
+			{
+				if (i == 0 & j != 0)
+				{
+					possibleLocations[iterator] = new Vector2(currentPos.x + j, currentPos.y);
+					possibleLocations[iterator+1] = new Vector2(currentPos.x - j, currentPos.y);
+					iterator+=2;
+				}
+				else if (j==0 & i!=0)
+				{
+					possibleLocations[iterator] = new Vector2(currentPos.x, currentPos.y + i);
+					possibleLocations[iterator+1] = new Vector2(currentPos.x, currentPos.y - i);
+					iterator+=2;
+
+				}else if ((j != 0) & (i != 0)){
+					possibleLocations[iterator] = new Vector2(currentPos.x + j, currentPos.y + i);
+					possibleLocations[iterator+1] = new Vector2(currentPos.x + j, currentPos.y - i);
+					possibleLocations[iterator+2] = new Vector2(currentPos.x - j, currentPos.y + i);
+					possibleLocations[iterator+3] = new Vector2(currentPos.x - j, currentPos.y - i);
+					iterator+=4;
+				}
+				
+			}
+		 }
+
+
+
+		 return possibleLocations;
+	}
+
 	public override void _Input(InputEvent @event)
 	{
 		// mouse press/release event
@@ -66,8 +115,20 @@ public class Grid : TileMap
 					// MapToWorld converts grid to pixel coordinates
 					if (this.selected != null)
 					{
-						this.selected.SetPosition(MapToWorld(cell));
-						GD.Print(this.selected, " moved to ", cell);
+						Vector2[] validMoves = RangeCheck((int)this.selected.Call("GetRange"), WorldToMap(this.selected.GetPosition()));
+						// GD.Print(validMoves.Length);
+						// GD.Print(WorldToMap(this.selected.GetPosition()));
+						for (int j = 0; j < validMoves.Length; j++)
+						{
+							if((cell.x == validMoves[j].x) & (cell.y == validMoves[j].y) )
+							{
+								this.selected.SetPosition(MapToWorld(cell));
+								GD.Print(this.selected, " moved to ", cell);
+								this.selected = null;
+								break;
+							}
+						}
+						
 					}
 				}
 			}
