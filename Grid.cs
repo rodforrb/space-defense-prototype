@@ -91,6 +91,7 @@ public class Grid : TileMap
 		Random r = new Random();
 		int randDirection = r.Next(0, 4); //0 = north, 1 east, 2 south, 3 west
 		//to do check ray cast for valid move, snapped, add collision with other ship
+		
 		GD.Print("direction test:", randDirection);
 		switch (randDirection){
 			case 0:
