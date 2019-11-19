@@ -33,9 +33,6 @@ public class Ship1 : Node2D
         HP = Math.Min(maxHP, heal + HP);
     }
 
-
-
-
     // Called when the node enters the scene tree for the first time.    
     public override void _Ready()
     {
@@ -47,4 +44,5 @@ public class Ship1 : Node2D
 //  {
 //      
 //  }
+
 }
