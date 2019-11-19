@@ -28,7 +28,6 @@ public class Grid : TileMap
 //      
 //  }
 	
-	// Called when there is input
 
 
 	private int SumOfPrevious(int startNum)
@@ -41,9 +40,15 @@ public class Grid : TileMap
 
 		return final;
 	}
+	
+	/* returns a vector array of cells in range of a given position
+	* int range - radius around central position
+	* Vector2 currentPos - central position
+	* return Vector2[] of positions within range
+	*/
 	private Vector2[] RangeCheck(int range, Vector2 currentPos)
 	{
-		 Vector2[] possibleLocations = new Vector2[((range+range+1) * (range+range+1)) - (SumOfPrevious(range)*4)];
+		 Vector2[] possibleLocations = new Vector2[((2*range+1) * (2*range+1)) - (SumOfPrevious(range)*4)];
 		 int iterator = 0;
 		 for (int i = 0; i <= range; i++)
 		 {	
@@ -68,15 +73,12 @@ public class Grid : TileMap
 					possibleLocations[iterator+3] = new Vector2(currentPos.x - j, currentPos.y - i);
 					iterator+=4;
 				}
-				
 			}
 		 }
-
-
-
 		 return possibleLocations;
 	}
 
+	// Called when there is input
 	public override void _Input(InputEvent @event)
 	{
 		// mouse press/release event
@@ -117,8 +119,7 @@ public class Grid : TileMap
 					if (this.selected != null)
 					{
 						Vector2[] validMoves = RangeCheck((int)this.selected.Call("GetRange"), WorldToMap(this.selected.GetPosition()));
-						// GD.Print(validMoves.Length);
-						// GD.Print(WorldToMap(this.selected.GetPosition()));
+						
 						for (int j = 0; j < validMoves.Length; j++)
 						{
 							if((cell.x == validMoves[j].x) & (cell.y == validMoves[j].y) )

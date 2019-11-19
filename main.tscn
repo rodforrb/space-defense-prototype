@@ -53,7 +53,7 @@ margin_right = 1011.0
 margin_bottom = 30.0
 text = "Start"
 
-[node name="CompMove" type="Button" parent="Panel"]
+[node name="CompTurn" type="Button" parent="Panel"]
 margin_left = 840.0
 margin_top = 10.0
 margin_right = 911.0
@@ -74,19 +74,19 @@ __meta__ = {
 }
 
 [node name="Sprite" type="Sprite" parent="Grid/Ship1"]
+position = Vector2( 16, 16 )
 texture = ExtResource( 5 )
-offset = Vector2( 16, 16 )
 
 [node name="CompShip" type="Node2D" parent="Grid"]
-position = Vector2( 480, 96 )
-rotation = 3.14159
+position = Vector2( 512, 128 )
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="Sprite" type="Sprite" parent="Grid/CompShip"]
+position = Vector2( 16, 16 )
+rotation = 3.14159
 texture = ExtResource( 6 )
-offset = Vector2( 16, 16 )
 [connection signal="pressed" from="Panel/Button" to="." method="_on_Button_pressed"]
-[connection signal="pressed" from="Panel/CompMove" to="Grid" method="_on_CompMove_pressed"]
+[connection signal="pressed" from="Panel/CompTurn" to="Grid" method="_on_CompMove_pressed"]
