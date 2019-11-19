@@ -1,5 +1,0 @@
-/home/ben/Documents/4/space-defense-prototype/.mono/temp/bin/Tools/space-defense-prototype.dll
-/home/ben/Documents/4/space-defense-prototype/.mono/temp/bin/Tools/space-defense-prototype.pdb
-/home/ben/Documents/4/space-defense-prototype/.mono/temp/obj/Tools/space-defense-prototype.csprojAssemblyReference.cache
-/home/ben/Documents/4/space-defense-prototype/.mono/temp/obj/Tools/space-defense-prototype.dll
-/home/ben/Documents/4/space-defense-prototype/.mono/temp/obj/Tools/space-defense-prototype.pdb
