@@ -68,4 +68,16 @@ __meta__ = {
 [node name="Sprite" type="Sprite" parent="Grid/Ship1"]
 texture = ExtResource( 5 )
 offset = Vector2( 16, 16 )
+
+[node name="CompShip" type="Node2D" parent="Grid"]
+position = Vector2( 480, 96 )
+rotation = 3.14159
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="Grid/CompShip"]
+texture = ExtResource( 5 )
+offset = Vector2( 16, 16 )
 [connection signal="pressed" from="Panel/Button" to="." method="_on_Button_pressed"]
