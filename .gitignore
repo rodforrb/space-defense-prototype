@@ -1,4 +1,6 @@
 builds/*
 .mono/*
 mono_crash.*
-.mono/*
+.mono
+.import
+*.import
