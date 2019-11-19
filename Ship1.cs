@@ -4,7 +4,7 @@ using System;
 public class Ship1 : Node2D
 {
     public const int maxHP = 50;//maximum hp
-    public int HP { get; } = 50;//current hp
+    public int HP { get; set;} = 50;//current hp
 
     public int firepower { get; set; } = 5;//the ships firepower multiplier
     public int penetration { get; set; } = 5;//the ships ability to ignore armour
@@ -26,11 +26,11 @@ public class Ship1 : Node2D
     //special setters for HP
     public void take_damage(int hit)
     {
-        HP = max(0, HP - hit);
+        HP = Math.Max(0, HP - hit);
     }
     public void heal_damage(int heal)
     {
-        HP = min(maxHP, heal + HP);
+        HP = Math.Min(maxHP, heal + HP);
     }
 
 
