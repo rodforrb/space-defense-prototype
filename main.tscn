@@ -52,6 +52,13 @@ margin_right = 1011.0
 margin_bottom = 30.0
 text = "Start"
 
+[node name="CompMove" type="Button" parent="Panel"]
+margin_left = 840.0
+margin_top = 10.0
+margin_right = 911.0
+margin_bottom = 30.0
+text = "Move"
+
 [node name="Grid" type="TileMap" parent="."]
 tile_set = SubResource( 2 )
 cell_size = Vector2( 32, 32 )
@@ -81,3 +88,4 @@ __meta__ = {
 texture = ExtResource( 5 )
 offset = Vector2( 16, 16 )
 [connection signal="pressed" from="Panel/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Panel/CompMove" to="Grid" method="_on_CompMove_pressed"]

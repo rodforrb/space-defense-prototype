@@ -85,7 +85,7 @@ public class Grid : TileMap
 			}
 		}
 	}
-	private void _on_CompTurn_pressed(){
+	private void _on_CompMove_pressed(){
 		Node2D compShip = (Node2D)GetNode("CompShip");
 		Vector2 shipCell = compShip.Position; 
 		Random r = new Random();
