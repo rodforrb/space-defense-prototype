@@ -3,3 +3,8 @@
 /home/ben/Documents/4/space-defense-prototype/.mono/temp/obj/Tools/space-defense-prototype.csprojAssemblyReference.cache
 /home/ben/Documents/4/space-defense-prototype/.mono/temp/obj/Tools/space-defense-prototype.dll
 /home/ben/Documents/4/space-defense-prototype/.mono/temp/obj/Tools/space-defense-prototype.pdb
+C:\Users\nicho\Documents\CS4ZP6\space-defense-prototype\.mono\temp\bin\Tools\space-defense-prototype.dll
+C:\Users\nicho\Documents\CS4ZP6\space-defense-prototype\.mono\temp\bin\Tools\space-defense-prototype.pdb
+C:\Users\nicho\Documents\CS4ZP6\space-defense-prototype\.mono\temp\obj\Tools\space-defense-prototype.csprojAssemblyReference.cache
+C:\Users\nicho\Documents\CS4ZP6\space-defense-prototype\.mono\temp\obj\Tools\space-defense-prototype.dll
+C:\Users\nicho\Documents\CS4ZP6\space-defense-prototype\.mono\temp\obj\Tools\space-defense-prototype.pdb
