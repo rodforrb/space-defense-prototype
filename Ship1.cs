@@ -5,7 +5,7 @@ public class Ship1 : Node2D
 {
 	
     // Called when the node enters the scene tree for the first time.
-    private int range = 3;
+    private int range = 5;
 
     public int GetRange()
     {
