@@ -136,7 +136,12 @@ public class Grid : TileMap
 						
 					}
 				}
-				// redraw highlighted spaces
+				// delete old highlighted spaces
+				foreach (Sprite s in GetNode("Available").GetChildren())
+				{
+					s.QueueFree();
+				}
+				// draw new highlighted spaces
 				foreach (Vector2 in this.availableSpaces)
 				{
 					
