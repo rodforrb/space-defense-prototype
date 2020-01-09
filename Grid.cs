@@ -7,6 +7,7 @@ public class Grid : TileMap
 {
 	// currently selected node/sprite
 	private Node2D selected = null;
+	private Vector2[] validMoves = null;
 	
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -21,6 +22,9 @@ public class Grid : TileMap
 		}
     }
 	private int gridSize = 32;
+
+
+	
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)
@@ -75,12 +79,30 @@ public class Grid : TileMap
 				}
 			}
 		 }
+		 //removes the last elenment from the array, which is always (0,0)
+		 Array.Resize(ref possibleLocations, possibleLocations.Length - 1);
+		//Sets all the possible movement cells to a blue tile.
+		int tile = TileSet.FindTileByName("SpriteStar4");
+		for(int i = 0; i < possibleLocations.Length; i++){
+			SetCellv(possibleLocations[i], tile);
+		}
 		 return possibleLocations;
+	}
+
+	// Removes all blue tiles from the grid 
+	private void removeRange(Vector2[] moves)
+	{
+		int tile = TileSet.FindTileByName("Sprite");
+		for(int i = 0; i < moves.Length; i++){
+			
+			SetCellv(moves[i], tile);
+		}
 	}
 
 	// Called when there is input
 	public override void _Input(InputEvent @event)
 	{
+		
 		// mouse press/release event
 		if (@event is InputEventMouseButton mouseClick)
 		{
@@ -95,43 +117,40 @@ public class Grid : TileMap
 				for (int i = 0; i < GetChildCount(); i++)
 				{
 					Node2D child = (Node2D)GetChild(i);
+					
 					// if user clicked on a child
-					if (cell == WorldToMap(child.GetPosition()) && child !=  (Node2D)GetNode("../CompShip"))
+					//currently only works for friendly child nodes
+					if (cell == WorldToMap(child.GetPosition()) && child !=  (Node2D)GetNode("CompShip"))
 					{
-						if (this.selected == null)
+						if (this.selected != child)
 						{
 							this.selected = child;
 							GD.Print("Selected: ", child);
+							//Populates the valid moves for the selected ship
+							this.validMoves = RangeCheck((int)this.selected.Call("GetRange"), WorldToMap(this.selected.GetPosition()));
 							break;
-						} else {
-							// something was previously selected, decide what to do
-							// clicked new child: update current selection
-							if (this.selected != child)
-							{
-								this.selected = child;
-								GD.Print("Selected: ", child);
-								break;
-							}
-						}
+						} 
 					}
-					// clicked any other cell: move the selected ship
+					// if the current child is selected this statement is entered.
 					// MapToWorld converts grid to pixel coordinates
-					if (this.selected != null)
+					if (this.selected == child )
 					{
-						Vector2[] validMoves = RangeCheck((int)this.selected.Call("GetRange"), WorldToMap(this.selected.GetPosition()));
-						
-						for (int j = 0; j < validMoves.Length; j++)
+
+						//if a valid position is seledted, the child is moved.
+						if (GetCellv(cell) == TileSet.FindTileByName("SpriteStar4"))
 						{
-							if((cell.x == validMoves[j].x) & (cell.y == validMoves[j].y) )
-							{
-								this.selected.SetPosition(MapToWorld(cell));
-								GD.Print(this.selected, " moved to ", cell);
-								this.selected = null;
-								break;
-							}
+							this.selected.SetPosition(MapToWorld(cell));
+							removeRange(this.validMoves);
+							GD.Print(this.selected, " moved to ", cell);
+							this.selected = null;
 						}
-						
+					//if another cell is clicked, removes blue tiles and unselects child.
+					//*****Change this functionality when battle system is more developed.*****
+					}else{
+						removeRange(this.validMoves);
+						this.selected = null;
 					}
+					
 				}
 			}
 			
