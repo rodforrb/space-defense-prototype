@@ -137,7 +137,7 @@ public class Grid : TileMap
 					{
 
 						//if a valid position is seledted, the child is moved.
-						if (GetCellv(cell) == TileSet.FindTileByName("SpriteStar4"))
+						if (GetCellv(cell) == TileSet.FindTileByName("SpriteStar4") && cell != WorldToMap(((Node2D)GetNode("CompShip")).GetPosition()))
 						{
 							this.selected.SetPosition(MapToWorld(cell));
 							removeRange(this.validMoves);
@@ -166,6 +166,7 @@ public class Grid : TileMap
 			}
 		}
 	}
+	
 	private void _on_CompMove_pressed(){
 		Node2D compShip = (Node2D)GetNode("CompShip");
 		Vector2 shipCell = compShip.Position; 
