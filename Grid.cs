@@ -8,6 +8,8 @@ public class Grid : TileMap
 	// currently selected node/sprite
 	private Node2D selected = null;
 	private Vector2[] validMoves = null;
+	private bool turnEnd = false;
+
 	
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -82,20 +84,26 @@ public class Grid : TileMap
 		 //removes the last elenment from the array, which is always (0,0)
 		 Array.Resize(ref possibleLocations, possibleLocations.Length - 1);
 		//Sets all the possible movement cells to a blue tile.
-		int tile = TileSet.FindTileByName("SpriteStar4");
-		for(int i = 0; i < possibleLocations.Length; i++){
-			SetCellv(possibleLocations[i], tile);
-		}
+		
 		 return possibleLocations;
+	}
+
+	private void addRange(Vector2[] moves, String tileString)
+	{
+		int tile = TileSet.FindTileByName(tileString);
+		for(int i = 0; i < moves.Length; i++)
+		{
+			SetCellv(moves[i], tile);
+		}
 	}
 
 	// Removes all blue tiles from the grid 
 	private void removeRange(Vector2[] moves)
 	{
-		int tile = TileSet.FindTileByName("Sprite");
+		// int tile = TileSet.FindTileByName("Sprite");
 		for(int i = 0; i < moves.Length; i++){
 			
-			SetCellv(moves[i], tile);
+			SetCellv(moves[i], -1);
 		}
 	}
 
@@ -112,6 +120,9 @@ public class Grid : TileMap
 			{
 				Vector2 cell = WorldToMap(mouseClick.Position);
 				GD.Print("Mouse Click at: ", mouseClick.Position, ", Cell: ", cell);
+				Node2D enemyShip = (Node2D)GetNode("CompShip");;
+				
+				
 				
 				// check if user clicked on something
 				for (int i = 0; i < GetChildCount(); i++)
@@ -120,7 +131,7 @@ public class Grid : TileMap
 					
 					// if user clicked on a child
 					//currently only works for friendly child nodes
-					if (cell == WorldToMap(child.GetPosition()) && child !=  (Node2D)GetNode("CompShip"))
+					if (cell == WorldToMap(child.GetPosition()) && child !=  enemyShip)
 					{
 						if (this.selected != child)
 						{
@@ -128,6 +139,7 @@ public class Grid : TileMap
 							GD.Print("Selected: ", child);
 							//Populates the valid moves for the selected ship
 							this.validMoves = RangeCheck((int)this.selected.Call("GetRange"), WorldToMap(this.selected.GetPosition()));
+							addRange(this.validMoves, "SpriteStar4");
 							break;
 						} 
 					}
@@ -137,18 +149,45 @@ public class Grid : TileMap
 					{
 
 						//if a valid position is seledted, the child is moved.
-						if (GetCellv(cell) == TileSet.FindTileByName("SpriteStar4") && cell != WorldToMap(((Node2D)GetNode("CompShip")).GetPosition()))
+						//does not allow ships to be placed in the same call ***change when more ships are added***
+						Vector2 enemyLoc = WorldToMap((enemyShip).GetPosition());
+						if (GetCellv(cell) == TileSet.FindTileByName("SpriteStar4") && cell != enemyLoc)
 						{
 							this.selected.SetPosition(MapToWorld(cell));
 							removeRange(this.validMoves);
 							GD.Print(this.selected, " moved to ", cell);
-							this.selected = null;
+							this.validMoves = RangeCheck((int)this.selected.Call("getAttackRange"), WorldToMap(this.selected.GetPosition()));
+							turnEnd = true;
+							for(int j = 0; j < this.validMoves.Length; j++)
+							{
+								GD.Print(this.validMoves[j]);
+								GD.Print(enemyLoc);
+								if(this.validMoves[j].x == enemyLoc.x && this.validMoves[j].y == enemyLoc.y)
+								{
+									addRange(this.validMoves, "SpriteStar5"); 
+									turnEnd = false;	
+								}
+							}
+
+							
+						}else if(GetCellv(cell) == TileSet.FindTileByName("SpriteStar5") && cell.x == enemyLoc.x && cell.y == enemyLoc.y)
+						{
+							
+							enemyShip.Call("take_damage", this.selected.Call("getFirepower"));
+							turnEnd = true;
+
+							
 						}
+
 					//if another cell is clicked, removes blue tiles and unselects child.
 					//*****Change this functionality when battle system is more developed.*****
 					}else{
-						removeRange(this.validMoves);
-						this.selected = null;
+						if(this.turnEnd)
+						{
+							removeRange(this.validMoves);
+							this.selected = null;
+						}
+						
 					}
 					
 				}

@@ -15,9 +15,21 @@ public class Ship1 : Node2D
 	
     private int range = 5;
 
+    private int attackRange = 1;
+
+    public int getAttackRange()
+    {
+        return attackRange;
+    }
+
     public int GetRange()
     {
         return range;
+    }
+
+    public int getFirepower()
+    {
+        return this.firepower;
     }
 
     //these values serve as base values for weapons and skills
@@ -27,6 +39,8 @@ public class Ship1 : Node2D
     public void take_damage(int hit)
     {
         HP = Math.Max(0, HP - hit);
+        GD.Print(HP);
+        
     }
     public void heal_damage(int heal)
     {
