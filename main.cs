@@ -35,7 +35,14 @@ public class main : Node2D
 			
 		}
 	    
-	}	
+	}
+	public override void _Process(float delta)
+	{
+		if (Input.IsActionPressed("ui_cancel"))
+		{
+			GetTree().ChangeScene("res://MainMenu.tscn");
+		}
+	}		
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)
 //  {
