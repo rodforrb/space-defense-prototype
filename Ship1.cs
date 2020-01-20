@@ -37,8 +37,6 @@ public class Ship1 : Node2D
         HP = Math.Min(maxHP, heal + HP);
     }
 
-<<<<<<< HEAD
-=======
 	//special setters for AP
 	public void spend_AP(int amount)
 	{
@@ -56,7 +54,6 @@ public class Ship1 : Node2D
 
 
 
->>>>>>> grid
     // Called when the node enters the scene tree for the first time.    
     public override void _Ready()
     {
