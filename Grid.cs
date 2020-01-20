@@ -7,9 +7,14 @@ public class Grid : TileMap
 {
 	// currently selected node/sprite
 	private Node2D selected = null;
+	private int gridSize = 32;
+	private bool playerTurn = true;
+	private Ship1[] playerNodes;
+	private Ship1[] aiNodes;
+	private Vector2[] obstacles;
 	
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
 	{
 		// iterate children of this node (all the Node2D characters)
 		for (int i = 0; i < GetChildCount(); i++)
@@ -19,27 +24,13 @@ public class Grid : TileMap
 			GD.Print("Node loaded: ", child, " at ", WorldToMap(child.GetPosition()));
 			GD.Print(child.Call("GetRange"));
 		}
-    }
-	private int gridSize = 32;
+	}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)
 //  {
 //      
 //  }
-	
-
-
-	private int SumOfPrevious(int startNum)
-	{
-		int final = 0;
-		for (int i = startNum; i > 0; i--)
-		{
-			final += i;
-		}
-
-		return final;
-	}
 	
 	/* returns a vector array of cells in range of a given position
 	* int range - radius around central position
@@ -48,6 +39,15 @@ public class Grid : TileMap
 	*/
 	private Vector2[] RangeCheck(int range, Vector2 currentPos)
 	{
+		int SumOfPrevious(int startNum)
+		{
+			int final = 0;
+			for (int i = startNum; i > 0; i--)
+			{
+				final += i;
+			}
+			return final;
+		}
 		 Vector2[] possibleLocations = new Vector2[((2*range+1) * (2*range+1)) - (SumOfPrevious(range)*4)];
 		 int iterator = 0;
 		 for (int i = 0; i <= range; i++)
@@ -78,9 +78,31 @@ public class Grid : TileMap
 		 return possibleLocations;
 	}
 
-	// Called when there is input
+	/* Receives a request to move a ship
+	*  Ship1 ship, ship to move
+	*  Vector2 target, target space coordinates
+	*  return true if moved, false if blocked
+	*/
+	public bool move(Ship1 ship, Vector2 target)
+	{
+		float distance = WorldToMap(ship.Position).DistanceTo(target);
+
+		// target out of range
+		if (distance > ship.GetRange()) return false;
+
+		// move ship to new position
+		ship.SetPosition(MapToWorld(target));
+		return true;
+	}
+
+	/* Called whenever there is user input
+	*  consequently this manages all actions for the player's turn
+	*/
 	public override void _Input(InputEvent @event)
 	{
+		// ignore user input while it is not their turn
+		if (!this.playerTurn) return;
+		
 		// mouse press/release event
 		if (@event is InputEventMouseButton mouseClick)
 		{
@@ -118,19 +140,17 @@ public class Grid : TileMap
 					// MapToWorld converts grid to pixel coordinates
 					if (this.selected != null)
 					{
-						Vector2[] validMoves = RangeCheck((int)this.selected.Call("GetRange"), WorldToMap(this.selected.GetPosition()));
-						
-						for (int j = 0; j < validMoves.Length; j++)
+						// try to move ship, returns false for invalid moves
+						if (!move((Ship1)child, cell))
 						{
-							if((cell.x == validMoves[j].x) & (cell.y == validMoves[j].y) )
-							{
-								this.selected.SetPosition(MapToWorld(cell));
-								GD.Print(this.selected, " moved to ", cell);
-								this.selected = null;
-								break;
-							}
+				 			GD.Print("Invalid move!");
+							break;
 						}
 						
+				 		GD.Print(this.selected, " moved to ", cell);
+						// deselect the ship after moving it
+				 		this.selected = null;
+				 		break;
 					}
 				}
 			}
@@ -147,31 +167,21 @@ public class Grid : TileMap
 			}
 		}
 	}
-	private void _on_CompMove_pressed(){
+	// pressed when user ends their turn
+	private void _on_CompMove_pressed()
+	{
+		this.playerTurn = false;
+		ComputerTurn();
+		// todo: reset values to 'turn start' values
+		this.playerTurn = true;	
+	}
+
+	// runs the computer player's turn
+	private void ComputerTurn()
+	{
+		
 		Node2D compShip = (Node2D)GetNode("CompShip");
 		Vector2 shipCell = compShip.Position; 
-		Random r = new Random();
-		int randDirection = r.Next(0, 4); //0 = north, 1 east, 2 south, 3 west
-		//to do check ray cast for valid move, snapped, add collision with other ship
 		
-		GD.Print("direction test:", randDirection);
-		switch (randDirection){
-			case 0:
-			    Vector2 moveNorth = new Vector2(shipCell.x, shipCell.y - 1 * gridSize);
-				compShip.SetPosition(moveNorth);
-				break;			
-			case 1:
-			    Vector2 moveEast = new Vector2(shipCell.x + 1 * gridSize, shipCell.y);
-				compShip.SetPosition(moveEast);
-				break;
-			case 2:
-			    Vector2 moveSouth = new Vector2(shipCell.x, shipCell.y + 1 * gridSize);
-				compShip.SetPosition(moveSouth);
-				break;			
-			case 3:
-			    Vector2 moveWest = new Vector2(shipCell.x - 1 * gridSize, shipCell.y);
-				compShip.SetPosition(moveWest);
-				break;
-		}
 	}
 }

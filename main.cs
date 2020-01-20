@@ -30,7 +30,7 @@ public class main : Node2D
 			compTurn = false;
 		}
 		else{
-			GetNode<Button>("Panel/CompTurn").Text = "turn state 2";;
+			GetNode<Button>("Panel/CompTurn").Text = "turn state 2";
 			compTurn = true;
 			
 		}
