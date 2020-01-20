@@ -27,6 +27,7 @@ public class CompShip : Ship1
 //      
 //  }
 
+	// requests the ship's actions to the grid
 	public void PlayTurn()
 	{
 		Vector2 location = this.GetPosition();
@@ -34,17 +35,18 @@ public class CompShip : Ship1
 		int randDirection = r.Next(0, 4); //0 = north, 1 east, 2 south, 3 west
 		
 		switch (randDirection){
+			// todo: is statically referencing the grid the best way ?
 			case 0:
-				this.SetPosition(((Grid) GetNode("/root/Game/Grid")).CheckMove(location, Vector2.Up));
+				((Grid) GetNode("/root/Game/Grid")).move(this, location+Vector2.Up);
 				break;			
 			case 1:
-				this.SetPosition(((Grid) GetNode("/root/Game/Grid")).CheckMove(location, Vector2.Right));
+				((Grid) GetNode("/root/Game/Grid")).move(this, location+Vector2.Right);
 				break;
 			case 2:
-				this.SetPosition(((Grid) GetNode("/root/Game/Grid")).CheckMove(location, Vector2.Down));
+				((Grid) GetNode("/root/Game/Grid")).move(this, location+Vector2.Down);
 				break;			
 			case 3:
-				this.SetPosition(((Grid) GetNode("/root/Game/Grid")).CheckMove(location, Vector2.Left));
+				((Grid) GetNode("/root/Game/Grid")).move(this, location+Vector2.Left);
 				break;
 		}
 	}

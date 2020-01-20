@@ -5,12 +5,15 @@ using System;
 public class Grid : TileMap
 {
 	// currently selected node/sprite
-	private Ship1 selected = null;
-	// highlighted spaces where selected ship can move
-	private Vector2[] availableSpaces;
+	private Node2D selected = null;
+	private int gridSize = 32;
+	private bool playerTurn = true;
+	private Ship1[] playerNodes;
+	private Ship1[] aiNodes;
+	private Vector2[] obstacles;
 	
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
 	{
 		// iterate children of this node (all the Node2D characters)
 		for (int i = 0; i < GetChildCount(); i++)
@@ -19,27 +22,13 @@ public class Grid : TileMap
 			// WorldToMap converts pixel coordinates to grid coordinates
 			GD.Print("Node loaded: ", child, " at ", WorldToMap(child.GetPosition()));
 		}
-    }
-	private int gridSize = 32;
+	}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)
 //  {
 //      
 //  }
-	
-
-
-	private int SumOfPrevious(int startNum)
-	{
-		int final = 0;
-		for (int i = startNum; i > 0; i--)
-		{
-			final += i;
-		}
-
-		return final;
-	}
 	
 	/* returns a vector array of cells in range of a given position
 	* int range - radius around central position
@@ -48,6 +37,15 @@ public class Grid : TileMap
 	*/
 	private Vector2[] RangeCheck(int range, Vector2 currentPos)
 	{
+		int SumOfPrevious(int startNum)
+		{
+			int final = 0;
+			for (int i = startNum; i > 0; i--)
+			{
+				final += i;
+			}
+			return final;
+		}
 		 Vector2[] possibleLocations = new Vector2[((2*range+1) * (2*range+1)) - (SumOfPrevious(range)*4)];
 		 int iterator = 0;
 		 for (int i = 0; i <= range; i++)
@@ -78,9 +76,33 @@ public class Grid : TileMap
 		 return possibleLocations;
 	}
 
-	// Called when there is input
+	/* Receives a request to move a ship
+	*  Ship1 ship, ship to move
+	*  Vector2 target, target space coordinates
+	*  return true if moved, false if blocked
+	*/
+	public bool move(Ship1 ship, Vector2 target)
+	{
+		float distance = WorldToMap(ship.Position).DistanceTo(target);
+
+		// target out of range
+		if (distance > ship.GetRange()) return false;
+
+		// move ship to new position
+		ship.SetPosition(MapToWorld(target));
+		return true;
+	}
+
+	//public bool attack( -- projectile class -- , Vector2 target) //TODO
+
+	/* Called whenever there is user input
+	*  consequently this manages all actions for the player's turn
+	*/
 	public override void _Input(InputEvent @event)
 	{
+		// ignore user input while it is not their turn
+		if (!this.playerTurn) return;
+		
 		// mouse press/release event
 		if (@event is InputEventMouseButton mouseClick)
 		{
@@ -101,7 +123,6 @@ public class Grid : TileMap
 						if (this.selected == null)
 						{
 							this.selected = child;
-							this.availableSpaces = RangeCheck(child.GetRange(), child.GetPosition());
 							
 							GD.Print("Selected: ", child);
 							break;
@@ -111,7 +132,6 @@ public class Grid : TileMap
 							if (this.selected != child)
 							{
 								this.selected = child;
-								this.availableSpaces = RangeCheck(child.GetRange(), child.GetPosition());
 								GD.Print("Selected: ", child);
 								break;
 							}
@@ -121,30 +141,18 @@ public class Grid : TileMap
 					// MapToWorld converts grid to pixel coordinates
 					if (this.selected != null)
 					{
-						Vector2[] validMoves = RangeCheck((int)this.selected.Call("GetRange"), WorldToMap(this.selected.GetPosition()));
-						
-						for (int j = 0; j < validMoves.Length; j++)
+						// try to move ship, returns false for invalid moves
+						if (!move((Ship1)child, cell))
 						{
-							if((cell.x == validMoves[j].x) & (cell.y == validMoves[j].y) )
-							{
-								this.selected.SetPosition(MapToWorld(cell));
-								GD.Print(this.selected, " moved to ", cell);
-								this.selected = null;
-								break;
-							}
+				 			GD.Print("Invalid move!");
+							break;
 						}
 						
+				 		GD.Print(this.selected, " moved to ", cell);
+						// deselect the ship after moving it
+				 		this.selected = null;
+				 		break;
 					}
-				}
-				// delete old highlighted spaces
-				foreach (Sprite s in GetNode("Available").GetChildren())
-				{
-					s.QueueFree();
-				}
-				// draw new highlighted spaces
-				foreach (Vector2 in this.availableSpaces)
-				{
-					
 				}
 				
 			} // end of left click
@@ -161,15 +169,17 @@ public class Grid : TileMap
 			}
 		}
 	}
-	
-	// TODO return safe space to move to
-	public Vector2 CheckMove(Vector2 location, Vector2 direction)
+	// pressed when user ends their turn
+	private void _on_CompMove_pressed()
 	{
-		return MapToWorld(WorldToMap(location) + direction);
+		this.playerTurn = false;
+		ComputerTurn();
+		// todo: reset values to 'turn start' values
+		this.playerTurn = true;	
 	}
-	
-	// Runs the computer AI turn
-	public void PlayComputerTurn()
+
+	// runs the computer player's turn
+	private void ComputerTurn()
 	{
 		for (int i = 0; i < GetNode("ComputerShips").GetChildCount(); i++)
 		{
