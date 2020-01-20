@@ -35,21 +35,27 @@ custom_constants/separation = 30
 alignment = 1
 
 [node name="Continue" type="TextureRect" parent="HBoxContainer/VBoxContainer/MenuOptions"]
-margin_top = 111.0
+margin_top = 73.0
 margin_right = 537.0
-margin_bottom = 147.0
+margin_bottom = 109.0
 texture = ExtResource( 3 )
 
 [node name="NewGame" type="TextureRect" parent="HBoxContainer/VBoxContainer/MenuOptions"]
-margin_top = 177.0
+margin_top = 139.0
 margin_right = 537.0
-margin_bottom = 213.0
+margin_bottom = 175.0
 texture = ExtResource( 4 )
 
 [node name="Options" type="TextureRect" parent="HBoxContainer/VBoxContainer/MenuOptions"]
-margin_top = 243.0
+margin_top = 205.0
 margin_right = 537.0
-margin_bottom = 289.0
+margin_bottom = 251.0
+texture = ExtResource( 5 )
+
+[node name="Quit" type="TextureRect" parent="HBoxContainer/VBoxContainer/MenuOptions"]
+margin_top = 281.0
+margin_right = 537.0
+margin_bottom = 327.0
 texture = ExtResource( 5 )
 
 [node name="Version" type="TextureRect" parent="HBoxContainer/VBoxContainer"]
