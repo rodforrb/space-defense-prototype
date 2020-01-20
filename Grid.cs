@@ -181,9 +181,11 @@ public class Grid : TileMap
 	// runs the computer player's turn
 	private void ComputerTurn()
 	{
-		
-		Node2D compShip = (Node2D)GetNode("CompShip");
-		Vector2 shipCell = compShip.Position; 
-		
+		// Runs the computer AI turn
+		for (int i = 0; i < GetNode("ComputerShips").GetChildCount(); i++)
+		{
+			CompShip child = (CompShip)GetNode("ComputerShips").GetChild(i);
+			child.PlayTurn();
+		}
 	}
 }
