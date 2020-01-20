@@ -95,6 +95,8 @@ public class Grid : TileMap
 		return true;
 	}
 
+	//public bool attack( -- projectile class -- , Vector2 target) //TODO
+
 	/* Called whenever there is user input
 	*  consequently this manages all actions for the player's turn
 	*/
