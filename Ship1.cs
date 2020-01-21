@@ -51,6 +51,13 @@ public class Ship1 : Node2D
 		return weapon1;
 	}
 
+    private int attackRange = 2;
+
+    public int getAttackRange()
+    {
+        return attackRange;
+    }
+
     public int GetRange()
     {
         return range;
@@ -61,6 +68,11 @@ public class Ship1 : Node2D
 	//TODO: make the calculation in take_damage more complex, factoring in the defenders armour/evasion and the attackers penetration/accuracy
 	//TODO: the calculation in take_damage should be affected by what weapon the attacker uses. Perhaps this will be calculated elsewhere in Grid.cs
 
+    public int getFirepower()
+    {
+        return this.firepower;
+    }
+
     //these values serve as base values for weapons and skills
     //we will most likely change every value here later on
 
@@ -68,6 +80,9 @@ public class Ship1 : Node2D
     public void take_damage(int hit)
     {
         HP = Math.Max(0, HP - hit);
+        GD.Print(HP);
+        
+        
     }
     public void heal_damage(int heal)
     {
