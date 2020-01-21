@@ -10,6 +10,7 @@ public class Grid : TileMap
 	private Vector2[] validMoves = null;
 	private bool turnEnd = false;
 
+
 	
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -120,7 +121,7 @@ public class Grid : TileMap
 			{
 				Vector2 cell = WorldToMap(mouseClick.Position);
 				GD.Print("Mouse Click at: ", mouseClick.Position, ", Cell: ", cell);
-				Node2D enemyShip = (Node2D)GetNode("CompShip");;
+				Node2D enemyShip = (Node2D)GetNode("CompShip");
 				
 				
 				
@@ -157,14 +158,15 @@ public class Grid : TileMap
 							removeRange(this.validMoves);
 							GD.Print(this.selected, " moved to ", cell);
 							this.validMoves = RangeCheck((int)this.selected.Call("getAttackRange"), WorldToMap(this.selected.GetPosition()));
+							//player has moved. Turn is over if they cannot attack
 							turnEnd = true;
+							//checks if enemy is in range
 							for(int j = 0; j < this.validMoves.Length; j++)
 							{
-								GD.Print(this.validMoves[j]);
-								GD.Print(enemyLoc);
 								if(this.validMoves[j].x == enemyLoc.x && this.validMoves[j].y == enemyLoc.y)
 								{
 									addRange(this.validMoves, "SpriteStar5"); 
+									//if they are, turn is not over
 									turnEnd = false;	
 								}
 							}

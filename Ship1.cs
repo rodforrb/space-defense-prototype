@@ -15,7 +15,7 @@ public class Ship1 : Node2D
 	
     private int range = 5;
 
-    private int attackRange = 1;
+    private int attackRange = 2;
 
     public int getAttackRange()
     {
@@ -40,6 +40,7 @@ public class Ship1 : Node2D
     {
         HP = Math.Max(0, HP - hit);
         GD.Print(HP);
+        
         
     }
     public void heal_damage(int heal)
