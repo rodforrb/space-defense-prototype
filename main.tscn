@@ -1,13 +1,12 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://main.cs" type="Script" id=1]
 [ext_resource path="res://resources/graphics/backgrounds/grid_lines.png" type="Texture" id=2]
 [ext_resource path="res://Grid.cs" type="Script" id=3]
 [ext_resource path="res://Ship1.cs" type="Script" id=4]
 [ext_resource path="res://resources/graphics/sprites/ship1/ship1.png" type="Texture" id=5]
-[ext_resource path="res://resources/graphics/sprites/yellow_tint.png" type="Texture" id=6]
-[ext_resource path="res://CompShip.cs" type="Script" id=7]
-[ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=8]
+[ext_resource path="res://CompShip.cs" type="Script" id=6]
+[ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=7]
 
 [sub_resource type="TileSet" id=1]
 0/name = "grid_lines.png 0"
@@ -53,7 +52,7 @@ margin_left = 940.0
 margin_top = 10.0
 margin_right = 1011.0
 margin_bottom = 30.0
-text = "End Turn"
+text = "Start"
 
 [node name="CompTurn" type="Button" parent="Panel"]
 margin_left = 840.0
@@ -69,44 +68,26 @@ format = 1
 script = ExtResource( 3 )
 
 [node name="Ship1" type="Node2D" parent="Grid"]
-position = Vector2( 576, 352 )
+position = Vector2( 480, 352 )
 script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="Sprite" type="Sprite" parent="Grid/Ship1"]
 position = Vector2( 16, 16 )
 texture = ExtResource( 5 )
 
-[node name="Available" type="Node2D" parent="Grid/Ship1"]
-
-[node name="TintYellow" type="Sprite" parent="Grid/Ship1/Available"]
-position = Vector2( 1, 1 )
-texture = ExtResource( 6 )
-offset = Vector2( 15, 15 )
-
-[node name="ComputerShips" type="Node2D" parent="Grid"]
-
-[node name="Enemy1" type="Node2D" parent="Grid/ComputerShips"]
+[node name="CompShip" type="Node2D" parent="Grid"]
 position = Vector2( 512, 128 )
-script = ExtResource( 7 )
+script = ExtResource( 6 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Sprite" type="Sprite" parent="Grid/ComputerShips/Enemy1"]
+[node name="Sprite" type="Sprite" parent="Grid/CompShip"]
 position = Vector2( 16, 16 )
 rotation = 3.14159
-texture = ExtResource( 8 )
-
-[node name="Enemy2" type="Node2D" parent="Grid/ComputerShips"]
-position = Vector2( 672, 128 )
-script = ExtResource( 7 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Sprite" type="Sprite" parent="Grid/ComputerShips/Enemy2"]
-position = Vector2( 16, 16 )
-rotation = 3.14159
-texture = ExtResource( 8 )
+texture = ExtResource( 7 )
 [connection signal="pressed" from="Panel/Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Panel/CompTurn" to="Grid" method="_on_CompMove_pressed"]
