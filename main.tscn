@@ -12,6 +12,8 @@
 [ext_resource path="res://resources/graphics/UI/labels/label_loadgame.png" type="Texture" id=10]
 [ext_resource path="res://resources/graphics/UI/labels/label_options.png" type="Texture" id=11]
 [ext_resource path="res://resources/graphics/UI/labels/label_exit.png" type="Texture" id=12]
+[ext_resource path="res://CompShip.cs" type="Script" id=6]
+[ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=7]
 
 [sub_resource type="TileSet" id=1]
 0/name = "grid_lines.png 0"
@@ -87,7 +89,7 @@ texture = ExtResource( 5 )
 
 [node name="CompShip" type="Node2D" parent="Grid"]
 position = Vector2( 512, 128 )
-script = ExtResource( 4 )
+script = ExtResource( 6 )
 __meta__ = {
 "_edit_group_": true
 }

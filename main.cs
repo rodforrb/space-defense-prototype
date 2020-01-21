@@ -15,10 +15,10 @@ public class main : Node2D
         
     }
 
-	// this is attached to the "Button" node
+	// this is attached to the "End Turn" node
 	private void _on_Button_pressed()
 	{
-	    GetNode<Button>("Panel/Button").Text = "HELLO!";
+		GetNode("Grid").Call("PlayComputerTurn");
 	}
 
 	private void _on_CompTurn_pressed()
@@ -31,7 +31,7 @@ public class main : Node2D
 			compTurn = false;
 		}
 		else{
-			GetNode<Button>("Panel/CompTurn").Text = "turn state 2";;
+			GetNode<Button>("Panel/CompTurn").Text = "turn state 2";
 			compTurn = true;
 			
 		}
