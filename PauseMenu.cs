@@ -30,7 +30,40 @@ public class PauseMenu : Popup
             }
         }
     }
-//GUI button events for popup
+    //GUI button events for popup
+    //continue
+    public void _on_Continue_gui_input(InputEvent @event){
+        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+        {
+            Hide();
+            GetTree().Paused = false;
+            pauseGame = false;
+            GD.Print("Contiue game clicked");
+        }
+    }
+    //Options (does nothing)
+    public void _on_Options_gui_input(InputEvent @event){
+        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+        {
+            GD.Print("Options clicked");
+        }
+    }
+    //Save game (does nothing)
+    public void _on_Save_gui_input(InputEvent @event){
+        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+        {
+            GD.Print("Save game clicked");
+        }
+    }      
+    //Load game (does nothing)
+    public void _on_Load_gui_input(InputEvent @event){
+        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+        {
+            GD.Print("Load game clicked");
+        }
+    }
+
+    //exit
     public void _on_Exit_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
         {
@@ -41,17 +74,6 @@ public class PauseMenu : Popup
             GD.Print("Exit game clicked");
         }
     }
-
-    public void _on_Continue_gui_input(InputEvent @event){
-        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
-        {
-            Hide();
-            GetTree().Paused = false;
-            pauseGame = false;
-            GD.Print("Contiue game clicked");
-        }
-    }
-
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)

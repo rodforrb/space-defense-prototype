@@ -12,6 +12,15 @@ public class MainMenu : MarginContainer
     {
         
     }
+    //Load game (does nothing)
+    public void _on_Continue_gui_input(InputEvent @event){
+        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+        {
+            GD.Print("Load game clicked");
+        }
+    }
+
+    //New game
     public void _on_NewGame_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
         {
@@ -19,7 +28,24 @@ public class MainMenu : MarginContainer
             GD.Print("New game clicked");
         }
     }
-    
+    //Options (does nothing)
+    public void _on_Options_gui_input(InputEvent @event){
+        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+        {
+            GD.Print("Options clicked");
+        }
+    }
+    //leaves game
+    public void _on_Quit_gui_input(InputEvent @event){
+        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+        {
+            GD.Print("Exit clicked");
+            GetTree().Quit();
+        }
+    }    
+
+    //test function
+    /*
     public override void _GuiInput(InputEvent @event)
 {
     if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
@@ -27,6 +53,7 @@ public class MainMenu : MarginContainer
         GD.Print("Left mouse button was pressed!");
     }
 }
+*/
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)
 //  {
