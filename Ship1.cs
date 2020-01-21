@@ -18,8 +18,8 @@ public class Ship1 : Node2D
 	
 	public shipClass.Projectile weapon1 { get; set; } = new shipClass.Projectile("Gun", 1, 2, 2, 8, 1, "normal");//the first weapon that the ship has
 	//public shipClass.Projectile weapon0 = shipClass.Weapons.getGun();//the first weapon that the ship has
-	public shipClass.Projectile weapon2 = new shipClass.Projectile("Missile", 2, 3, 2, 10, 2, "solid");//the second weapon a ship has
-	public shipClass.Projectile weapon3 = new shipClass.Projectile("Laser", 2, 2, 3, 10, 2, "shiny");//the third weapon a ship has
+	public shipClass.Projectile weapon2 { get; set;} = new shipClass.Projectile("Missile", 2, 3, 2, 10, 2, "solid");//the second weapon a ship has
+	public shipClass.Projectile weapon3 { get; set;} = new shipClass.Projectile("Laser", 2, 2, 3, 10, 2, "shiny");//the third weapon a ship has
                                                                                                      //int yes = shipClass.Projectile.firepower;
 
     //constructor with parameters
