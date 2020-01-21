@@ -49,9 +49,12 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exit.cs" />
     <Compile Include="Grid.cs" />
+    <Compile Include="level_select.cs" />
     <Compile Include="main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Save.cs" />
     <Compile Include="Ship1.cs" />
     <Compile Include="Start.cs" />
   </ItemGroup>

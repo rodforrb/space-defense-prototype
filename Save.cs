@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Start : Button
+public class Save : Button
 {
     // Declare member variables here. Examples:
     // private int a = 2;
@@ -12,12 +12,6 @@ public class Start : Button
     {
         
     }
-	
-	// this is attached to the "Button" node
-	private void _on_Button_pressed()
-	{
-	    GetNode<Button>("Panel/Button").Text = "TEST123";
-	}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)
