@@ -1,13 +1,19 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://main.cs" type="Script" id=1]
 [ext_resource path="res://TileSet.tres" type="TileSet" id=2]
 [ext_resource path="res://Grid.cs" type="Script" id=3]
 [ext_resource path="res://Ship1.cs" type="Script" id=4]
 [ext_resource path="res://resources/graphics/sprites/ship1/ship1.png" type="Texture" id=5]
-[ext_resource path="res://resources/graphics/sprites/yellow_tint.png" type="Texture" id=6]
-[ext_resource path="res://CompShip.cs" type="Script" id=7]
-[ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=8]
+[ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=6]
+[ext_resource path="res://PauseMenu.cs" type="Script" id=7]
+[ext_resource path="res://resources/graphics/UI/labels/label_continue.png" type="Texture" id=8]
+[ext_resource path="res://resources/graphics/UI/labels/label_savegame.png" type="Texture" id=9]
+[ext_resource path="res://resources/graphics/UI/labels/label_loadgame.png" type="Texture" id=10]
+[ext_resource path="res://resources/graphics/UI/labels/label_options.png" type="Texture" id=11]
+[ext_resource path="res://resources/graphics/UI/labels/label_exit.png" type="Texture" id=12]
+[ext_resource path="res://CompShip.cs" type="Script" id=6]
+[ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=7]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
@@ -22,7 +28,7 @@ tile_data = PoolIntArray( 0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 
 
 [node name="Panel" type="Panel" parent="."]
 editor/display_folded = true
-margin_top = 549.0
+margin_top = 540.0
 margin_right = 1030.0
 margin_bottom = 600.0
 
@@ -31,7 +37,7 @@ margin_left = 940.0
 margin_top = 10.0
 margin_right = 1011.0
 margin_bottom = 30.0
-text = "End Turn"
+text = "Start"
 
 [node name="CompTurn" type="Button" parent="Panel"]
 margin_left = 840.0
@@ -42,49 +48,120 @@ text = "Move"
 
 [node name="Grid" type="TileMap" parent="."]
 tile_set = ExtResource( 2 )
+editor/display_folded = true
 cell_size = Vector2( 32, 32 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
 format = 1
 script = ExtResource( 3 )
 
 [node name="Ship1" type="Node2D" parent="Grid"]
-position = Vector2( 576, 352 )
+position = Vector2( 480, 352 )
 script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="Sprite" type="Sprite" parent="Grid/Ship1"]
 position = Vector2( 16, 16 )
 texture = ExtResource( 5 )
 
-[node name="Available" type="Node2D" parent="Grid/Ship1"]
-
-[node name="TintYellow" type="Sprite" parent="Grid/Ship1/Available"]
-position = Vector2( 1, 1 )
-texture = ExtResource( 6 )
-offset = Vector2( 15, 15 )
-
-[node name="ComputerShips" type="Node2D" parent="Grid"]
-
-[node name="Enemy1" type="Node2D" parent="Grid/ComputerShips"]
+[node name="CompShip" type="Node2D" parent="Grid"]
 position = Vector2( 512, 128 )
-script = ExtResource( 7 )
+script = ExtResource( 6 )
 __meta__ = {
 "_edit_group_": true
 }
 [node name="Sprite" type="Sprite" parent="Grid/ComputerShips/Enemy1"]
+
+[node name="Sprite" type="Sprite" parent="Grid/CompShip"]
 position = Vector2( 16, 16 )
 rotation = 3.14159
-texture = ExtResource( 8 )
+texture = ExtResource( 6 )
 
-[node name="Enemy2" type="Node2D" parent="Grid/ComputerShips"]
-position = Vector2( 672, 128 )
+[node name="PauseMenu" type="Popup" parent="."]
+pause_mode = 2
+self_modulate = Color( 0.584314, 0.552941, 0.552941, 1 )
+margin_left = 225.0
+margin_top = -1.0
+margin_right = 834.0
+margin_bottom = 516.0
+popup_exclusive = true
 script = ExtResource( 7 )
-__meta__ = {
-"_edit_group_": true
-}
 
-[node name="Sprite" type="Sprite" parent="Grid/ComputerShips/Enemy2"]
-position = Vector2( 16, 16 )
-rotation = 3.14159
+[node name="Background" type="ColorRect" parent="PauseMenu"]
+margin_left = 2.80902
+margin_top = 0.24939
+margin_right = 607.809
+margin_bottom = 514.25
+size_flags_stretch_ratio = 0.0
+color = Color( 0.584314, 0.552941, 0.552941, 1 )
+
+[node name="Menu" type="VBoxContainer" parent="PauseMenu"]
+margin_right = 606.0
+margin_bottom = 86.0
+
+[node name="VBoxContainer" type="CenterContainer" parent="PauseMenu/Menu"]
+margin_right = 606.0
+margin_bottom = 50.0
+
+[node name="Continue" type="TextureRect" parent="PauseMenu/Menu/VBoxContainer"]
+margin_left = 203.0
+margin_right = 403.0
+margin_bottom = 50.0
+mouse_default_cursor_shape = 2
 texture = ExtResource( 8 )
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseMenu/Menu"]
+margin_top = 54.0
+margin_right = 606.0
+margin_bottom = 104.0
+
+[node name="Save" type="TextureRect" parent="PauseMenu/Menu/CenterContainer"]
+margin_left = 203.0
+margin_right = 403.0
+margin_bottom = 50.0
+mouse_default_cursor_shape = 2
+texture = ExtResource( 9 )
+
+[node name="CenterContainer2" type="CenterContainer" parent="PauseMenu/Menu"]
+margin_top = 108.0
+margin_right = 606.0
+margin_bottom = 158.0
+
+[node name="Load" type="TextureRect" parent="PauseMenu/Menu/CenterContainer2"]
+margin_left = 203.0
+margin_right = 403.0
+margin_bottom = 50.0
+mouse_default_cursor_shape = 2
+texture = ExtResource( 10 )
+
+[node name="CenterContainer3" type="CenterContainer" parent="PauseMenu/Menu"]
+margin_top = 162.0
+margin_right = 606.0
+margin_bottom = 212.0
+
+[node name="Options" type="TextureRect" parent="PauseMenu/Menu/CenterContainer3"]
+margin_left = 203.0
+margin_right = 403.0
+margin_bottom = 50.0
+mouse_default_cursor_shape = 2
+texture = ExtResource( 11 )
+
+[node name="CenterContainer4" type="CenterContainer" parent="PauseMenu/Menu"]
+margin_top = 216.0
+margin_right = 606.0
+margin_bottom = 266.0
+
+[node name="Exit" type="TextureRect" parent="PauseMenu/Menu/CenterContainer4"]
+margin_left = 203.0
+margin_right = 403.0
+margin_bottom = 50.0
+mouse_default_cursor_shape = 2
+texture = ExtResource( 12 )
 [connection signal="pressed" from="Panel/Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Panel/CompTurn" to="Grid" method="_on_CompMove_pressed"]
+[connection signal="gui_input" from="PauseMenu/Menu/VBoxContainer/Continue" to="PauseMenu" method="_on_Continue_gui_input"]
+[connection signal="gui_input" from="PauseMenu/Menu/CenterContainer/Save" to="PauseMenu" method="_on_Save_gui_input"]
+[connection signal="gui_input" from="PauseMenu/Menu/CenterContainer2/Load" to="PauseMenu" method="_on_Load_gui_input"]
+[connection signal="gui_input" from="PauseMenu/Menu/CenterContainer3/Options" to="PauseMenu" method="_on_Options_gui_input"]
+[connection signal="gui_input" from="PauseMenu/Menu/CenterContainer4/Exit" to="PauseMenu" method="_on_Exit_gui_input"]
