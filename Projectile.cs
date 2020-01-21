@@ -6,7 +6,7 @@ namespace shipClass
     public class Projectile : Node2D
     {
         public string name = "";//the name of the projectile
-        public int firepower = 0;//the firepower of the projectile
+        public int firepower {get; set;} = 0;//the firepower of the projectile
         public int penetration = 0;//the penetration multiplier of the projectile
         public int accuracy = 0;//the accuracy multiplier of the projectile
         public int range = 0;//the range of the weapon in tiles
@@ -82,6 +82,7 @@ namespace shipClass
 		public Projectile Missile = new Projectile("Missile", 2, 3, 2, 10, 2, "solid");
         public Projectile Laser = new Projectile("Laser", 2, 2, 3, 10, 2, "shiny");
         public Projectile Bomb = new Projectile("Bomb", 3, 3, 1, 5, 3, "solid");
+		public Projectile None = new Projectile("None", 0, 0, 0, 0, 0, "nothing");
 
         public Projectile getGun()
         {
@@ -94,6 +95,10 @@ namespace shipClass
         public Projectile getLaser()
         {
             return Laser;
+        }
+        public Projectile getNone()
+        {
+            return None;
         }
 		// Called when the node enters the scene tree for the first time.
         public override void _Ready()
