@@ -45,7 +45,6 @@ margin_bottom = 30.0
 text = "Move"
 
 [node name="Grid" type="TileMap" parent="."]
-editor/display_folded = true
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 32, 32 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
@@ -73,9 +72,11 @@ __meta__ = {
 [node name="Sprite" type="Sprite" parent="Grid/CompShip"]
 position = Vector2( 16, 16 )
 rotation = 3.14159
+texture = ExtResource( 7 )
 
 [node name="PauseMenu" type="Popup" parent="."]
 pause_mode = 2
+editor/display_folded = true
 self_modulate = Color( 0.584314, 0.552941, 0.552941, 1 )
 margin_left = 225.0
 margin_top = -1.0
