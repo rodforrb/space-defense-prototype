@@ -14,9 +14,10 @@ public class Start : Button
     }
 	
 	// this is attached to the "Button" node
-	private void _on_Button_pressed()
+	private void _on_Start_pressed()
 	{
-	    GetNode<Button>("Panel/Button").Text = "HELLO!";
+		// loads a level
+        GetTree().ChangeScene("res://main.tscn");
 	}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.

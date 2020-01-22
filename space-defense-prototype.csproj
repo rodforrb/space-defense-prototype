@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="CompShip.cs" />
     <Compile Include="Grid.cs" />
+    <Compile Include="level_select.cs" />
     <Compile Include="main.cs" />
     <Compile Include="MainMenu.cs" />
     <Compile Include="PauseMenu.cs" />

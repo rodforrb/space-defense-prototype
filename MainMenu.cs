@@ -16,6 +16,7 @@ public class MainMenu : MarginContainer
     public void _on_Continue_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
         {
+            GetTree().ChangeScene("res://level_select.tscn");
             GD.Print("Load game clicked");
         }
     }
