@@ -112,7 +112,7 @@ public class Grid : TileMap
 	*  Vector2 target, target space coordinates
 	*  return true if moved, false if blocked
 	*/
-	public bool move(Ship1 ship, Vector2 target)
+	public bool Move(Ship1 ship, Vector2 target)
 	{
 //		float distance = WorldToMap(ship.Position).DistanceTo(target);
 
@@ -125,7 +125,18 @@ public class Grid : TileMap
 		return true;
 	}
 
-	//public bool attack( -- projectile class -- , Vector2 target) //TODO
+	/* Receives a request to attack a target
+	* Ship1 ship, attacking ship
+	* Vector2 target, grid coordinates to attack
+	* ProjectileType projType
+	* return true if hit, false if miss
+	*/
+	public bool Attack(Ship1 ship, Vector2 target, ProjectileType projType = ProjectileType.Default)
+	{
+		
+
+		return true;
+	}
 
 	/* Called whenever there is user input
 	*  consequently this manages all actions for the player's turn
@@ -190,7 +201,7 @@ public class Grid : TileMap
 						//if a valid position is selected, the child is moved.
 						
 						// try to move ship, inner loop runs for invalid moves
-						if (!move((Ship1)child, cell))
+						if (!Move((Ship1)child, cell))
 						{
 							// we don't otherwise HAVE to do anything if move() fails
 				 			GD.Print("Invalid move!");
