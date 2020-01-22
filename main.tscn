@@ -1,19 +1,17 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://main.cs" type="Script" id=1]
 [ext_resource path="res://TileSet.tres" type="TileSet" id=2]
 [ext_resource path="res://Grid.cs" type="Script" id=3]
 [ext_resource path="res://Ship1.cs" type="Script" id=4]
 [ext_resource path="res://resources/graphics/sprites/ship1/ship1.png" type="Texture" id=5]
-[ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=6]
-[ext_resource path="res://PauseMenu.cs" type="Script" id=7]
+[ext_resource path="res://CompShip.cs" type="Script" id=6]
+[ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=7]
 [ext_resource path="res://resources/graphics/UI/labels/label_continue.png" type="Texture" id=8]
 [ext_resource path="res://resources/graphics/UI/labels/label_savegame.png" type="Texture" id=9]
 [ext_resource path="res://resources/graphics/UI/labels/label_loadgame.png" type="Texture" id=10]
 [ext_resource path="res://resources/graphics/UI/labels/label_options.png" type="Texture" id=11]
 [ext_resource path="res://resources/graphics/UI/labels/label_exit.png" type="Texture" id=12]
-[ext_resource path="res://CompShip.cs" type="Script" id=6]
-[ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=7]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
@@ -47,8 +45,8 @@ margin_bottom = 30.0
 text = "Move"
 
 [node name="Grid" type="TileMap" parent="."]
-tile_set = ExtResource( 2 )
 editor/display_folded = true
+tile_set = ExtResource( 2 )
 cell_size = Vector2( 32, 32 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
 format = 1
@@ -71,12 +69,10 @@ script = ExtResource( 6 )
 __meta__ = {
 "_edit_group_": true
 }
-[node name="Sprite" type="Sprite" parent="Grid/ComputerShips/Enemy1"]
 
 [node name="Sprite" type="Sprite" parent="Grid/CompShip"]
 position = Vector2( 16, 16 )
 rotation = 3.14159
-texture = ExtResource( 6 )
 
 [node name="PauseMenu" type="Popup" parent="."]
 pause_mode = 2

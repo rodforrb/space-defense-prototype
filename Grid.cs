@@ -113,10 +113,11 @@ public class Grid : TileMap
 	*/
 	public bool move(Ship1 ship, Vector2 target)
 	{
-		float distance = WorldToMap(ship.Position).DistanceTo(target);
+//		float distance = WorldToMap(ship.Position).DistanceTo(target);
 
 		// target out of range
-		if (distance > ship.GetRange()) return false;
+		if (!Array.Exists(RangeCheck(ship.GetRange(), WorldToMap(ship.Position)), element => element == target)) return false;
+
 
 		// move ship to new position
 		ship.SetPosition(MapToWorld(target));
@@ -171,8 +172,18 @@ public class Grid : TileMap
 					if (this.selected == child )
 					{
 
-						//if a valid position is seledted, the child is moved.
-						//does not allow ships to be placed in the same call ***change when more ships are added***
+						//if a valid position is selected, the child is moved.
+						
+						// try to move ship, returns false for invalid moves
+						if (!move((Ship1)child, cell))
+						{
+				 			GD.Print("Invalid move!");
+							// deselect the ship after moving it
+					 		this.selected = null;
+							break;
+						}
+						
+						//does not allow ships to be placed in the same cell ***change when more ships are added***
 						Vector2 enemyLoc = WorldToMap((enemyShip).GetPosition());
 						if (GetCellv(cell) == TileSet.FindTileByName("SpriteStar4") && cell != enemyLoc)
 						{
@@ -194,7 +205,7 @@ public class Grid : TileMap
 							}
 
 							
-						}else if(GetCellv(cell) == TileSet.FindTileByName("SpriteStar5") && cell.x == enemyLoc.x && cell.y == enemyLoc.y)
+						} else if (GetCellv(cell) == TileSet.FindTileByName("SpriteStar5") && cell.x == enemyLoc.x && cell.y == enemyLoc.y)
 						{
 							
 							enemyShip.Call("take_damage", this.selected.Call("getFirepower"));
@@ -205,23 +216,12 @@ public class Grid : TileMap
 
 					//if another cell is clicked, removes blue tiles and unselects child.
 					//*****Change this functionality when battle system is more developed.*****
-					}else{
+					} else {
 						if(this.turnEnd)
 						{
 							removeRange(this.validMoves);
 							this.selected = null;
-              
-						// try to move ship, returns false for invalid moves
-						//if (!move((Ship1)child, cell))
-						//{
-				 			//GD.Print("Invalid move!");
-							//break;
 						}
-						
-				 		GD.Print(this.selected, " moved to ", cell);
-						// deselect the ship after moving it
-				 		this.selected = null;
-				 		break;
 					}
 					
 				}
