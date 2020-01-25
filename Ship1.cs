@@ -77,11 +77,10 @@ public class Ship1 : Node2D
     //we will most likely change every value here later on
 
     //special setters for HP
-    public void take_damage(int hit)
+    public void take_damage(int fp, int pen)
     {
-        HP = Math.Max(0, HP - hit);
+        HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, (armour * 2) - pen) )) );
         GD.Print(HP);
-        
         
     }
     public void heal_damage(int heal)

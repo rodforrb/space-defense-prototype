@@ -13,6 +13,8 @@ public class CompShip : Ship1
     public int accuracy { get; set; } = 5;//odds of hitting an opponent
     public int evasion { get; set; } = 5;//odds of dodging an attack
 	*/
+	
+	
     private int range = 5;
 	
     // Called when the node enters the scene tree for the first time.
