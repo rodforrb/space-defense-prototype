@@ -15,6 +15,8 @@ public class CompShip : Ship1
 	*/
     private int range = 5;
 	
+	public int shipType = 1;
+	
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {

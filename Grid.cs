@@ -24,9 +24,14 @@ public class Grid : TileMap
 		for (int i = 0; i < GetChildCount(); i++)
 		{
 			Node2D child = (Node2D)GetChild(i);
+			
 			// WorldToMap converts pixel coordinates to grid coordinates
 			GD.Print("Node loaded: ", child, " at ", WorldToMap(child.GetPosition()));
+			
+
 		}
+		
+		 
 	}
 
 
@@ -112,15 +117,16 @@ public class Grid : TileMap
 	*  Vector2 target, target space coordinates
 	*  return true if moved, false if blocked
 	*/
-	public bool Move(Ship1 ship, Vector2 target)
+	public bool move(Ship1 ship, Vector2 target)
 	{
 //		float distance = WorldToMap(ship.Position).DistanceTo(target);
 
 		// target out of range
 		if (!Array.Exists(RangeCheck(ship.GetRange(), WorldToMap(ship.Position)), element => element == target)) return false;
-
+		
 
 		// move ship to new position
+		
 		ship.SetPosition(MapToWorld(target));
 		return true;
 	}
@@ -201,7 +207,7 @@ public class Grid : TileMap
 						//if a valid position is selected, the child is moved.
 						
 						// try to move ship, inner loop runs for invalid moves
-						if (!Move((Ship1)child, cell))
+						if (!move((Ship1)child, cell))
 						{
 							// we don't otherwise HAVE to do anything if move() fails
 				 			GD.Print("Invalid move!");
