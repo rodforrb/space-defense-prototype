@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Ship1 : Node2D
+public class Ship1 : Area2D
 {
     private int maxHP = 50;//maximum hp
     public int HP { get; set;} = 50;//current hp
@@ -21,6 +21,10 @@ public class Ship1 : Node2D
 	public shipClass.Projectile weapon2 { get; set;} = new shipClass.Projectile("Missile", 2, 3, 2, 10, 2, "solid");//the second weapon a ship has
 	public shipClass.Projectile weapon3 { get; set;} = new shipClass.Projectile("Laser", 2, 2, 3, 10, 2, "shiny");//the third weapon a ship has
                                                                                                      //int yes = shipClass.Projectile.firepower;
+//	public (PackedScene) var bullet;
+//	public var bullet_conatianer = GetNode("bullet_container");
+	public PackedScene bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
+	
 
     //constructor with parameters
     public Ship1(int Hpp, int fp, int pen, int arm, int acc, int eva, int ran, int ap, shipClass.Projectile w1, shipClass.Projectile w2, shipClass.Projectile w3)
@@ -51,7 +55,7 @@ public class Ship1 : Node2D
 		return weapon1;
 	}
 
-    private int attackRange = 2;
+    private int attackRange = 3;
 
     public int getAttackRange()
     {
@@ -77,9 +81,18 @@ public class Ship1 : Node2D
     //we will most likely change every value here later on
 
     //special setters for HP
-    public void take_damage(int fp, int pen)
+    public void take_damage(int fp, int pen, int acc)
     {
-        HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, (armour * 2) - pen) )) );
+		float hits = (float)acc / (float)(acc + evasion);
+		int chance = (int) (hits * 100);
+		Random random = new Random();
+		int result = random.Next(0, 100);
+		
+		if (result <= chance)
+		{
+			HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
+		}
+        
         GD.Print(HP);
         
     }
@@ -116,5 +129,18 @@ public class Ship1 : Node2D
 //  {
 //      
 //  }
+
+	/*public void shoot(Vector2 st, Vector2 ed, int ev)
+	{
+		
+		//_bullet.Bulle(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a, defender.evasion);
+		var bullet_instance = bullet.Instance() as Area2D;
+		AddChild(bullet_instance);
+		//bullet_instance.SetPosition(attackNode.Position);
+		//bullet_instance.start_at(st, ed, firepower, penetration, accuracy);
+		bullet_instance = new Bullets(st, ed, firepower, penetration, accuracy);
+		
+		bullet_instance.Connect("hit_target", this.GetParent(), "attackhits" );
+	}*/
 
 }

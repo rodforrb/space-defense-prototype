@@ -8,7 +8,9 @@ public class Bullets : Area2D
     // private int a = 2;
     // private string b = "text";
 	
-	public int move_speed = 100;
+	//Node2D Grid = GetParent();
+	
+	public int move_speed = 1000;
 	public Vector2 direction;
 	public Vector2 startPos;
 	public Vector2 currentPos;
@@ -16,7 +18,6 @@ public class Bullets : Area2D
 	public int firepow {get; set;}
 	public int penetra {get; set;}
 	public int accurat {get; set;}
-	public int eva {get; set;}
 	private PackedScene _bullet;
 	
 	[Signal]
@@ -43,7 +44,7 @@ public class Bullets : Area2D
 //    }
 	
 	//constructor with parameters
-	public Bullets(Vector2 st, Vector2 en, int f, int p, int a, int ev){
+	public Bullets(Vector2 st, Vector2 en, int f, int p, int a){
 		direction = en - st;
 		startPos = st;
 		endPos = en;
@@ -51,10 +52,9 @@ public class Bullets : Area2D
 		firepow = f;
 		penetra = p;
 		accurat = a;
-		eva = ev;
 	}
 	
-	public void Bulle(Vector2 st, Vector2 en, int f, int p, int a, int ev){
+	public void start_at(Vector2 st, Vector2 en, int f, int p, int a){
 		direction = en - st;
 		startPos = st;
 		endPos = en;
@@ -62,7 +62,6 @@ public class Bullets : Area2D
 		firepow = f;
 		penetra = p;
 		accurat = a;
-		eva = ev;
 	}
 	
 	public Vector2 getPosition()
@@ -92,20 +91,9 @@ public class Bullets : Area2D
 		}
 		else 
 		{
-			//move
-			float hits = (float)accurat / (float)(accurat + eva);
-			int chance = (int) (hits * 100);
-			Random random = new Random();
-			int result = random.Next(0, 100);
 			
-			if (result <= chance)
-			{
-				EmitSignal("hit_target", endPos, firepow, penetra);
-			}
-			else
-			{
-				//EmitSignal("missed_target");
-			}
+			EmitSignal("hit_target", endPos, firepow, penetra, accurat);
+			
 			
 			Free();
 		}
@@ -114,7 +102,7 @@ public class Bullets : Area2D
 	
 	private void _on_VisibilityNotifier2D_screen_exited()
 	{
-		Free();
+		//Free();
 		//queue_free();//destroy as soon as possible
 	}
 	private void _on_Bullets_area_entered(object area)
@@ -123,19 +111,8 @@ public class Bullets : Area2D
 		//move
 		if (currentPos == endPos)
 		{
-			float hits = (float)accurat / (float)(accurat + eva);
-			int chance = (int) (hits * 100);
-			Random random = new Random();
-			int result = random.Next(0, 100);
-			
-			if (result <= chance)
-			{
-				EmitSignal("hit_target", endPos, firepow, penetra);
-			}
-			else
-			{
-				//EmitSignal("missed_target");
-			}
+			EmitSignal("hit_target", endPos, firepow, penetra, accurat);
+
 		}
 		
 		Free();

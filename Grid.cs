@@ -17,8 +17,11 @@ public class Grid : TileMap
 	private Ship1[] aiNodes;
 	private Ship1 attackNode;
 	private Ship1 defendNode;
-	private Bullets bulletNode;
+	private Bullets gunNode;
 	private Vector2[] obstacles;
+	
+	public PackedScene _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
+	//public Node bullet_conatianer = GetNode("bullet_container");
 	
 	//https://docs.godotengine.org/en/3.1/getting_started/workflow/best_practices/scenes_versus_scripts.html
 	//Based on the information provided in the above link, I will define the animated projectiles as a seperate scene
@@ -30,7 +33,7 @@ public class Grid : TileMap
 	public override void _Ready()
 	{
 		// iterate children of this node (all the Node2D characters)
-		var _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
+		//var _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
 		for (int i = 0; i < GetChildCount(); i++)
 		{
 			Node2D child = (Node2D)GetChild(i);
@@ -152,25 +155,41 @@ public class Grid : TileMap
 		attackNode = attacker;
 		defendNode = defender;
 		
-		var _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
+		defender.take_damage(f, p, a);
+		
+		/*var _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
 		//_bullet.Bulle(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a, defender.evasion);
 		var bullet_instance = _bullet.Instance() as Area2D;
 		AddChild(bullet_instance);
 		//bullet_instance.SetPosition(attackNode.Position);
 		
 		
-		Bullets bull = new Bullets(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a, defender.evasion);
+		bullet_instance = new Bullets(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a);
 		
-		bullet_instance.Connect("hit_target", this, "attackhits" );
+		bullet_instance.Connect("hit_target", this, "attackhits" );*/
 		
 		//GetNode("Bullets").Set("Target", this);
 		//GetNode("Bullets").Connect("hit_target", bul, "MethodOnTheObject");
 		
 		
+		/*Bullets bull = new Bullets(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a, defender.evasion);
+		float hits = (float)a / (float)(a + defender.evasion);
+		int chance = (int) (hits * 100);
+		Random random = new Random();
+		int result = random.Next(0, 100);
+		
+		if (result <= chance)
+		{
+			defender.take_damage(f, p);
+		}*/
+		
+		//_bullet.Bulle(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a, defender.evasion);
+		
+		
 		return;
 	}
 	
-	public void attackhits(Vector2 cell, int fp, int pen)
+	public void attackhits(Vector2 cell, int fp, int pen, int acc)
 	{
 		/*for (int i = 0; i <GetChildCount(); i++)
 		{
@@ -179,7 +198,8 @@ public class Grid : TileMap
 				(Ship1)child.take_damage(fp, pen);
 		}*/
 		
-		defendNode.take_damage(fp, pen);
+		
+		defendNode.take_damage(fp, pen, acc);
 	}
 
 	/* Called whenever there is user input
@@ -298,5 +318,28 @@ public class Grid : TileMap
 			CompShip child = (CompShip)GetNode("ComputerShips").GetChild(i);
 			child.PlayTurn();
 		}
+	}
+	
+	//this function returns a node that is found at specific coordinates
+	private Node2D get_cell_node(Vector2 cord)
+	{
+		for (int i = 0; i <GetChildCount(); i++)
+		{
+			Node2D child = (Node2D)GetChild(i);
+			if (cord == WorldToMap(child.GetPosition()))
+				return child;
+		}
+		return null;
+	}
+	
+	//return true is space is occupied and not out of bounds, false otherwise
+	private bool is_cell_vacant(Vector2 cord)
+	{
+		if (get_cell_node(cord) != null)
+			return false;
+		if (cord.x <= 0 || cord.x > gridSize || cord.y <= 0 || cord.y > gridSize/2)
+			return false;
+		
+		return true;
 	}
 }
