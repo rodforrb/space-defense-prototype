@@ -22,7 +22,7 @@ public class Projectile : Node2D
     public string type {get; set;} = "";//the type of weapon it is, some types of weapons will be more effective against certain foes
     
 
-		//constructor with parameters
+	//constructor with parameters
     public Projectile(ProjectileType p, int fp, int pen, int acc, int ran, int ap, string typ)
     {
         proj = p;
@@ -32,6 +32,41 @@ public class Projectile : Node2D
         range = ran;
         APcost = ap;
         type = typ;
+    }
+
+    // constructor copy for self-filling constructor below
+    public void SetProjectile(ProjectileType p, int fp, int pen, int acc, int ran, int ap, string typ)
+    {
+        proj = p;
+        firepower = fp;
+        penetration = pen;
+        accuracy = acc;
+        range = ran;
+        APcost = ap;
+        type = typ;
+    }
+
+    public Projectile(ProjectileType type)
+    {
+        switch (type)
+        {
+            case ProjectileType.Gun:
+                SetProjectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");
+                break;
+            case ProjectileType.Missile:
+                SetProjectile(ProjectileType.Missile, 2, 3, 2, 10, 2, "solid");
+                break;
+            case ProjectileType.Laser:
+                SetProjectile(ProjectileType.Laser, 2, 2, 3, 10, 2, "shiny");
+                break;
+            case ProjectileType.Bomb:
+                SetProjectile(ProjectileType.Bomb, 3, 3, 1, 5, 3, "solid");
+                break;
+            default:
+                SetProjectile(ProjectileType.None, 0, 0, 0, 0, 0, "nothing");
+                break;
+
+        }
     }
     
     //constructor without parameters
@@ -83,36 +118,3 @@ public class Projectile : Node2D
 
 
 }
-
-//I tried to define a class of weapons but it will not let me reference them at all. I hope to properly define the weapons as described here
-public class Weapons : Node2D
-{
-    public Projectile Gun {get;} = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");
-    public Projectile Missile {get;} = new Projectile(ProjectileType.Missile, 2, 3, 2, 10, 2, "solid");
-    public Projectile Laser {get;} = new Projectile(ProjectileType.Laser, 2, 2, 3, 10, 2, "shiny");
-    public Projectile Bomb {get;} = new Projectile(ProjectileType.Bomb, 3, 3, 1, 5, 3, "solid");
-    public Projectile None {get;} = new Projectile(ProjectileType.None, 0, 0, 0, 0, 0, "nothing");
-
-    public Projectile getGun()
-    {
-        return Gun;
-    }
-    public Projectile getMissile()
-    {
-        return Missile;
-    }
-    public Projectile getLaser()
-    {
-        return Laser;
-    }
-    public Projectile getNone()
-    {
-        return None;
-    }
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-
-    }
-}
-

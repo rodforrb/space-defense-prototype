@@ -9,13 +9,13 @@ public class CompShip : Ship1
 	*/
 	private int range = 2;
 	private int maxAP = 2;
-	public int shipType = 1;
+	new public int shipType = 1;
 	public const int maxHP = 50;//maximum hp
-	public int HP { get; set;} = 50;//current hp
-	public int penetration { get; set; } = 5;//the ships ability to ignore armour
-	public int armour { get; set; } = 5;//the ships resistance to damage
-	public int accuracy { get; set; } = 5;//odds of hitting an opponent
-	public int evasion { get; set; } = 5;//odds of dodging an attack
+	new public int HP { get; set;} = 50;//current hp
+	new public int penetration { get; set; } = 5;//the ships ability to ignore armour
+	new public int armour { get; set; } = 5;//the ships resistance to damage
+	new public int accuracy { get; set; } = 5;//odds of hitting an opponent
+	new public int evasion { get; set; } = 5;//odds of dodging an attack
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -39,32 +39,8 @@ public class CompShip : Ship1
 	//this could be useful for switching turns
 	public async void PlayTurn(Ship1 target)
 	{
-
-		//Random r = new Random();
-		//int randDirection = r.Next(0, 4); //0 = north, 1 east, 2 south, 3 west
-		//Node2D compShip = (Node2D)GetNode("/root/Game/Grid/CompShip");
-		//Vector2 shipCell = compShip.Position; 
-
-
 		Vector2 dist;
 
-
-		/*
-		switch (randDirection){
-			// todo: consider moving movement logic into sperate function
-			case 0:
-				compShip.SetPosition(moveNorth);	
-				break;			
-			case 1:
-				compShip.SetPosition(moveEast);
-				break;
-			case 2:
-				compShip.SetPosition(moveSouth);
-				break;			
-			case 3:
-				compShip.SetPosition(moveWest);
-				break;
-		}*/
 		int fight;
 		//todo: add logic comparing stats
 		//ie, pass this function an array of ships, try to destroy weakest, or run from strongest
@@ -95,8 +71,7 @@ public class CompShip : Ship1
 			GD.Print("Test", i);
 			if(fight==1){			
 				if((Math.Abs(dist.x)+Math.Abs(dist.y)) <= range){
-					//attack func goes here
-					GD.Print(this, " attacks ", target, " for (unimplemented damage)");
+					((Grid) GetNode("/root/Game/Grid")).attack(this, target, new Projectile(ProjectileType.Gun));
 				}
 				else if(Math.Abs(dist.x) < Math.Abs(dist.y) ){
 					if(dist.y > 0){

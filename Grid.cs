@@ -162,35 +162,6 @@ public class Grid : TileMap
 		
 		defender.take_damage(f, p, a);
 		
-		/*var _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
-		//_bullet.Bulle(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a, defender.evasion);
-		var bullet_instance = _bullet.Instance() as Area2D;
-		AddChild(bullet_instance);
-		//bullet_instance.SetPosition(attackNode.Position);
-		
-		
-		bullet_instance = new Bullets(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a);
-		
-		bullet_instance.Connect("hit_target", this, "attackhits" );*/
-		
-		//GetNode("Bullets").Set("Target", this);
-		//GetNode("Bullets").Connect("hit_target", bul, "MethodOnTheObject");
-		
-		
-		/*Bullets bull = new Bullets(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a, defender.evasion);
-		float hits = (float)a / (float)(a + defender.evasion);
-		int chance = (int) (hits * 100);
-		Random random = new Random();
-		int result = random.Next(0, 100);
-		
-		if (result <= chance)
-		{
-			defender.take_damage(f, p);
-		}*/
-		
-		//_bullet.Bulle(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a, defender.evasion);
-		
-		
 		return;
 	}
 	
