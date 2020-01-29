@@ -1,22 +1,22 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 public class CompShip : Ship1
 {
 	/*
+	name or id?
+	*/
+    private int range = 2;
+	private int maxAP = 2;
+	public int shipType = 1;
     public const int maxHP = 50;//maximum hp
     public int HP { get; set;} = 50;//current hp
-	name or id?
-    public int firepower { get; set; } = 5;//the ships firepower multiplier
     public int penetration { get; set; } = 5;//the ships ability to ignore armour
     public int armour { get; set; } = 5;//the ships resistance to damage
     public int accuracy { get; set; } = 5;//odds of hitting an opponent
     public int evasion { get; set; } = 5;//odds of dodging an attack
-	*/
-    private int range = 1;
-	
-	public int shipType = 1;
-	
+
 	public CompShip(){
 
 	}
@@ -33,24 +33,29 @@ public class CompShip : Ship1
 //      
 //  }
 
-	// requests the ship's actions to the grid
-	public void PlayTurn()
-	{
-		Vector2 location = this.GetPosition();
-		Random r = new Random();
-		int randDirection = r.Next(0, 4); //0 = north, 1 east, 2 south, 3 west
-		//get node "this.name" for dynamic?
-		Node2D compShip = (Node2D)GetNode("/root/Game/Grid/CompShip");
-		
-		Vector2 shipCell = compShip.Position; 
-		int gridSize = ((Grid) GetNode("/root/Game/Grid")).gridSize;
-		Vector2 moveNorth = new Vector2(shipCell.x, shipCell.y - range * gridSize);
-		Vector2 moveEast = new Vector2(shipCell.x + range * gridSize, shipCell.y);
-		Vector2 moveSouth = new Vector2(shipCell.x, shipCell.y + range * gridSize);
-		Vector2 moveWest = new Vector2(shipCell.x - range * gridSize, shipCell.y);
+	//todo: move, validate move, ensure inboundness
 
+	// requests the ship's actions to the grid
+	//Todo:
+	//public void PlayTurn(Array of player ships)
+	//also: make this a bool
+	//that returns true when the turn is complete
+	//this could be useful for switching turns
+	public async void PlayTurn(Ship1 target)
+	{
+
+		//Random r = new Random();
+		//int randDirection = r.Next(0, 4); //0 = north, 1 east, 2 south, 3 west
+		//Node2D compShip = (Node2D)GetNode("/root/Game/Grid/CompShip");
+		//Vector2 shipCell = compShip.Position; 
+
+
+		Vector2 dist;
+
+
+		/*
 		switch (randDirection){
-			// todo: is statically referencing the grid the best way ?
+			// todo: consider moving movement logic into sperate function
 			case 0:
 				compShip.SetPosition(moveNorth);	
 				break;			
@@ -63,6 +68,82 @@ public class CompShip : Ship1
 			case 3:
 				compShip.SetPosition(moveWest);
 				break;
+		}*/
+		int fight;
+		//todo: add logic comparing stats
+		//ie, pass this function an array of ships, try to destroy weakest, or run from strongest
+		//have some var like fight, 0 = run, 1 = fight, 2 = freeze, 3 = something like "support" idk
+		if(this.HP <= target.firepower && this.firepower < target.HP){
+			fight = 0;
+		}
+		else{
+			fight = 1;
+		}
+		
+		for (int i = 0; i < maxAP; i++){
+
+
+			Vector2 shipCell = this.GetPosition();
+			Node2D compShip = (Node2D)this;
+			Vector2 targetCell = target.Position; 
+			int gridSize = ((Grid) GetNode("/root/Game/Grid")).gridSize;
+			Vector2 moveNorth = new Vector2(shipCell.x, shipCell.y - 1 * gridSize);
+			Vector2 moveEast = new Vector2(shipCell.x + 1 * gridSize, shipCell.y);
+			Vector2 moveSouth = new Vector2(shipCell.x, shipCell.y + 1 * gridSize);
+			Vector2 moveWest = new Vector2(shipCell.x - 1 * gridSize, shipCell.y);
+
+
+			dist = (targetCell - shipCell)/gridSize;
+			GD.Print(dist);
+			//to do
+			GD.Print("Test", i);
+			if(fight==1){			
+				if((Math.Abs(dist.x)+Math.Abs(dist.y)) <= range){
+					//attack func goes here
+					GD.Print(this, " attacks ", target, " for (unimplemented damage)");
+				}
+				else if(Math.Abs(dist.x) < Math.Abs(dist.y) ){
+					if(dist.y > 0){
+						compShip.SetPosition(moveSouth);
+					}
+					else{
+						compShip.SetPosition(moveNorth);
+					}
+				}
+				else if(Math.Abs(dist.x) >= Math.Abs(dist.y) ){
+					if(dist.x > 0){
+						compShip.SetPosition(moveEast);
+					}
+					else{
+						compShip.SetPosition(moveWest);
+					}
+
+				}
+			}
+			else if(fight == 0){
+				if(Math.Abs(dist.x) <= Math.Abs(dist.y) ){
+					if(dist.y > 0){
+						compShip.SetPosition(moveNorth);
+					}
+					else{
+						compShip.SetPosition(moveSouth);
+					}
+				}
+				else if(Math.Abs(dist.x) > Math.Abs(dist.y) ){
+					if(dist.x > 0){
+						compShip.SetPosition(moveWest);
+					}
+					else{
+						compShip.SetPosition(moveEast);
+					}
+
+				}				
+			}
+
+
+			await Task.Delay(TimeSpan.FromSeconds(0.2));
+			
 		}
 	}
+	
 }

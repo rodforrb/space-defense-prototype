@@ -7,6 +7,7 @@ public class Ship1 : Node2D
     public int HP { get; set;} = 50;//current hp
 
     //0 for firendly, 1 for enemy;
+    //Do we need a name or ID?
     public int shipType = 0;
 
    

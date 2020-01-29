@@ -1,9 +1,15 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://level_select.cs" type="Script" id=1]
 [ext_resource path="res://resources/graphics/ui/ui.png" type="Texture" id=2]
 [ext_resource path="res://resources/graphics/terrain/terrain.png" type="Texture" id=3]
 [ext_resource path="res://resources/graphics/sprites/selectors/selector horizontal.png" type="Texture" id=4]
+[ext_resource path="res://PauseMenu.cs" type="Script" id=5]
+[ext_resource path="res://resources/graphics/UI/labels/label_continue.png" type="Texture" id=6]
+[ext_resource path="res://resources/graphics/UI/labels/label_savegame.png" type="Texture" id=7]
+[ext_resource path="res://resources/graphics/UI/labels/label_loadgame.png" type="Texture" id=8]
+[ext_resource path="res://resources/graphics/UI/labels/label_options.png" type="Texture" id=9]
+[ext_resource path="res://resources/graphics/UI/labels/label_exit.png" type="Texture" id=10]
 
 [sub_resource type="TileSet" id=1]
 32/name = "ui.png 32"
@@ -201,4 +207,90 @@ valign = 1
 position = Vector2( 254, 222 )
 scale = Vector2( 0.6, 0.6 )
 texture = ExtResource( 4 )
+
+[node name="PauseMenu" type="Popup" parent="."]
+pause_mode = 2
+self_modulate = Color( 0.584314, 0.552941, 0.552941, 1 )
+margin_left = 225.0
+margin_top = -1.0
+margin_right = 834.0
+margin_bottom = 516.0
+popup_exclusive = true
+script = ExtResource( 5 )
+
+[node name="Background" type="ColorRect" parent="PauseMenu"]
+margin_left = 2.80902
+margin_top = 0.24939
+margin_right = 607.809
+margin_bottom = 514.25
+size_flags_stretch_ratio = 0.0
+color = Color( 0.584314, 0.552941, 0.552941, 1 )
+
+[node name="Menu" type="VBoxContainer" parent="PauseMenu"]
+margin_right = 606.0
+margin_bottom = 86.0
+
+[node name="VBoxContainer" type="CenterContainer" parent="PauseMenu/Menu"]
+margin_right = 606.0
+margin_bottom = 50.0
+
+[node name="Continue" type="TextureRect" parent="PauseMenu/Menu/VBoxContainer"]
+margin_left = 203.0
+margin_right = 403.0
+margin_bottom = 50.0
+mouse_default_cursor_shape = 2
+texture = ExtResource( 6 )
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseMenu/Menu"]
+margin_top = 54.0
+margin_right = 606.0
+margin_bottom = 104.0
+
+[node name="Save" type="TextureRect" parent="PauseMenu/Menu/CenterContainer"]
+margin_left = 203.0
+margin_right = 403.0
+margin_bottom = 50.0
+mouse_default_cursor_shape = 2
+texture = ExtResource( 7 )
+
+[node name="CenterContainer2" type="CenterContainer" parent="PauseMenu/Menu"]
+margin_top = 108.0
+margin_right = 606.0
+margin_bottom = 158.0
+
+[node name="Load" type="TextureRect" parent="PauseMenu/Menu/CenterContainer2"]
+margin_left = 203.0
+margin_right = 403.0
+margin_bottom = 50.0
+mouse_default_cursor_shape = 2
+texture = ExtResource( 8 )
+
+[node name="CenterContainer3" type="CenterContainer" parent="PauseMenu/Menu"]
+margin_top = 162.0
+margin_right = 606.0
+margin_bottom = 212.0
+
+[node name="Options" type="TextureRect" parent="PauseMenu/Menu/CenterContainer3"]
+margin_left = 203.0
+margin_right = 403.0
+margin_bottom = 50.0
+mouse_default_cursor_shape = 2
+texture = ExtResource( 9 )
+
+[node name="CenterContainer4" type="CenterContainer" parent="PauseMenu/Menu"]
+margin_top = 216.0
+margin_right = 606.0
+margin_bottom = 266.0
+
+[node name="Exit" type="TextureRect" parent="PauseMenu/Menu/CenterContainer4"]
+margin_left = 203.0
+margin_right = 403.0
+margin_bottom = 50.0
+mouse_default_cursor_shape = 2
+texture = ExtResource( 10 )
 [connection signal="pressed" from="Panel/Start" to="." method="_on_Start_pressed"]
+[connection signal="gui_input" from="PauseMenu/Menu/VBoxContainer/Continue" to="PauseMenu" method="_on_Continue_gui_input"]
+[connection signal="gui_input" from="PauseMenu/Menu/CenterContainer/Save" to="PauseMenu" method="_on_Save_gui_input"]
+[connection signal="gui_input" from="PauseMenu/Menu/CenterContainer2/Load" to="PauseMenu" method="_on_Load_gui_input"]
+[connection signal="gui_input" from="PauseMenu/Menu/CenterContainer3/Options" to="PauseMenu" method="_on_Options_gui_input"]
+[connection signal="gui_input" from="PauseMenu/Menu/CenterContainer4/Exit" to="PauseMenu" method="_on_Exit_gui_input"]

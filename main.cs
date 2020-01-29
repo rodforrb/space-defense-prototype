@@ -36,7 +36,7 @@ public class main : Node2D
 			
 		}
 	    
-	}/*
+	}
 	public override void _Process(float delta)
 	{
 		if (Input.IsActionPressed("ui_cancel"))
@@ -54,6 +54,7 @@ public class main : Node2D
 			}
 		}
 	}
+	/*
     public void _on_Exit_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
     {

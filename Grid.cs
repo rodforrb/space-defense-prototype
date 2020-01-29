@@ -248,9 +248,17 @@ public class Grid : TileMap
 
 		for (int i = 0; i < GetNode("CompShip").GetChildCount(); i++)
 		{
+			//will need to change for array of ships
+			//TEMP
 			Node2D child = (Node2D)GetNode("CompShip");
-			CompShip compShip = (CompShip)child;	
-			compShip.PlayTurn();
+			CompShip compShip = (CompShip)child;
+			
+			//In the future, this should also be an array
+			//TEMP
+			Node2D targetTemp = (Node2D)GetNode("Ship1");
+			Ship1 target = (Ship1)targetTemp;
+
+			compShip.PlayTurn(target);
 			//Node child = GetNode("CompShip").GetChild(i);
 		}
 	}
