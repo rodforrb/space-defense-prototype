@@ -7,7 +7,7 @@ public class Grid : TileMap
 	// currently selected node/sprite
 	private Node2D selected = null;
 
-  	private Vector2[] validMoves = null;
+	private Vector2[] validMoves = null;
 	private Vector2[] atkRange = null;
 	private bool turnEnd = false;
 
@@ -15,12 +15,25 @@ public class Grid : TileMap
 	private bool playerTurn = true;
 	private Ship1[] playerNodes;
 	private Ship1[] aiNodes;
+	private Ship1 attackNode;
+	private Ship1 defendNode;
+	private Bullets gunNode;
 	private Vector2[] obstacles;
+	
+	public PackedScene _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
+	//public Node bullet_conatianer = GetNode("bullet_container");
+	
+	//https://docs.godotengine.org/en/3.1/getting_started/workflow/best_practices/scenes_versus_scripts.html
+	//Based on the information provided in the above link, I will define the animated projectiles as a seperate scene
+	//it may also be a good idea to make the ships other scenes as well.
+	//public PackedScene _bullet = (PackedScene)ResourceLoader.load("Bullets.tscn", "", false);
+	
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		// iterate children of this node (all the Node2D characters)
+		//var _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
 		for (int i = 0; i < GetChildCount(); i++)
 		{
 			Node2D child = (Node2D)GetChild(i);
@@ -117,7 +130,7 @@ public class Grid : TileMap
 	*  Vector2 target, target space coordinates
 	*  return true if moved, false if blocked
 	*/
-	public bool move(Ship1 ship, Vector2 target)
+	public bool Move(Ship1 ship, Vector2 target)
 	{
 //		float distance = WorldToMap(ship.Position).DistanceTo(target);
 
@@ -137,11 +150,62 @@ public class Grid : TileMap
 	* ProjectileType projType
 	* return true if hit, false if miss
 	*/
-	public bool Attack(Ship1 ship, Vector2 target, ProjectileType projType = ProjectileType.Default)
+	public void attack( Ship1 attacker, Ship1 defender, Projectile proj) //TODO
 	{
+		if (!Array.Exists(RangeCheck(attacker.getAttackRange(), WorldToMap(attacker.Position)), element => element == WorldToMap(defender.Position))) return;
 		
-
-		return true;
+		int f = attacker.firepower * proj.firepower;
+		int p = attacker.penetration * proj.penetration;
+		int a = attacker.accuracy * proj.accuracy;
+		attackNode = attacker;
+		defendNode = defender;
+		
+		defender.take_damage(f, p, a);
+		
+		/*var _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
+		//_bullet.Bulle(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a, defender.evasion);
+		var bullet_instance = _bullet.Instance() as Area2D;
+		AddChild(bullet_instance);
+		//bullet_instance.SetPosition(attackNode.Position);
+		
+		
+		bullet_instance = new Bullets(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a);
+		
+		bullet_instance.Connect("hit_target", this, "attackhits" );*/
+		
+		//GetNode("Bullets").Set("Target", this);
+		//GetNode("Bullets").Connect("hit_target", bul, "MethodOnTheObject");
+		
+		
+		/*Bullets bull = new Bullets(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a, defender.evasion);
+		float hits = (float)a / (float)(a + defender.evasion);
+		int chance = (int) (hits * 100);
+		Random random = new Random();
+		int result = random.Next(0, 100);
+		
+		if (result <= chance)
+		{
+			defender.take_damage(f, p);
+		}*/
+		
+		//_bullet.Bulle(WorldToMap(attacker.Position), WorldToMap(defender.Position), f, p, a, defender.evasion);
+		
+		
+		return;
+	}
+	
+	
+	public void attackhits(Vector2 cell, int fp, int pen, int acc)
+	{
+		/*for (int i = 0; i <GetChildCount(); i++)
+		{
+			Node2D child = (Node2D)GetChild(i);
+			if (cell == WorldToMap(child.GetPosition()))
+				(Ship1)child.take_damage(fp, pen);
+		}*/
+		
+		
+		defendNode.take_damage(fp, pen, acc);
 	}
 
 	/* Called whenever there is user input
@@ -199,15 +263,25 @@ public class Grid : TileMap
 							break;
 						} 
 					}
+					//if the user clicks on an enemy ship while one of their ships is selected it will try to attack them
+					//TODO: Make the player choose a weapon first.
+					if (this.selected == child && cell == WorldToMap(enemyShip.Position))
+					{
+						//Ship1 temps = (Ship1)child;
+						//shipClass.Projectile weapon = child.Call("getWeapon1");
+						Projectile weapon = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");
+						attack((Ship1)child, (Ship1)enemyShip, weapon );
+					
+					
 					// if the current child is selected this statement is entered.
 					// MapToWorld converts grid to pixel coordinates
-					if (this.selected == child )
+					}else if (this.selected == child )
 					{
 
 						//if a valid position is selected, the child is moved.
 						
 						// try to move ship, inner loop runs for invalid moves
-						if (!move((Ship1)child, cell))
+						if (!Move((Ship1)child, cell))
 						{
 							// we don't otherwise HAVE to do anything if move() fails
 				 			GD.Print("Invalid move!");
@@ -261,5 +335,28 @@ public class Grid : TileMap
 			compShip.PlayTurn(target);
 			//Node child = GetNode("CompShip").GetChild(i);
 		}
+	}
+	
+	//this function returns a node that is found at specific coordinates
+	private Node2D get_cell_node(Vector2 cord)
+	{
+		for (int i = 0; i <GetChildCount(); i++)
+		{
+			Node2D child = (Node2D)GetChild(i);
+			if (cord == WorldToMap(child.GetPosition()))
+				return child;
+		}
+		return null;
+	}
+	
+	//return true is space is occupied and not out of bounds, false otherwise
+	private bool is_cell_vacant(Vector2 cord)
+	{
+		if (get_cell_node(cord) != null)
+			return false;
+		if (cord.x <= 0 || cord.x > gridSize || cord.y <= 0 || cord.y > gridSize/2)
+			return false;
+		
+		return true;
 	}
 }
