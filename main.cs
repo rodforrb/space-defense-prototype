@@ -7,7 +7,7 @@ public class main : Node2D
     // private int a = 2;
     // private string b = "text";
 	private bool compTurn = false; 
-	private bool pauseGame = false;
+	//private bool pauseGame = false;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -37,23 +37,7 @@ public class main : Node2D
 		}
 	    
 	}
-	public override void _Process(float delta)
-	{
-		if (Input.IsActionPressed("ui_cancel"))
-		{
-			//GetTree().ChangeScene("res://MainMenu.tscn");
-			if (!pauseGame){
-			GetTree().Paused = true;
-			GetNode<Control>("PauseMenu").Show();
-			//pauseGame = true;
-			}
-			else{
-				GetNode<Control>("PauseMenu").Hide();
-				GetTree().Paused = false;
-				pauseGame = false;
-			}
-		}
-	}
+
 	/*
     public void _on_Exit_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
