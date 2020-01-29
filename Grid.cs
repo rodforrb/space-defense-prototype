@@ -11,7 +11,7 @@ public class Grid : TileMap
 	private Vector2[] atkRange = null;
 	private bool turnEnd = false;
 
-	private int gridSize = 32;
+	public int gridSize = 32;
 	private bool playerTurn = true;
 	private Ship1[] playerNodes;
 	private Ship1[] aiNodes;
@@ -245,10 +245,21 @@ public class Grid : TileMap
 	// runs the computer player's turn
 	private void ComputerTurn()
 	{
-		for (int i = 0; i < GetNode("ComputerShips").GetChildCount(); i++)
+
+		for (int i = 0; i < GetNode("CompShip").GetChildCount(); i++)
 		{
-			CompShip child = (CompShip)GetNode("ComputerShips").GetChild(i);
-			child.PlayTurn();
+			//will need to change for array of ships
+			//TEMP
+			Node2D child = (Node2D)GetNode("CompShip");
+			CompShip compShip = (CompShip)child;
+			
+			//In the future, this should also be an array
+			//TEMP
+			Node2D targetTemp = (Node2D)GetNode("Ship1");
+			Ship1 target = (Ship1)targetTemp;
+
+			compShip.PlayTurn(target);
+			//Node child = GetNode("CompShip").GetChild(i);
 		}
 	}
 }
