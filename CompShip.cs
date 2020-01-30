@@ -111,7 +111,6 @@ public class CompShip : Ship1
 				}				
 			}
 
-
 			await Task.Delay(TimeSpan.FromSeconds(0.2));
 			
 		}
