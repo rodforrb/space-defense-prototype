@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+	
 /*	This is the main code for controlling objects on the Grid */
 public class Grid : TileMap
 {
@@ -28,6 +28,14 @@ public class Grid : TileMap
 	//it may also be a good idea to make the ships other scenes as well.
 	//public PackedScene _bullet = (PackedScene)ResourceLoader.load("Bullets.tscn", "", false);
 	
+	/* Used to get instantiated Grid object
+	 * Unfortunately GetNode cannot be used by a static class.
+	 * @return Grid
+	*/
+	public Grid GetGrid ()
+	{
+		return (GetNode<Grid>("/root/Game/Grid"));
+	}
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -47,14 +55,12 @@ public class Grid : TileMap
 		 
 	}
 
-
-	
-
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)
 //  {
 //      
 //  }
+
 	
 	/* returns a vector array of cells in range of a given position
 	* int range - radius around central position
@@ -130,8 +136,10 @@ public class Grid : TileMap
 	*  Vector2 target, target space coordinates
 	*  return true if moved, false if blocked
 	*/
-	public bool Move(Ship1 ship, Vector2 target)
+	public bool Move(Node2D ShipNode, Vector2 target)
 	{
+		GD.Print(ShipNode, target);
+		Ship1 ship = (Ship1)ShipNode;
 //		float distance = WorldToMap(ship.Position).DistanceTo(target);
 
 		// target out of range
@@ -139,7 +147,6 @@ public class Grid : TileMap
 		
 
 		// move ship to new position
-		
 		ship.SetPosition(MapToWorld(target));
 		return true;
 	}
@@ -150,7 +157,7 @@ public class Grid : TileMap
 	* ProjectileType projType
 	* return true if hit, false if miss
 	*/
-	public void attack( Ship1 attacker, Ship1 defender, Projectile proj) //TODO
+	public void Attack( Ship1 attacker, Ship1 defender, Projectile proj) //TODO
 	{
 		if (!Array.Exists(RangeCheck(attacker.getAttackRange(), WorldToMap(attacker.Position)), element => element == WorldToMap(defender.Position))) return;
 		
@@ -241,7 +248,7 @@ public class Grid : TileMap
 						//Ship1 temps = (Ship1)child;
 						//shipClass.Projectile weapon = child.Call("getWeapon1");
 						Projectile weapon = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");
-						attack((Ship1)child, (Ship1)enemyShip, weapon );
+						Attack((Ship1)child, (Ship1)enemyShip, weapon );
 					
 					
 					// if the current child is selected this statement is entered.
