@@ -257,7 +257,7 @@ public class Grid : TileMap
 		defendNode.take_damage(fp, pen, acc);
 	}
 
-	/* Draws or undraws highlighted movement range tiles
+	/* Draws or undraws highlighted move indicator tiles
 	*/
 	public void DrawMoves()
 	{
@@ -287,8 +287,15 @@ public class Grid : TileMap
 				}
 			}
 		}
-		// highlight ships which can move or attack
-		addRange(this.validShips.ToArray(), "YellowTransparency");
+		// if some ships have moves remaining
+		if (validShips.Count > 0)
+		{
+			// highlight ships which can move or attack
+			addRange(this.validShips.ToArray(), "YellowTransparency");
+			GetNode<Sprite>("/root/Game/Panel/EndTurn/Sprite").Visible = false;
+		} else {
+			GetNode<Sprite>("/root/Game/Panel/EndTurn/Sprite").Visible = true;
+		}
 
 		// ship is selected, new tiles should be drawn
 		if (this.selected != null)

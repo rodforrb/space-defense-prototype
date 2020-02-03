@@ -1,14 +1,15 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://main.cs" type="Script" id=1]
 [ext_resource path="res://TileSet.tres" type="TileSet" id=2]
-[ext_resource path="res://Grid.cs" type="Script" id=3]
-[ext_resource path="res://PauseMenu.cs" type="Script" id=4]
-[ext_resource path="res://resources/graphics/UI/labels/label_continue.png" type="Texture" id=5]
-[ext_resource path="res://resources/graphics/UI/labels/label_savegame.png" type="Texture" id=6]
-[ext_resource path="res://resources/graphics/UI/labels/label_loadgame.png" type="Texture" id=7]
-[ext_resource path="res://resources/graphics/UI/labels/label_options.png" type="Texture" id=8]
-[ext_resource path="res://resources/graphics/UI/labels/label_exit.png" type="Texture" id=9]
+[ext_resource path="res://resources/graphics/backgrounds/blueSelector.png" type="Texture" id=3]
+[ext_resource path="res://Grid.cs" type="Script" id=4]
+[ext_resource path="res://PauseMenu.cs" type="Script" id=5]
+[ext_resource path="res://resources/graphics/UI/labels/label_continue.png" type="Texture" id=6]
+[ext_resource path="res://resources/graphics/UI/labels/label_savegame.png" type="Texture" id=7]
+[ext_resource path="res://resources/graphics/UI/labels/label_loadgame.png" type="Texture" id=8]
+[ext_resource path="res://resources/graphics/UI/labels/label_options.png" type="Texture" id=9]
+[ext_resource path="res://resources/graphics/UI/labels/label_exit.png" type="Texture" id=10]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
@@ -27,25 +28,33 @@ margin_right = 1025.0
 margin_bottom = 600.0
 
 [node name="Button" type="Button" parent="Panel"]
-margin_left = 850.0
+margin_left = 832.0
 margin_top = 10.0
-margin_right = 921.0
+margin_right = 903.0
 margin_bottom = 30.0
 text = "Start"
 
-[node name="CompTurn" type="Button" parent="Panel"]
-margin_left = 940.0
+[node name="EndTurn" type="Button" parent="Panel"]
+margin_left = 928.0
 margin_top = 10.0
-margin_right = 1011.0
+margin_right = 1012.0
 margin_bottom = 50.0
 text = "End Turn"
+clip_text = true
+
+[node name="Sprite" type="Sprite" parent="Panel/EndTurn"]
+visible = false
+modulate = Color( 1, 1, 1, 0.196078 )
+position = Vector2( 42, 20 )
+scale = Vector2( 0.328125, 0.15625 )
+texture = ExtResource( 3 )
 
 [node name="Grid" type="TileMap" parent="."]
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 32, 32 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
 format = 1
-script = ExtResource( 3 )
+script = ExtResource( 4 )
 
 [node name="PauseMenu" type="Popup" parent="."]
 pause_mode = 2
@@ -56,7 +65,7 @@ margin_top = 110.0
 margin_right = 650.0
 margin_bottom = 400.0
 popup_exclusive = true
-script = ExtResource( 4 )
+script = ExtResource( 5 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -85,7 +94,7 @@ margin_left = 30.0
 margin_right = 230.0
 margin_bottom = 50.0
 mouse_default_cursor_shape = 2
-texture = ExtResource( 5 )
+texture = ExtResource( 6 )
 
 [node name="CenterContainer" type="CenterContainer" parent="PauseMenu/Menu"]
 margin_top = 54.0
@@ -97,7 +106,7 @@ margin_left = 30.0
 margin_right = 230.0
 margin_bottom = 50.0
 mouse_default_cursor_shape = 2
-texture = ExtResource( 6 )
+texture = ExtResource( 7 )
 
 [node name="CenterContainer2" type="CenterContainer" parent="PauseMenu/Menu"]
 margin_top = 108.0
@@ -109,7 +118,7 @@ margin_left = 30.0
 margin_right = 230.0
 margin_bottom = 50.0
 mouse_default_cursor_shape = 2
-texture = ExtResource( 7 )
+texture = ExtResource( 8 )
 
 [node name="CenterContainer3" type="CenterContainer" parent="PauseMenu/Menu"]
 margin_top = 162.0
@@ -121,7 +130,7 @@ margin_left = 30.0
 margin_right = 230.0
 margin_bottom = 50.0
 mouse_default_cursor_shape = 2
-texture = ExtResource( 8 )
+texture = ExtResource( 9 )
 
 [node name="CenterContainer4" type="CenterContainer" parent="PauseMenu/Menu"]
 margin_top = 216.0
@@ -133,9 +142,9 @@ margin_left = 30.0
 margin_right = 230.0
 margin_bottom = 50.0
 mouse_default_cursor_shape = 2
-texture = ExtResource( 9 )
+texture = ExtResource( 10 )
 [connection signal="pressed" from="Panel/Button" to="." method="_on_Button_pressed"]
-[connection signal="pressed" from="Panel/CompTurn" to="Grid" method="_on_CompMove_pressed"]
+[connection signal="pressed" from="Panel/EndTurn" to="Grid" method="_on_CompMove_pressed"]
 [connection signal="gui_input" from="PauseMenu/Menu/VBoxContainer/Continue" to="PauseMenu" method="_on_Continue_gui_input"]
 [connection signal="gui_input" from="PauseMenu/Menu/CenterContainer/Save" to="PauseMenu" method="_on_Save_gui_input"]
 [connection signal="gui_input" from="PauseMenu/Menu/CenterContainer2/Load" to="PauseMenu" method="_on_Load_gui_input"]
