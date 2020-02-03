@@ -103,12 +103,19 @@ public class Ship1 : Node2D
 		// {
 		// 	HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
 		// }
-        
+		
+		var hpb = (TextureProgress)GetNode("HPbar");
+		
+		//first calculate the actual hp
         HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
+		//then calculate it as a percentage for the HPbar
+		double fraction = ((double) HP / maxHP) * 100.0;
+		hpb.Value = (int)(fraction);
 
         GD.Print(HP);
-        
+        GD.Print(hpb.Value);
         // ship is removed by Grid if dead
+		// the hpbar naturally is removed too since it is a child node 
     }
     public void heal_damage(int heal)
     {
