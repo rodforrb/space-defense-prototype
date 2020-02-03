@@ -9,8 +9,8 @@ public enum Team
 
 public class Ship1 : Node2D
 {
-    private int maxHP = 5;//maximum hp
-    public int HP { get; set;} = 5;//current hp
+    private int maxHP = 10;//maximum hp
+    public int HP { get; set;} = 10;//current hp
 
     public Team team;
    
