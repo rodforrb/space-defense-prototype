@@ -12,6 +12,7 @@ public class Grid : TileMap
 
 	private Vector2[] validMoves = null;
 	private Vector2[] atkRange = null;
+	private List<Vector2> validShips = new List<Vector2>();
 	private bool turnEnd = false;
 
 	public int gridSize = 32;
@@ -76,6 +77,7 @@ public class Grid : TileMap
 			// WorldToMap converts pixel coordinates to grid coordinates
 			GD.Print("Node loaded: ", child, " at ", WorldToMap(child.GetPosition()));
 		}
+		DrawMoves();
 	}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -257,12 +259,37 @@ public class Grid : TileMap
 
 	/* Draws or undraws highlighted movement range tiles
 	*/
-	public void DrawRange()
+	public void DrawMoves()
 	{
 		// remove old range tiles
 		if (this.validMoves != null) removeRange(this.validMoves);
 		if (this.atkRange != null) removeRange(this.atkRange);
 		
+		removeRange(validShips.ToArray());
+		this.validShips.Clear();
+
+		// check if any ships have moves left
+		foreach (Ship1 ship in playerShips)
+		{
+			// ship can move
+			if (ship.range > 0)
+			{
+				this.validShips.Add(WorldToMap(ship.Position));
+			}
+			else if (ship.AP > 2) // TODO ensure ship has enough AP for an attack
+			{
+				// otherwise see if there is an attackable ship
+				foreach (CompShip compShip in computerShips)
+				{
+					if (Array.Exists(atkRange, element => element == WorldToMap(compShip.Position)))
+						this.validShips.Add(WorldToMap(ship.Position));
+						break;
+				}
+			}
+		}
+		// highlight ships which can move or attack
+		addRange(this.validShips.ToArray(), "YellowTransparency");
+
 		// ship is selected, new tiles should be drawn
 		if (this.selected != null)
 		{
@@ -319,7 +346,7 @@ public class Grid : TileMap
 							GD.Print("Selected: ", ship);
 							
 							// redraw movement range
-							DrawRange();
+							DrawMoves();
 
 							return; // "select ship" action complete
 						}
@@ -341,7 +368,7 @@ public class Grid : TileMap
 							Projectile weapon = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");
 							Attack(this.selected, compShip, weapon );
 							// redraw movement range tiles in case a ship was removed
-							DrawRange();
+							DrawMoves();
 						}
 						return; // "enemy ship clicked" action complete
 					}
@@ -368,7 +395,7 @@ public class Grid : TileMap
 							this.selected = null;
 						else {
 							// redraw and check if anything is attackable
-							DrawRange();
+							DrawMoves();
 							// if not, deselect
 							if (this.atkRange.Length == 0)
 							{
@@ -377,7 +404,7 @@ public class Grid : TileMap
 						}
 					}
 					// redraw movement range tiles
-					DrawRange();
+					DrawMoves();
 				}
 				return; // "move ship" action complete 
 			} // end of left click
@@ -394,7 +421,7 @@ public class Grid : TileMap
 				if (this.atkRange != null) removeRange(this.atkRange);
 				this.selected = null;
 				// redraw movement range tiles with no ship selected
-				DrawRange();
+				DrawMoves();
 			}
 		}
 	}
@@ -408,7 +435,7 @@ public class Grid : TileMap
 
 		// deselect ship and redraw (remove) movement tiles
 		this.selected = null;
-		DrawRange();
+		DrawMoves();
 
 		// reset everyone's action points
 		foreach (Ship1 ship in playerShips)
@@ -420,6 +447,7 @@ public class Grid : TileMap
 		ComputerTurn();
 		
 		// resume player's turn
+		DrawMoves();
 		this.playerTurn = true;	
 	}
 

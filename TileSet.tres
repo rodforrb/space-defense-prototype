@@ -1,12 +1,13 @@
-[gd_resource type="TileSet" load_steps=8 format=2]
+[gd_resource type="TileSet" load_steps=9 format=2]
 
 [ext_resource path="res://resources/graphics/SpaceShooterRedux/Backgrounds/purple.png" type="Texture" id=1]
-[ext_resource path="res://resources/graphics/sprites/ship0/ship32.png" type="Texture" id=2]
-[ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=3]
-[ext_resource path="res://resources/graphics/backgrounds/blueSelector.png" type="Texture" id=4]
-[ext_resource path="res://resources/graphics/backgrounds/redSelector.png" type="Texture" id=5]
-[ext_resource path="res://resources/graphics/backgrounds/blueSelector_transparency.png" type="Texture" id=6]
-[ext_resource path="res://resources/graphics/backgrounds/redSelector_transparency.png" type="Texture" id=7]
+[ext_resource path="res://resources/graphics/sprites/yellow_tint.png" type="Texture" id=2]
+[ext_resource path="res://resources/graphics/sprites/ship0/ship32.png" type="Texture" id=3]
+[ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=4]
+[ext_resource path="res://resources/graphics/backgrounds/blueSelector.png" type="Texture" id=5]
+[ext_resource path="res://resources/graphics/backgrounds/redSelector.png" type="Texture" id=6]
+[ext_resource path="res://resources/graphics/backgrounds/blueSelector_transparency.png" type="Texture" id=7]
+[ext_resource path="res://resources/graphics/backgrounds/redSelector_transparency.png" type="Texture" id=8]
 
 [resource]
 0/name = "Sprite"
@@ -30,7 +31,7 @@
 1/shapes = [  ]
 1/z_index = 0
 2/name = "SpriteStar2"
-2/texture = ExtResource( 2 )
+2/texture = ExtResource( 3 )
 2/tex_offset = Vector2( 0, 0 )
 2/modulate = Color( 1, 1, 1, 1 )
 2/region = Rect2( 0, 0, 32, 32 )
@@ -40,7 +41,7 @@
 2/shapes = [  ]
 2/z_index = 0
 3/name = "SpriteStar3"
-3/texture = ExtResource( 3 )
+3/texture = ExtResource( 4 )
 3/tex_offset = Vector2( 0, 0 )
 3/modulate = Color( 1, 1, 1, 1 )
 3/region = Rect2( 0, 0, 32, 32 )
@@ -50,7 +51,7 @@
 3/shapes = [  ]
 3/z_index = 0
 4/name = "SpriteStar4"
-4/texture = ExtResource( 4 )
+4/texture = ExtResource( 5 )
 4/tex_offset = Vector2( 0, 0 )
 4/modulate = Color( 1, 1, 1, 1 )
 4/region = Rect2( 0, 0, 32, 32 )
@@ -60,7 +61,7 @@
 4/shapes = [  ]
 4/z_index = 0
 5/name = "SpriteStar5"
-5/texture = ExtResource( 5 )
+5/texture = ExtResource( 6 )
 5/tex_offset = Vector2( 0, 0 )
 5/modulate = Color( 1, 1, 1, 1 )
 5/region = Rect2( 0, 0, 32, 32 )
@@ -70,7 +71,7 @@
 5/shapes = [  ]
 5/z_index = 0
 6/name = "BlueTransparency"
-6/texture = ExtResource( 6 )
+6/texture = ExtResource( 7 )
 6/tex_offset = Vector2( 0, 0 )
 6/modulate = Color( 1, 1, 1, 1 )
 6/region = Rect2( 0, 0, 32, 32 )
@@ -80,7 +81,7 @@
 6/shapes = [  ]
 6/z_index = 0
 9/name = "RedTransparency"
-9/texture = ExtResource( 7 )
+9/texture = ExtResource( 8 )
 9/tex_offset = Vector2( 0, 0 )
 9/modulate = Color( 1, 1, 1, 1 )
 9/region = Rect2( 0, 0, 32, 32 )
@@ -89,3 +90,13 @@
 9/navigation_offset = Vector2( 0, 0 )
 9/shapes = [  ]
 9/z_index = 0
+10/name = "YellowTransparency"
+10/texture = ExtResource( 2 )
+10/tex_offset = Vector2( 0, 0 )
+10/modulate = Color( 1, 1, 1, 1 )
+10/region = Rect2( 0, 0, 32, 32 )
+10/tile_mode = 0
+10/occluder_offset = Vector2( 0, 0 )
+10/navigation_offset = Vector2( 0, 0 )
+10/shapes = [  ]
+10/z_index = 0
