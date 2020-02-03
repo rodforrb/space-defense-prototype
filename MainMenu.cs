@@ -17,7 +17,6 @@ public class MainMenu : MarginContainer
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
         {
             GetTree().ChangeScene("res://level_select.tscn");
-            GD.Print("Load game clicked");
         }
     }
 
@@ -25,22 +24,20 @@ public class MainMenu : MarginContainer
     public void _on_NewGame_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
         {
-            GetTree().ChangeScene("res://main.tscn");
-            GD.Print("New game clicked");
+            GetTree().ChangeScene("res://Level1.tscn");
         }
     }
     //Options (does nothing)
     public void _on_Options_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
         {
-            GD.Print("Options clicked");
+			// TODO
         }
     }
     //leaves game
     public void _on_Quit_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
         {
-            GD.Print("Exit clicked");
             GetTree().Quit();
         }
     }    

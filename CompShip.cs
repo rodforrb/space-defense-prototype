@@ -9,7 +9,8 @@ public class CompShip : Ship1
 	*/
 	private int range = 2;
 	private int maxAP = 2;
-	new public int shipType = 1;
+	
+	new public Team team = Team.Computer;
 	public const int maxHP = 50;//maximum hp
 	new public int HP { get; set;} = 50;//current hp
 	new public int penetration { get; set; } = 5;//the ships ability to ignore armour
@@ -38,17 +39,26 @@ public class CompShip : Ship1
 //      
 //  }
 
-	//todo: move, validate move, ensure inboundness
-
 	// requests the ship's actions to the grid
 	//Todo:
 	//public void PlayTurn(Array of player ships)
 	//also: make this a bool
 	//that returns true when the turn is complete
 	//this could be useful for switching turns
-	public async void PlayTurn(Ship1 target)
+	public async void PlayTurn()
 	{
-		Vector2 dist;
+		Ship1 target = GetGrid().playerShips[0];
+		float distance = 10000000;
+		foreach (Ship1 ship in GetGrid().playerShips)
+		{
+			float lenSquared = (this.Position - ship.Position).LengthSquared();
+			if (lenSquared < distance)
+			{
+				target = ship;
+				distance = lenSquared;
+			}
+		}
+
 
 		int fight;
 		//todo: add logic comparing stats
@@ -71,21 +81,21 @@ public class CompShip : Ship1
 			Vector2 moveWest = new Vector2(shipCell.x - 1, shipCell.y);
 
 
-			dist = (targetCell - shipCell);
+			Vector2 difference = (targetCell - shipCell);
 			if(fight==1){			
-				if((Math.Abs(dist.x)+Math.Abs(dist.y)) <= range){
+				if((Math.Abs(difference.x)+Math.Abs(difference.y)) <= range){
 					GetGrid().Attack(this, target, new Projectile(ProjectileType.Gun));
 				}
-				else if(Math.Abs(dist.x) < Math.Abs(dist.y) ){
-					if(dist.y > 0){
+				else if(Math.Abs(difference.x) < Math.Abs(difference.y) ){
+					if(difference.y > 0){
 						GetGrid().Move(this, moveSouth);
 					}
 					else{
 						GetGrid().Move(this, moveNorth);
 					}
 				}
-				else if(Math.Abs(dist.x) >= Math.Abs(dist.y) ){
-					if(dist.x > 0){
+				else if(Math.Abs(difference.x) >= Math.Abs(difference.y) ){
+					if(difference.x > 0){
 						GetGrid().Move(this, moveEast);
 					}
 					else{
@@ -95,16 +105,16 @@ public class CompShip : Ship1
 				}
 			}
 			else if(fight == 0){
-				if(Math.Abs(dist.x) <= Math.Abs(dist.y) ){
-					if(dist.y > 0){
+				if(Math.Abs(difference.x) <= Math.Abs(difference.y) ){
+					if(difference.y > 0){
 						GetGrid().Move(this, moveNorth);
 					}
 					else{
 						GetGrid().Move(this, moveSouth);
 					}
 				}
-				else if(Math.Abs(dist.x) > Math.Abs(dist.y) ){
-					if(dist.x > 0){
+				else if(Math.Abs(difference.x) > Math.Abs(difference.y) ){
+					if(difference.x > 0){
 						GetGrid().Move(this, moveWest);
 					}
 					else{

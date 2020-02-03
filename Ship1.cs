@@ -1,15 +1,18 @@
 using Godot;
 using System;
 
-public class Ship1 : Area2D
+public enum Team
+{
+    Player,
+    Computer
+}
+
+public class Ship1 : Node2D
 {
     private int maxHP = 50;//maximum hp
     public int HP { get; set;} = 50;//current hp
 
-    //0 for firendly, 1 for enemy;
-    //Do we need a name or ID?
-    public int shipType = 0;
-
+    public Team team;
    
 
     public int firepower { get; set; } = 5;//the ships firepower multiplier
@@ -17,9 +20,9 @@ public class Ship1 : Area2D
     public int armour { get; set; } = 5;//the ships resistance to damage
     public int accuracy { get; set; } = 5;//odds of hitting an opponent
     public int evasion { get; set; } = 5;//odds of dodging an attack
-    public int AP { get; set; } = 4;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
+    public int AP { get; set; } = 7;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
 
-    private int maxAP = 4;//the maximum action points of a ship, it will reset to this value at the start of every turn
+    private int maxAP = 7;//the maximum action points of a ship, it will reset to this value at the start of every turn
     private int range = 5;//the range it can move
 	
 	public Projectile weapon1 { get; set; } = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");//the first weapon that the ship has
@@ -47,13 +50,14 @@ public class Ship1 : Area2D
         maxAP = ap;
         weapon1 = w1;
         weapon2 = w2;
-        weapon3 = w3;
+        weapon3 = w3; 
+        team = Team.Player;
     }
 
     //constructor without parameters
     public Ship1()
     {
-
+        team = Team.Player;
     }
 
     public Projectile getWeapon1()
@@ -94,13 +98,17 @@ public class Ship1 : Area2D
 		Random random = new Random();
 		int result = random.Next(0, 100);
 		
-		if (result <= chance)
-		{
-			HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
-		}
+        // removed randomness for now
+		// if (result <= chance)
+		// {
+		// 	HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
+		// }
         
+        HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
+
         GD.Print(HP);
         
+        // ship is removed by Grid if dead
     }
     public void heal_damage(int heal)
     {

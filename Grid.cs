@@ -1,11 +1,12 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 	
 /*	This is the main code for controlling objects on the Grid */
 public class Grid : TileMap
 {
 	// currently selected node/sprite
-	private Node2D selected = null;
+	private Ship1 selected = null;
 
 	private Vector2[] validMoves = null;
 	private Vector2[] atkRange = null;
@@ -13,8 +14,8 @@ public class Grid : TileMap
 
 	public int gridSize = 32;
 	private bool playerTurn = true;
-	private Ship1[] playerNodes;
-	private Ship1[] aiNodes;
+	public List<Ship1> playerShips {get;} = new List<Ship1>();
+	public List<CompShip> computerShips {get;} = new List<CompShip>();
 	private Ship1 attackNode;
 	private Ship1 defendNode;
 	private Bullets gunNode;
@@ -45,14 +46,34 @@ public class Grid : TileMap
 		for (int i = 0; i < GetChildCount(); i++)
 		{
 			Node2D child = (Node2D)GetChild(i);
+
+			// rounding to fix grid alignment issues from editor
+			child.SetPosition(MapToWorld(WorldToMap(child.GetPosition())));
 			
+			/* Sometimes it's better to ask for forgiveness.
+			 * See if the child is a ship by trying to convert it to a ship.
+			 * If it fails, it wasn't a ship.
+			 * CompShip check must be before Ship1 check because of inheritance, and class-specific variables are wrong when casting.
+			*/
+			try
+			{
+				CompShip childShip = (CompShip)child;
+				computerShips.Add((CompShip)childShip);
+
+			} catch (System.Exception e) {
+				// not a compship, maybe a Ship1
+				try{
+					Ship1 childShip = (Ship1)child;
+					playerShips.Add(childShip);
+
+				} catch (System.Exception e2) {
+					// it wasn't a ship so don't worry about it
+				}
+			}
+
 			// WorldToMap converts pixel coordinates to grid coordinates
 			GD.Print("Node loaded: ", child, " at ", WorldToMap(child.GetPosition()));
-			
-
 		}
-		
-		 
 	}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -69,6 +90,7 @@ public class Grid : TileMap
 	*/
 	private Vector2[] RangeCheck(int range, Vector2 currentPos)
 	{
+		// internal function to calculate sum
 		int SumOfPrevious(int startNum)
 		{
 			int final = 0;
@@ -78,10 +100,10 @@ public class Grid : TileMap
 			}
 			return final;
 		}
-		 Vector2[] possibleLocations = new Vector2[((2*range+1) * (2*range+1)) - (SumOfPrevious(range)*4)];
-		 int iterator = 0;
-		 for (int i = 0; i <= range; i++)
-		 {	
+		Vector2[] possibleLocations = new Vector2[((2*range+1) * (2*range+1)) - (SumOfPrevious(range)*4)];
+		int iterator = 0;
+		for (int i = 0; i <= range; i++)
+		{	
 			for(int j = range-i; j >= 0;j--)
 			{
 				if (i == 0 & j != 0)
@@ -96,7 +118,8 @@ public class Grid : TileMap
 					possibleLocations[iterator+1] = new Vector2(currentPos.x, currentPos.y - i);
 					iterator+=2;
 
-				}else if ((j != 0) & (i != 0)){
+				}
+				else if ((j != 0) & (i != 0)){
 					possibleLocations[iterator] = new Vector2(currentPos.x + j, currentPos.y + i);
 					possibleLocations[iterator+1] = new Vector2(currentPos.x + j, currentPos.y - i);
 					possibleLocations[iterator+2] = new Vector2(currentPos.x - j, currentPos.y + i);
@@ -104,12 +127,12 @@ public class Grid : TileMap
 					iterator+=4;
 				}
 			}
-		 }
-		 //removes the last elenment from the array, which is always (0,0)
-		 Array.Resize(ref possibleLocations, possibleLocations.Length - 1);
+		}
+		//removes the last elenment from the array, which is always (0,0)
+		Array.Resize(ref possibleLocations, possibleLocations.Length - 1);
 		//Sets all the possible movement cells to a blue tile.
-		
-		 return possibleLocations;
+	
+		return possibleLocations;
 	}
 
 	private void addRange(Vector2[] moves, String tileString)
@@ -157,8 +180,9 @@ public class Grid : TileMap
 	* ProjectileType projType
 	* return true if hit, false if miss
 	*/
-	public void Attack( Ship1 attacker, Ship1 defender, Projectile proj) //TODO
+	public void Attack(Ship1 attacker, Ship1 defender, Projectile proj) //TODO
 	{
+		// target out of range
 		if (!Array.Exists(RangeCheck(attacker.getAttackRange(), WorldToMap(attacker.Position)), element => element == WorldToMap(defender.Position))) return;
 		
 		int f = attacker.firepower * proj.firepower;
@@ -168,7 +192,18 @@ public class Grid : TileMap
 		defendNode = defender;
 		
 		defender.take_damage(f, p, a);
-		
+		if (defender.HP <= 0)
+		{
+			RemoveChild(defender);
+			// remove from the appropriate list
+			try
+			{
+				computerShips.Remove((CompShip)defender);
+				
+			} catch (System.InvalidCastException e) {
+				playerShips.Remove(defender);
+			}
+		}
 		return;
 	}
 	
@@ -197,93 +232,105 @@ public class Grid : TileMap
 		// mouse press/release event
 		if (@event is InputEventMouseButton mouseClick)
 		{
-			// check if specifically left mouse press event (BUTTON_LEFT = 1)
+			// left click mouse press event (BUTTON_LEFT = 1)
 			// list of enums here but I can't figure out how to access them: https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html
 			if (mouseClick.IsPressed() && mouseClick.GetButtonIndex() == 1)
 			{
 				Vector2 cell = WorldToMap(mouseClick.Position);
-				GD.Print("Mouse Click at: ", mouseClick.Position, ", Cell: ", cell);
-				Node2D enemyShip = (Node2D)GetNode("CompShip");
+				int tileIndex = GetCellv(cell);
+				GD.Print("Mouse Click at: ", mouseClick.Position, ", Cell: ", cell, ", Tile: ", tileIndex);
 				
-				
-				
-				// check if user clicked on something
-				for (int i = 0; i < GetChildCount(); i++)
+				// iterate player ships to find what was clicked
+				foreach (Ship1 ship in playerShips)
 				{
-					Node2D child = (Node2D)GetChild(i);
-          
-					// if user clicked on a child
-					//currently only works for friendly child nodes
-					if (cell == WorldToMap(child.GetPosition()) && child !=  enemyShip)
+					// if user clicked on this ship
+					if (cell == WorldToMap(ship.GetPosition()))
 					{
-						if (this.selected != child)
+						// specifically, a new ship
+						if (this.selected != ship)
 						{
-							this.selected = child;
-							GD.Print("Selected: ", child);
-							Ship1 ship = (Ship1)child;
+							this.selected = ship;
+							GD.Print("Selected: ", ship);
 							
-							
+							// remove old range tiles
+							if (this.validMoves != null) removeRange(this.validMoves);
+							if (this.atkRange != null) removeRange(this.atkRange);
+
 							//Populates the valid moves for the selected ship
-							this.validMoves = RangeCheck((int)this.selected.Call("GetRange"), WorldToMap(this.selected.GetPosition()));
-							
+							this.validMoves = RangeCheck(ship.GetRange(), WorldToMap(ship.GetPosition()));
 							// draw movement range
 							addRange(this.validMoves, "SpriteStar4");
 							
-							//checks if enemy is in attack range
 							this.atkRange = RangeCheck(ship.getAttackRange(), WorldToMap(ship.Position));
-							if (Array.Exists((atkRange), element => element == WorldToMap(enemyShip.Position)))
-							{
-								// draw attack range if an enemy is nearby
-								addRange(atkRange, "SpriteStar5"); 
-								//if they are, turn is not over
-								turnEnd = false;	
-							}
-							break;
-						} 
-					}
-					//if the user clicks on an enemy ship while one of their ships is selected it will try to attack them
-					//TODO: Make the player choose a weapon first.
-					if (this.selected == child && cell == WorldToMap(enemyShip.Position))
-					{
-						//Ship1 temps = (Ship1)child;
-						//shipClass.Projectile weapon = child.Call("getWeapon1");
-						Projectile weapon = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");
-						Attack((Ship1)child, (Ship1)enemyShip, weapon );
-					
-					
-					// if the current child is selected this statement is entered.
-					// MapToWorld converts grid to pixel coordinates
-					}else if (this.selected == child )
-					{
+							// draw attack range always
+							addRange(atkRange, "SpriteStar5");
 
-						//if a valid position is selected, the child is moved.
-						
-						// try to move ship, inner loop runs for invalid moves
-						if (!Move((Ship1)child, cell))
-						{
-							// we don't otherwise HAVE to do anything if move() fails
-				 			GD.Print("Invalid move!");
+							// //checks if enemy is in attack range
+							// {
+							// 	// draw attack range
+							// 	addRange(atkRange, "SpriteStar5"); 
+							// 	//if they are, turn is not over
+							// 	turnEnd = false;	
+							// }
+							return; // exit because ship was found
 						}
-						removeRange(this.validMoves);
-						removeRange(this.atkRange);
-					 	this.selected = null;
 					}
 				}
-			} // end of left click
-			
-			// right click
-			if (mouseClick.IsPressed() && mouseClick.GetButtonIndex() == 2)
-			{
-				// eg. clear selection
+
+				// iterate enemy ships to find what was clicked
+				foreach (CompShip compShip in computerShips)
+				{
+					// if user clicked on this ship
+					if (cell == WorldToMap(compShip.GetPosition()))
+					{
+						//if the user clicks on an enemy ship while one of their ships is selected it will try to attack them
+						//TODO: Make the player choose a weapon first.
+						if (this.selected !=  null)
+						{
+							//Ship1 temps = (Ship1)child;
+							//shipClass.Projectile weapon = child.Call("getWeapon1");
+							Projectile weapon = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");
+							Attack(this.selected, compShip, weapon );
+						}
+						return;
+					}
+				}
+
+				// a ship wasn't clicked, if a ship is selected try to move it to the space
 				if (this.selected != null)
 				{
-					GD.Print("Deselected ", this.selected);
+
+					//if a valid position is selected, the child is moved.
+					
+					// try to move ship, inner loop runs for invalid moves
+					if (!Move(this.selected, cell))
+					{
+						// we don't otherwise HAVE to do anything if move() fails
+						GD.Print("Invalid move!");
+					}
+					removeRange(this.validMoves);
+					removeRange(this.atkRange);
+					// deselect
 					this.selected = null;
 				}
+				return; // this 
+			} // end of left click
+			
+		// right click
+		if (mouseClick.IsPressed() && mouseClick.GetButtonIndex() == 2)
+		{
+			// eg. clear selection
+			if (this.selected != null)
+			{
+				GD.Print("Deselected ", this.selected);
+				// remove old range tiles
+				if (this.validMoves != null) removeRange(this.validMoves);
+				if (this.atkRange != null) removeRange(this.atkRange);
+				this.selected = null;
 			}
 		}
-	}	
-  
+	}
+}
 
 // pressed when user ends their turn
 	private void _on_CompMove_pressed()
@@ -297,21 +344,9 @@ public class Grid : TileMap
 	// runs the computer player's turn
 	private void ComputerTurn()
 	{
-
-		for (int i = 0; i < GetNode("CompShip").GetChildCount(); i++)
+		foreach (CompShip compShip in computerShips)
 		{
-			//will need to change for array of ships
-			//TEMP
-			Node2D child = (Node2D)GetNode("CompShip");
-			CompShip compShip = (CompShip)child;
-			
-			//In the future, this should also be an array
-			//TEMP
-			Node2D targetTemp = (Node2D)GetNode("Ship1");
-			Ship1 target = (Ship1)targetTemp;
-
-			compShip.PlayTurn(target);
-			//Node child = GetNode("CompShip").GetChild(i);
+			compShip.PlayTurn();
 		}
 	}
 	
@@ -336,5 +371,16 @@ public class Grid : TileMap
 			return false;
 		
 		return true;
+	}
+
+	// check whether a victory condition has been met by either side
+	// returns 0 for no victory, 1 for player victory, 2 for computer victory
+	private int CheckVictory()
+	{
+		if (computerShips.Count == 0) return 1; // player wins in a tie
+
+		if (playerShips.Count == 0) return 2;
+
+		return 0;
 	}
 }
