@@ -1,10 +1,12 @@
-[gd_resource type="TileSet" load_steps=6 format=2]
+[gd_resource type="TileSet" load_steps=8 format=2]
 
 [ext_resource path="res://resources/graphics/SpaceShooterRedux/Backgrounds/purple.png" type="Texture" id=1]
 [ext_resource path="res://resources/graphics/sprites/ship0/ship32.png" type="Texture" id=2]
 [ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=3]
 [ext_resource path="res://resources/graphics/backgrounds/blueSelector.png" type="Texture" id=4]
 [ext_resource path="res://resources/graphics/backgrounds/redSelector.png" type="Texture" id=5]
+[ext_resource path="res://resources/graphics/backgrounds/blueSelector_transparency.png" type="Texture" id=6]
+[ext_resource path="res://resources/graphics/backgrounds/redSelector_transparency.png" type="Texture" id=7]
 
 [resource]
 0/name = "Sprite"
@@ -67,3 +69,23 @@
 5/navigation_offset = Vector2( 16, 16 )
 5/shapes = [  ]
 5/z_index = 0
+6/name = "BlueTransparency"
+6/texture = ExtResource( 6 )
+6/tex_offset = Vector2( 0, 0 )
+6/modulate = Color( 1, 1, 1, 1 )
+6/region = Rect2( 0, 0, 32, 32 )
+6/tile_mode = 0
+6/occluder_offset = Vector2( 0, 0 )
+6/navigation_offset = Vector2( 0, 0 )
+6/shapes = [  ]
+6/z_index = 0
+9/name = "RedTransparency"
+9/texture = ExtResource( 7 )
+9/tex_offset = Vector2( 0, 0 )
+9/modulate = Color( 1, 1, 1, 1 )
+9/region = Rect2( 0, 0, 32, 32 )
+9/tile_mode = 0
+9/occluder_offset = Vector2( 0, 0 )
+9/navigation_offset = Vector2( 0, 0 )
+9/shapes = [  ]
+9/z_index = 0

@@ -7,12 +7,12 @@ public class CompShip : Ship1
 	/*
 	name or id?
 	*/
-	private int range = 2;
-	private int maxAP = 2;
+	private int maxRange = 3;
+	new public int range {get; set;} = 3;
+	private int maxAP = 5;
+	new public int AP {get; set;} = 5;
 	
 	new public Team team = Team.Computer;
-	public const int maxHP = 50;//maximum hp
-	new public int HP { get; set;} = 50;//current hp
 	new public int penetration { get; set; } = 5;//the ships ability to ignore armour
 	new public int armour { get; set; } = 5;//the ships resistance to damage
 	new public int accuracy { get; set; } = 5;//odds of hitting an opponent
@@ -45,8 +45,16 @@ public class CompShip : Ship1
 	//also: make this a bool
 	//that returns true when the turn is complete
 	//this could be useful for switching turns
-	public async void PlayTurn()
+	public void PlayTurn()
 	{
+		// nothing to do but game might not have ended yet because of async
+		try
+		{
+		if (GetGrid().playerShips.Count == 0) return;
+		} catch (System.Exception e) {
+			return;
+		}
+
 		Ship1 target = GetGrid().playerShips[0];
 		float distance = 10000000;
 		foreach (Ship1 ship in GetGrid().playerShips)
@@ -120,12 +128,8 @@ public class CompShip : Ship1
 					else{
 						GetGrid().Move(this, moveEast);
 					}
-
 				}				
-			}
-
-			await Task.Delay(TimeSpan.FromSeconds(0.2));
-			
+			}			
 		}
 	}
 	

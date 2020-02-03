@@ -1,6 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 	
 /*	This is the main code for controlling objects on the Grid */
 public class Grid : TileMap
@@ -161,16 +163,41 @@ public class Grid : TileMap
 	*/
 	public bool Move(Node2D ShipNode, Vector2 target)
 	{
-		GD.Print(ShipNode, target);
 		Ship1 ship = (Ship1)ShipNode;
-//		float distance = WorldToMap(ship.Position).DistanceTo(target);
+		// check if target position is out of range
+		if (!Array.Exists(RangeCheck(ship.range, WorldToMap(ship.Position)), element => element == target))
+			return false;
 
-		// target out of range
-		if (!Array.Exists(RangeCheck(ship.GetRange(), WorldToMap(ship.Position)), element => element == target)) return false;
-		
+    // calculate x+y movement distance
+		Vector2 vector =  target - WorldToMap(ship.Position);
+		Vector2 intVector = new Vector2((int)vector.x, (int)vector.y);
+		int distance = (int) (Math.Abs(intVector.x) + Math.Abs(intVector.y));
 
-		// move ship to new position
-		ship.SetPosition(MapToWorld(target));
+		// move ship along path to new position
+		while (WorldToMap(ship.Position) != target)
+		{
+			// more vertical distance to travel
+			if (Math.Abs(intVector.x) < Math.Abs(intVector.y))
+			{
+				// move 1 unit in y direction
+				ship.SetPosition(ship.Position + new Vector2(0,intVector.y*gridSize/Math.Abs(intVector.y)));
+			}
+			else // move horizontally
+			{
+				// move 1 unit in x direction
+				ship.SetPosition(ship.Position + new Vector2(intVector.x*gridSize/Math.Abs(intVector.x), 0));
+			}
+
+			// recalculate x+y movement distance
+			vector = target - WorldToMap(ship.Position);
+			intVector = new Vector2((int)vector.x, (int)vector.y);
+
+			// pause on each tile briefly
+			// System.Threading.Thread.Sleep(100);
+		}
+		ship.AP -= distance;
+		ship.range -= distance;
+
 		return true;
 	}
 
@@ -184,17 +211,24 @@ public class Grid : TileMap
 	{
 		// target out of range
 		if (!Array.Exists(RangeCheck(attacker.getAttackRange(), WorldToMap(attacker.Position)), element => element == WorldToMap(defender.Position))) return;
-		
+	
+		// not enough points to attack
+		if (attacker.AP < 2) return;
+
+		// consume points and proceed with attacking
+		attacker.AP -= 2;
+		attacker.range -= 2;
+
 		int f = attacker.firepower * proj.firepower;
 		int p = attacker.penetration * proj.penetration;
 		int a = attacker.accuracy * proj.accuracy;
-		attackNode = attacker;
-		defendNode = defender;
 		
 		defender.take_damage(f, p, a);
+		// remove defender if no HP
 		if (defender.HP <= 0)
 		{
 			RemoveChild(defender);
+
 			// remove from the appropriate list
 			try
 			{
@@ -204,9 +238,9 @@ public class Grid : TileMap
 				playerShips.Remove(defender);
 			}
 		}
+		CheckVictory();
 		return;
 	}
-	
 	
 	public void attackhits(Vector2 cell, int fp, int pen, int acc)
 	{
@@ -219,6 +253,38 @@ public class Grid : TileMap
 		
 		
 		defendNode.take_damage(fp, pen, acc);
+	}
+
+	/* Draws or undraws highlighted movement range tiles
+	*/
+	public void DrawRange()
+	{
+		// remove old range tiles
+		if (this.validMoves != null) removeRange(this.validMoves);
+		if (this.atkRange != null) removeRange(this.atkRange);
+		
+		// ship is selected, new tiles should be drawn
+		if (this.selected != null)
+		{
+			//Populates the valid moves for the selected ship
+			this.validMoves = RangeCheck(selected.GetRange(), WorldToMap(selected.GetPosition()));
+			// draw movement range
+			addRange(this.validMoves, "BlueTransparency");
+			
+			// get array of attackable spaces
+			this.atkRange = RangeCheck(selected.getAttackRange(), WorldToMap(selected.Position));
+			// create list of attackable ships
+			List<Vector2> shipsInRange = new List<Vector2>();
+			foreach (CompShip compShip in computerShips)
+			{
+				if (Array.Exists(atkRange, element => element == WorldToMap(compShip.Position)))
+					shipsInRange.Add(WorldToMap(compShip.Position));
+			}
+
+			// rewrite atkRange tiles to only be on ships
+			this.atkRange = shipsInRange.ToArray();
+			addRange(atkRange, "RedTransparency");
+		}
 	}
 
 	/* Called whenever there is user input
@@ -252,27 +318,10 @@ public class Grid : TileMap
 							this.selected = ship;
 							GD.Print("Selected: ", ship);
 							
-							// remove old range tiles
-							if (this.validMoves != null) removeRange(this.validMoves);
-							if (this.atkRange != null) removeRange(this.atkRange);
+							// redraw movement range
+							DrawRange();
 
-							//Populates the valid moves for the selected ship
-							this.validMoves = RangeCheck(ship.GetRange(), WorldToMap(ship.GetPosition()));
-							// draw movement range
-							addRange(this.validMoves, "SpriteStar4");
-							
-							this.atkRange = RangeCheck(ship.getAttackRange(), WorldToMap(ship.Position));
-							// draw attack range always
-							addRange(atkRange, "SpriteStar5");
-
-							// //checks if enemy is in attack range
-							// {
-							// 	// draw attack range
-							// 	addRange(atkRange, "SpriteStar5"); 
-							// 	//if they are, turn is not over
-							// 	turnEnd = false;	
-							// }
-							return; // exit because ship was found
+							return; // "select ship" action complete
 						}
 					}
 				}
@@ -291,8 +340,10 @@ public class Grid : TileMap
 							//shipClass.Projectile weapon = child.Call("getWeapon1");
 							Projectile weapon = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");
 							Attack(this.selected, compShip, weapon );
+							// redraw movement range tiles in case a ship was removed
+							DrawRange();
 						}
-						return;
+						return; // "enemy ship clicked" action complete
 					}
 				}
 
@@ -306,14 +357,29 @@ public class Grid : TileMap
 					if (!Move(this.selected, cell))
 					{
 						// we don't otherwise HAVE to do anything if move() fails
-						GD.Print("Invalid move!");
+						// TODO - user feedback
 					}
-					removeRange(this.validMoves);
-					removeRange(this.atkRange);
-					// deselect
-					this.selected = null;
+
+					// deselect ship if no moves available
+					if (selected.range <= 0)
+					{
+						// can't attack at all
+						if (selected.AP <= 0)
+							this.selected = null;
+						else {
+							// redraw and check if anything is attackable
+							DrawRange();
+							// if not, deselect
+							if (this.atkRange.Length == 0)
+							{
+								this.selected = null;
+							}
+						}
+					}
+					// redraw movement range tiles
+					DrawRange();
 				}
-				return; // this 
+				return; // "move ship" action complete 
 			} // end of left click
 			
 		// right click
@@ -327,6 +393,8 @@ public class Grid : TileMap
 				if (this.validMoves != null) removeRange(this.validMoves);
 				if (this.atkRange != null) removeRange(this.atkRange);
 				this.selected = null;
+				// redraw movement range tiles with no ship selected
+				DrawRange();
 			}
 		}
 	}
@@ -335,9 +403,23 @@ public class Grid : TileMap
 // pressed when user ends their turn
 	private void _on_CompMove_pressed()
 	{
+		// block player actions
 		this.playerTurn = false;
+
+		// deselect ship and redraw (remove) movement tiles
+		this.selected = null;
+		DrawRange();
+
+		// reset everyone's action points
+		foreach (Ship1 ship in playerShips)
+			ship.ResetPoints();
+		foreach (CompShip compShip in computerShips)
+			compShip.ResetPoints();
+
+		// carry out computer's turn	
 		ComputerTurn();
-		// todo: reset values to 'turn start' values
+		
+		// resume player's turn
 		this.playerTurn = true;	
 	}
 
@@ -347,6 +429,8 @@ public class Grid : TileMap
 		foreach (CompShip compShip in computerShips)
 		{
 			compShip.PlayTurn();
+			CheckVictory();
+			System.Threading.Thread.Sleep(200);
 		}
 	}
 	
@@ -374,13 +458,23 @@ public class Grid : TileMap
 	}
 
 	// check whether a victory condition has been met by either side
-	// returns 0 for no victory, 1 for player victory, 2 for computer victory
-	private int CheckVictory()
+	// if so, ends the match appropriately
+	private void CheckVictory()
 	{
-		if (computerShips.Count == 0) return 1; // player wins in a tie
-
-		if (playerShips.Count == 0) return 2;
-
-		return 0;
+		// enemy has 0 ships, player wins
+		if (computerShips.Count == 0)
+		{
+			// increment state variables to unlock next level
+			State.maxLevel = State.currentLevel + 1;
+			State.currentLevel += 1;
+			// end match and return to level select
+			GetTree().ChangeScene("res://level_select.tscn");
+		}
+		// player has 0 ships, player loses
+		else if (playerShips.Count == 0)
+		{
+			// just end match and return to level select
+			GetTree().ChangeScene("res://level_select.tscn");
+		}
 	}
 }
