@@ -220,8 +220,8 @@ public class Grid : TileMap
 		if (attacker.AP < 2) return;
 
 		// consume points and proceed with attacking
-		attacker.AP -= 2;
-		attacker.range -= 2;
+		attacker.AP = Math.Max(0, attacker.AP-2);
+		attacker.range = Math.Max(0, attacker.range-2);
 
 		int f = attacker.firepower * proj.firepower;
 		int p = attacker.penetration * proj.penetration;
@@ -294,8 +294,11 @@ public class Grid : TileMap
 		{
 			// highlight ships which can move or attack
 			addRange(this.validShips.ToArray(), "YellowTransparency");
+
+			
 			GetNode<Sprite>("/root/Game/Panel/EndTurn/Sprite").Visible = false;
 		} else {
+			// highlight EndTurn button if no moves
 			GetNode<Sprite>("/root/Game/Panel/EndTurn/Sprite").Visible = true;
 		}
 
@@ -320,6 +323,37 @@ public class Grid : TileMap
 			// rewrite atkRange tiles to only be on ships
 			this.atkRange = shipsInRange.ToArray();
 			addRange(atkRange, "RedTransparency");
+
+			// copy selected ship's sprite to UI panel
+			GetNode<Sprite>("/root/Game/Panel/PanelContainer/PanelSprite").Texture = this.selected.GetTexture();
+			
+			// draw HP bars on UI panel
+			int numBars = (int)Math.Ceiling(6 * (float)selected.HP / (float)selected.maxHP);
+			while (numBars > 0)
+			{
+				Vector2 barTile = new Vector2(5 + 6-numBars, 16);
+				SetCellv(barTile, TileSet.FindTileByName("HPBar"));
+
+				numBars--;
+			}				
+			
+			// set HP text, insert two spaces for alignment with low numbers because I can't find the align setting
+			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HP").Text = (selected.HP < 10 ? "  " : "") + selected.HP;
+			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HPMax").Text = selected.maxHP.ToString();
+		}  
+		// no ship selected cleanup
+		else 
+		{
+			GetNode<Sprite>("/root/Game/Panel/PanelContainer/PanelSprite").Texture = null;
+			// remove hp bars
+			for (int x = 5; x <= 10; x++)
+			{
+				Vector2 barTile = new Vector2(x, 16);
+				SetCellv(barTile, -1);			
+			}				
+			// unset hp text
+			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HP").Text = "  0";
+			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HPMax").Text = "0";
 		}
 	}
 

@@ -9,7 +9,7 @@ public enum Team
 
 public class Ship1 : Node2D
 {
-    private int maxHP = 10;//maximum hp
+    public int maxHP {get;} = 10;//maximum hp
     public int HP { get; set;} = 10;//current hp
 
     public Team team;
@@ -164,5 +164,10 @@ public class Ship1 : Node2D
 		
 		bullet_instance.Connect("hit_target", this.GetParent(), "attackhits" );
 	}*/
+
+    public Texture GetTexture()
+    {
+        return GetChild<Sprite>(0).Texture;
+    }
 
 }

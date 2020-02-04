@@ -1,6 +1,6 @@
 [gd_resource type="TileSet" load_steps=9 format=2]
 
-[ext_resource path="res://resources/graphics/SpaceShooterRedux/Backgrounds/purple.png" type="Texture" id=1]
+[ext_resource path="res://resources/graphics/UI/bars/health_energy_bars.png" type="Texture" id=1]
 [ext_resource path="res://resources/graphics/sprites/yellow_tint.png" type="Texture" id=2]
 [ext_resource path="res://resources/graphics/sprites/ship0/ship32.png" type="Texture" id=3]
 [ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=4]
@@ -10,21 +10,11 @@
 [ext_resource path="res://resources/graphics/backgrounds/redSelector_transparency.png" type="Texture" id=8]
 
 [resource]
-0/name = "Sprite"
-0/texture = ExtResource( 1 )
-0/tex_offset = Vector2( 0, 0 )
-0/modulate = Color( 1, 1, 1, 1 )
-0/region = Rect2( 0, 0, 32, 32 )
-0/tile_mode = 0
-0/occluder_offset = Vector2( 16, 16 )
-0/navigation_offset = Vector2( 16, 16 )
-0/shapes = [  ]
-0/z_index = 0
-1/name = "SpriteStar"
+1/name = "HPFrame"
 1/texture = ExtResource( 1 )
 1/tex_offset = Vector2( 0, 0 )
 1/modulate = Color( 1, 1, 1, 1 )
-1/region = Rect2( 0, 0, 32, 32 )
+1/region = Rect2( -4, 0, 263, 64 )
 1/tile_mode = 0
 1/occluder_offset = Vector2( 16, 16 )
 1/navigation_offset = Vector2( 16, 16 )
@@ -100,3 +90,13 @@
 10/navigation_offset = Vector2( 0, 0 )
 10/shapes = [  ]
 10/z_index = 0
+11/name = "HPBar"
+11/texture = ExtResource( 1 )
+11/tex_offset = Vector2( 0, 0 )
+11/modulate = Color( 1, 1, 1, 1 )
+11/region = Rect2( 293, 0, 32, 64 )
+11/tile_mode = 0
+11/occluder_offset = Vector2( 0, 0 )
+11/navigation_offset = Vector2( 0, 0 )
+11/shapes = [  ]
+11/z_index = 0
