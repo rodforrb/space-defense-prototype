@@ -340,6 +340,11 @@ public class Grid : TileMap
 			// set HP text, insert two spaces for alignment with low numbers because I can't find the align setting
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HP").Text = (selected.HP < 10 ? "  " : "") + selected.HP;
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HPMax").Text = selected.maxHP.ToString();
+						
+			// set AP text 
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/AP").Text = (selected.AP < 10 ? "  " : "") + selected.AP;
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/APMax").Text = selected.maxAP.ToString();
+
 		}  
 		// no ship selected cleanup
 		else 
@@ -354,6 +359,10 @@ public class Grid : TileMap
 			// unset hp text
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HP").Text = "  0";
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HPMax").Text = "0";
+
+			// uset AP text 
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/AP").Text = "  0";
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/APMax").Text = "0";
 		}
 	}
 
