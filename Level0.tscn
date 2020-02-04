@@ -102,6 +102,54 @@ grow_horizontal = 2
 text = "0"
 scroll_active = false
 
+[node name="APLabel" type="CanvasLayer" parent="Panel"]
+layer = 3
+
+[node name="Label" type="RichTextLabel" parent="Panel/APLabel"]
+margin_left = 416.0
+margin_top = 535.905
+margin_right = 506.0
+margin_bottom = 560.905
+grow_horizontal = 2
+text = "Action Points:"
+scroll_active = false
+
+[node name="AP" type="RichTextLabel" parent="Panel/APLabel"]
+margin_left = 513.0
+margin_top = 535.452
+margin_right = 536.0
+margin_bottom = 560.452
+grow_horizontal = 2
+text = "  0"
+scroll_active = false
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="slash" type="RichTextLabel" parent="Panel/APLabel"]
+margin_left = 535.209
+margin_top = 535.905
+margin_right = 567.209
+margin_bottom = 560.905
+grow_horizontal = 2
+text = "/"
+scroll_active = false
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="APMax" type="RichTextLabel" parent="Panel/APLabel"]
+margin_left = 545.0
+margin_top = 535.0
+margin_right = 593.0
+margin_bottom = 560.0
+grow_horizontal = 2
+text = "0"
+scroll_active = false
+__meta__ = {
+"_edit_group_": true
+}
+
 [node name="Grid" type="TileMap" parent="."]
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 32, 32 )
