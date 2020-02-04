@@ -178,6 +178,7 @@ public class Grid : TileMap
 		// move ship along path to new position
 		while (WorldToMap(ship.Position) != target)
 		{
+
 			// more vertical distance to travel
 			if (Math.Abs(intVector.x) < Math.Abs(intVector.y))
 			{
@@ -195,8 +196,9 @@ public class Grid : TileMap
 			intVector = new Vector2((int)vector.x, (int)vector.y);
 
 			// pause on each tile briefly
-			// System.Threading.Thread.Sleep(100);
+			// TODO
 		}
+
 		ship.AP -= distance;
 		ship.range -= distance;
 

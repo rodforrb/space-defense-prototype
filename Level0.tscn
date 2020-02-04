@@ -49,6 +49,8 @@ position = Vector2( 42, 20 )
 scale = Vector2( 0.328125, 0.15625 )
 texture = ExtResource( 3 )
 
+[node name="Sprite" type="Sprite" parent="Panel"]
+
 [node name="Grid" type="TileMap" parent="."]
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 32, 32 )
