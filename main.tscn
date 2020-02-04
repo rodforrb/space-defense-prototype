@@ -55,6 +55,7 @@ script = ExtResource( 3 )
 [node name="CompShip" parent="Grid" instance=ExtResource( 5 )]
 
 [node name="Bullets" parent="Grid" instance=ExtResource( 6 )]
+visible = false
 
 [node name="PauseMenu" type="Popup" parent="."]
 pause_mode = 2

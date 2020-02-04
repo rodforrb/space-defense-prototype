@@ -12,8 +12,18 @@ public class level_select : Node2D
 	// load a level
 	private void _on_Start_pressed()
 	{
-			// loads a level
-	        GetTree().ChangeScene("res://main.tscn");
+		switch (State.currentLevel)
+		{
+			case 1:
+				GetTree().ChangeScene("res://Level1.tscn");
+				break;
+			case 2:
+				GetTree().ChangeScene("res://Level2.tscn");
+				break;
+			default:
+				GetTree().ChangeScene("res://Level0.tscn");
+				break;
+		}
 	}
 }
 

@@ -1,0 +1,46 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Level0.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Ship1.tscn" type="PackedScene" id=2]
+[ext_resource path="res://CompShip.tscn" type="PackedScene" id=3]
+
+[node name="Game" instance=ExtResource( 1 )]
+
+[node name="Ship1" parent="Grid" index="0" instance=ExtResource( 2 )]
+position = Vector2( 320, 448 )
+
+[node name="Ship2" parent="Grid" index="1" instance=ExtResource( 2 )]
+position = Vector2( 448, 352 )
+
+[node name="Ship3" parent="Grid" index="2" instance=ExtResource( 2 )]
+position = Vector2( 512, 384 )
+
+[node name="Ship4" parent="Grid" index="3" instance=ExtResource( 2 )]
+position = Vector2( 384, 384 )
+
+[node name="Ship5" parent="Grid" index="4" instance=ExtResource( 2 )]
+position = Vector2( 576, 448 )
+
+[node name="Ship6" parent="Grid" index="5" instance=ExtResource( 2 )]
+position = Vector2( 448, 448 )
+
+[node name="CompShip" parent="Grid" index="6" instance=ExtResource( 3 )]
+position = Vector2( 160, 64 )
+
+[node name="CompShip2" parent="Grid" index="7" instance=ExtResource( 3 )]
+position = Vector2( 864, 64 )
+
+[node name="CompShip4" parent="Grid" index="8" instance=ExtResource( 3 )]
+position = Vector2( 896, 128 )
+
+[node name="CompShip3" parent="Grid" index="9" instance=ExtResource( 3 )]
+position = Vector2( 448, 192 )
+
+[node name="CompShip6" parent="Grid" index="10" instance=ExtResource( 3 )]
+position = Vector2( 480, 160 )
+
+[node name="CompShip7" parent="Grid" index="11" instance=ExtResource( 3 )]
+position = Vector2( 416, 160 )
+
+[node name="CompShip5" parent="Grid" index="12" instance=ExtResource( 3 )]
+position = Vector2( 160, 160 )

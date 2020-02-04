@@ -1,15 +1,18 @@
 using Godot;
 using System;
 
-public class Ship1 : Area2D
+public enum Team
 {
-    private int maxHP = 50;//maximum hp
-    public int HP { get; set;} = 50;//current hp
+    Player,
+    Computer
+}
 
-    //0 for firendly, 1 for enemy;
-    //Do we need a name or ID?
-    public int shipType = 0;
+public class Ship1 : Node2D
+{
+    public int maxHP {get;} = 10;//maximum hp
+    public int HP { get; set;} = 10;//current hp
 
+    public Team team;
    
 
     public int firepower { get; set; } = 5;//the ships firepower multiplier
@@ -17,11 +20,11 @@ public class Ship1 : Area2D
     public int armour { get; set; } = 5;//the ships resistance to damage
     public int accuracy { get; set; } = 5;//odds of hitting an opponent
     public int evasion { get; set; } = 5;//odds of dodging an attack
-    public int AP { get; set; } = 4;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
+    public int AP { get; set; } = 5;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
+    public int maxAP {get;}= 5;//the maximum action points of a ship, it will reset to this value at the start of every turn
+    private int maxRange = 3;//the range it can move
+    public int range {get; set;} = 3;
 
-    private int maxAP = 4;//the maximum action points of a ship, it will reset to this value at the start of every turn
-    private int range = 5;//the range it can move
-	
 	public Projectile weapon1 { get; set; } = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");//the first weapon that the ship has
 	//public shipClass.Projectile weapon0 = shipClass.Weapons.getGun();//the first weapon that the ship has
 	public Projectile weapon2 { get; set;} = new Projectile(ProjectileType.Missile, 2, 3, 2, 10, 2, "solid");//the second weapon a ship has
@@ -47,13 +50,14 @@ public class Ship1 : Area2D
         maxAP = ap;
         weapon1 = w1;
         weapon2 = w2;
-        weapon3 = w3;
+        weapon3 = w3; 
+        team = Team.Player;
     }
 
     //constructor without parameters
     public Ship1()
     {
-
+        team = Team.Player;
     }
 
     public Projectile getWeapon1()
@@ -94,13 +98,24 @@ public class Ship1 : Area2D
 		Random random = new Random();
 		int result = random.Next(0, 100);
 		
-		if (result <= chance)
-		{
-			HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
-		}
-        
+        // removed randomness for now
+		// if (result <= chance)
+		// {
+		// 	HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
+		// }
+		
+		var hpb = (TextureProgress)GetNode("HPbar");
+		
+		//first calculate the actual hp
+        HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
+		//then calculate it as a percentage for the HPbar
+		double fraction = ((double) HP / maxHP) * 100.0;
+		hpb.Value = (int)(fraction);
+
         GD.Print(HP);
-        
+        GD.Print(hpb.Value);
+        // ship is removed by Grid if dead
+		// the hpbar naturally is removed too since it is a child node 
     }
     public void heal_damage(int heal)
     {
@@ -116,10 +131,11 @@ public class Ship1 : Area2D
 			AP = AP - amount;
 		}
 	}
-	public void reset_AP()
+	public void ResetPoints()
 	{
 		//when it is the ship's turn again it will regain all of it's action points
 		AP = maxAP;
+        range = maxRange;
 	}
 
 
@@ -148,5 +164,10 @@ public class Ship1 : Area2D
 		
 		bullet_instance.Connect("hit_target", this.GetParent(), "attackhits" );
 	}*/
+
+    public Texture GetTexture()
+    {
+        return GetChild<Sprite>(0).Texture;
+    }
 
 }
