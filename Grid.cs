@@ -9,20 +9,18 @@ public class Grid : TileMap
 {
 	// currently selected node/sprite
 	private Ship1 selected = null;
+	// mouse position tracker, uses grid coordinates
+	private Vector2 mouseTile = new Vector2(0,0);
 
 	private Vector2[] validMoves = null;
 	private Vector2[] atkRange = null;
+	private Vector2[] mouseRange = null;
 	private List<Vector2> validShips = new List<Vector2>();
-	private bool turnEnd = false;
 
 	public int gridSize = 32;
 	private bool playerTurn = true;
 	public List<Ship1> playerShips {get;} = new List<Ship1>();
 	public List<CompShip> computerShips {get;} = new List<CompShip>();
-	private Ship1 attackNode;
-	private Ship1 defendNode;
-	private Bullets gunNode;
-	private Vector2[] obstacles;
 	
 	public PackedScene _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
 	//public Node bullet_conatianer = GetNode("bullet_container");
@@ -148,13 +146,34 @@ public class Grid : TileMap
 		}
 	}
 
+	private void addRange(Vector2[] moves, String tileString, TileMap tileMap)
+	{
+		int tile = TileSet.FindTileByName(tileString);
+		for(int i = 0; i < moves.Length; i++)
+		{
+			tileMap.SetCellv(moves[i], tile);
+		}
+	}
+
 	// Removes all blue tiles from the grid 
 	private void removeRange(Vector2[] moves)
 	{
+		if (moves == null) return;
 		// int tile = TileSet.FindTileByName("Sprite");
 		for(int i = 0; i < moves.Length; i++){
 			
 			SetCellv(moves[i], -1);
+		}
+	}
+
+	// Removes all blue tiles from the grid 
+	private void removeRange(Vector2[] moves, TileMap tileMap)
+	{
+		if (moves == null) return;
+		// int tile = TileSet.FindTileByName("Sprite");
+		for(int i = 0; i < moves.Length; i++){
+			
+			tileMap.SetCellv(moves[i], -1);
 		}
 	}
 
@@ -245,27 +264,15 @@ public class Grid : TileMap
 		CheckVictory();
 		return;
 	}
-	
-	public void attackhits(Vector2 cell, int fp, int pen, int acc)
-	{
-		/*for (int i = 0; i <GetChildCount(); i++)
-		{
-			Node2D child = (Node2D)GetChild(i);
-			if (cell == WorldToMap(child.GetPosition()))
-				(Ship1)child.take_damage(fp, pen);
-		}*/
-		
-		
-		defendNode.take_damage(fp, pen, acc);
-	}
 
 	/* Draws or undraws highlighted move indicator tiles
 	*/
 	public void DrawMoves()
 	{
 		// remove old range tiles
-		if (this.validMoves != null) removeRange(this.validMoves);
-		if (this.atkRange != null) removeRange(this.atkRange);
+		removeRange(this.mouseRange, GetNode<TileMap>("/root/Game/TileMapTop"));
+		removeRange(this.validMoves);
+		removeRange(this.atkRange);
 		
 		removeRange(validShips.ToArray());
 		this.validShips.Clear();
@@ -327,16 +334,32 @@ public class Grid : TileMap
 			// copy selected ship's sprite to UI panel
 			GetNode<Sprite>("/root/Game/Panel/PanelContainer/PanelSprite").Texture = this.selected.GetTexture();
 			
+			Vector2 barTile;
 			// draw HP bars on UI panel
 			int numBars = (int)Math.Ceiling(6 * (float)selected.HP / (float)selected.maxHP);
 			while (numBars > 0)
 			{
-				Vector2 barTile = new Vector2(5 + 6-numBars, 16);
+				barTile = new Vector2(4 + numBars, 16);
 				SetCellv(barTile, TileSet.FindTileByName("HPBar"));
 
 				numBars--;
 			}				
 			
+			// remove old ap bars
+			for (int x = 5; x <= 10; x++)
+			{
+				barTile = new Vector2(x+9, 16);
+				SetCellv(barTile, -1);			
+			}				
+			// draw AP bars on UI panel
+			numBars = (int)Math.Ceiling(6 * (float)selected.AP / (float)selected.maxAP);
+			while (numBars > 0)
+			{
+				barTile = new Vector2(13 + numBars, 16);
+				SetCellv(barTile, TileSet.FindTileByName("HPBar"));
+
+				numBars--;
+			}				
 			// set HP text, insert two spaces for alignment with low numbers because I can't find the align setting
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HP").Text = (selected.HP < 10 ? "  " : "") + selected.HP;
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HPMax").Text = selected.maxHP.ToString();
@@ -346,14 +369,17 @@ public class Grid : TileMap
 			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/APMax").Text = selected.maxAP.ToString();
 
 		}  
-		// no ship selected cleanup
+		// no-ship-selected cleanup
 		else 
 		{
 			GetNode<Sprite>("/root/Game/Panel/PanelContainer/PanelSprite").Texture = null;
-			// remove hp bars
+			// remove hp and ap bars
+			Vector2 barTile;
 			for (int x = 5; x <= 10; x++)
 			{
-				Vector2 barTile = new Vector2(x, 16);
+				barTile = new Vector2(x, 16);
+				SetCellv(barTile, -1);			
+				barTile = new Vector2(x+9, 16);
 				SetCellv(barTile, -1);			
 			}				
 			// unset hp text
@@ -373,6 +399,30 @@ public class Grid : TileMap
 	{
 		// ignore user input while it is not their turn
 		if (!this.playerTurn) return;
+
+		// mouseover / mouse moved event
+		if (@event is InputEventMouseMotion mouseMoved)
+		{
+			// currently nothing happens if no ship selected
+			if (this.selected == null) return;
+
+			Vector2 newMouseTile = WorldToMap(mouseMoved.Position);
+			if (newMouseTile != mouseTile)
+			{
+				this.mouseTile = newMouseTile;
+				// check if mouse position is in ship movement range
+				if (Array.Exists(RangeCheck(selected.range, WorldToMap(selected.Position)), element => element == mouseTile))
+				{
+					// draw attack range of ship at new location
+					DrawMoves();
+					this.mouseRange = RangeCheck(this.selected.getAttackRange(), mouseTile);
+					addRange(mouseRange, "RedTransparency", GetNode<TileMap>("/root/Game/TileMapTop"));
+				}
+			}
+
+
+			return;
+		}
 		
 		// mouse press/release event
 		if (@event is InputEventMouseButton mouseClick)
@@ -443,15 +493,15 @@ public class Grid : TileMap
 					if (selected.range <= 0)
 					{
 						// can't attack at all
-						if (selected.AP <= 0)
-							this.selected = null;
+						if (selected.AP <= 0){}
+							// this.selected = null;
 						else {
 							// redraw and check if anything is attackable
 							DrawMoves();
 							// if not, deselect
 							if (this.atkRange.Length == 0)
 							{
-								this.selected = null;
+								// this.selected = null;
 							}
 						}
 					}

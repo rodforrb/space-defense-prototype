@@ -73,7 +73,7 @@
 9/name = "RedTransparency"
 9/texture = ExtResource( 8 )
 9/tex_offset = Vector2( 0, 0 )
-9/modulate = Color( 1, 1, 1, 1 )
+9/modulate = Color( 1, 1, 1, 0.45098 )
 9/region = Rect2( 0, 0, 32, 32 )
 9/tile_mode = 0
 9/occluder_offset = Vector2( 0, 0 )
