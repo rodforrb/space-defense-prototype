@@ -15,6 +15,8 @@ public class Grid : TileMap
 	private List<Vector2> validShips = new List<Vector2>();
 	private bool turnEnd = false;
 
+	private int[] obst = new int[]{4};
+
 	public int gridSize = 32;
 	private bool playerTurn = true;
 	public List<Ship1> playerShips {get;} = new List<Ship1>();
@@ -92,52 +94,94 @@ public class Grid : TileMap
 	* Vector2 currentPos - central position
 	* return Vector2[] of positions within range
 	*/
-	private Vector2[] RangeCheck(int range, Vector2 currentPos)
-	{
-		// internal function to calculate sum
-		int SumOfPrevious(int startNum)
-		{
-			int final = 0;
-			for (int i = startNum; i > 0; i--)
-			{
-				final += i;
-			}
-			return final;
-		}
-		Vector2[] possibleLocations = new Vector2[((2*range+1) * (2*range+1)) - (SumOfPrevious(range)*4)];
-		int iterator = 0;
-		for (int i = 0; i <= range; i++)
-		{	
-			for(int j = range-i; j >= 0;j--)
-			{
-				if (i == 0 & j != 0)
-				{
-					possibleLocations[iterator] = new Vector2(currentPos.x + j, currentPos.y);
-					possibleLocations[iterator+1] = new Vector2(currentPos.x - j, currentPos.y);
-					iterator+=2;
-				}
-				else if (j==0 & i!=0)
-				{
-					possibleLocations[iterator] = new Vector2(currentPos.x, currentPos.y + i);
-					possibleLocations[iterator+1] = new Vector2(currentPos.x, currentPos.y - i);
-					iterator+=2;
 
+	private Vector2[] RangeCheck(int range,Vector2 currentPos, bool initial = true, int direction = 0)
+	{
+		List<Vector2> allLocations = new List<Vector2>();
+		
+		if(initial)
+		{
+			
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x+1,currentPos.y),false,1));
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x-1,currentPos.y),false,2));
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y+1),false,3));
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y-1),false,4));
+
+			
+		}else if(range >=0){
+			bool isMovable = true;
+			if(direction == 1){
+				GD.Print(GetCellv(currentPos));
+				foreach (int obs in obst){
+					if(GetCellv(currentPos) == obs){
+						isMovable = false;
+					}
 				}
-				else if ((j != 0) & (i != 0)){
-					possibleLocations[iterator] = new Vector2(currentPos.x + j, currentPos.y + i);
-					possibleLocations[iterator+1] = new Vector2(currentPos.x + j, currentPos.y - i);
-					possibleLocations[iterator+2] = new Vector2(currentPos.x - j, currentPos.y + i);
-					possibleLocations[iterator+3] = new Vector2(currentPos.x - j, currentPos.y - i);
-					iterator+=4;
+				if(isMovable)
+				{	
+					
+					allLocations.Add(currentPos);
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y-1),false,1));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y+1),false,1));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x+1,currentPos.y),false,1));
 				}
+				
+				
+
+			}else if(direction == 2){
+				foreach (int obs in obst)
+				{
+					if(GetCellv(currentPos) == obs){
+						isMovable = false;
+					}
+				}
+				if(isMovable)
+				{
+					allLocations.Add(currentPos);
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y-1),false,2));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y+1),false,2));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x-1,currentPos.y),false,2));
+				}
+				
+
+			}else if(direction == 3){
+				foreach (int obs in obst)
+				{
+					if(GetCellv(currentPos) == obs){
+						isMovable = false;
+					}
+				}
+				if(isMovable)
+				{
+					allLocations.Add(currentPos);
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x-1,currentPos.y),false,3));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x+1,currentPos.y),false,3));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y+1),false,3));
+				}
+				
+
+			}else if (direction == 4){
+				foreach (int obs in obst)
+				{
+					if(GetCellv(currentPos) == obs){
+						isMovable = false;
+					}
+				}
+				if(isMovable)
+				{
+					allLocations.Add(currentPos);
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x-1,currentPos.y),false,4));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x+1,currentPos.y),false,4));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y-1),false,4));
+				}
+				
+
 			}
 		}
-		//removes the last elenment from the array, which is always (0,0)
-		Array.Resize(ref possibleLocations, possibleLocations.Length - 1);
-		//Sets all the possible movement cells to a blue tile.
-	
-		return possibleLocations;
+
+		return allLocations.ToArray();
 	}
+
 
 	private void addRange(Vector2[] moves, String tileString)
 	{
