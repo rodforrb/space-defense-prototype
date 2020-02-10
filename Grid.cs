@@ -17,6 +17,9 @@ public class Grid : TileMap
 	private Vector2[] mouseRange = null;
 	private List<Vector2> validShips = new List<Vector2>();
 
+	//array of tilemap indecies for obstacles
+	private int[] obst = new int[]{4};
+
 	public int gridSize = 32;
 	private bool playerTurn = true;
 	public List<Ship1> playerShips {get;} = new List<Ship1>();
@@ -88,54 +91,45 @@ public class Grid : TileMap
 	/* returns a vector array of cells in range of a given position
 	* int range - radius around central position
 	* Vector2 currentPos - central position
+	* int mainX - used to recursively check main axis. Should not be included in initial function call
+	* int mainY - used to recursively check main axis. Should not be included in initial function call
+	* int aduX - used to recursively check secondary axis. Should not be included in initial function call
+	* int aduY - used to recursively check secondary axis. Should not be included in initial function call
 	* return Vector2[] of positions within range
 	*/
-	private Vector2[] RangeCheck(int range, Vector2 currentPos)
-	{
-		// internal function to calculate sum
-		int SumOfPrevious(int startNum)
-		{
-			int final = 0;
-			for (int i = startNum; i > 0; i--)
-			{
-				final += i;
-			}
-			return final;
-		}
-		Vector2[] possibleLocations = new Vector2[((2*range+1) * (2*range+1)) - (SumOfPrevious(range)*4)];
-		int iterator = 0;
-		for (int i = 0; i <= range; i++)
-		{	
-			for(int j = range-i; j >= 0;j--)
-			{
-				if (i == 0 & j != 0)
-				{
-					possibleLocations[iterator] = new Vector2(currentPos.x + j, currentPos.y);
-					possibleLocations[iterator+1] = new Vector2(currentPos.x - j, currentPos.y);
-					iterator+=2;
-				}
-				else if (j==0 & i!=0)
-				{
-					possibleLocations[iterator] = new Vector2(currentPos.x, currentPos.y + i);
-					possibleLocations[iterator+1] = new Vector2(currentPos.x, currentPos.y - i);
-					iterator+=2;
 
-				}
-				else if ((j != 0) & (i != 0)){
-					possibleLocations[iterator] = new Vector2(currentPos.x + j, currentPos.y + i);
-					possibleLocations[iterator+1] = new Vector2(currentPos.x + j, currentPos.y - i);
-					possibleLocations[iterator+2] = new Vector2(currentPos.x - j, currentPos.y + i);
-					possibleLocations[iterator+3] = new Vector2(currentPos.x - j, currentPos.y - i);
-					iterator+=4;
+	private Vector2[] RangeCheck(int range,Vector2 currentPos, int mainX = 0, int mainY = 0, int aduX = 0, int aduY = 0)
+	{
+		List<Vector2> allLocations = new List<Vector2>();
+		//being checking along the main axis
+		if(mainX == 0 && mainY == 0)
+		{
+			
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x+1,currentPos.y),1,0,0,1));
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x-1,currentPos.y),-1,0,0,1));
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y+1),0,1,1,0));
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y-1),0,-1,1,0));
+		//Checks all spaces around current location. Then "moves" to those spaces and repates the process until the process is complete
+		}else if(range>=0){
+			bool isMovable = true;
+			foreach (int obs in obst){
+				if(GetCellv(currentPos) == obs){
+						isMovable = false;
 				}
 			}
-		}
-		//removes the last elenment from the array, which is always (0,0)
-		Array.Resize(ref possibleLocations, possibleLocations.Length - 1);
-		//Sets all the possible movement cells to a blue tile.
-	
-		return possibleLocations;
+			if(isMovable)
+				{	
+					allLocations.Add(currentPos);
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x-aduX,currentPos.y-aduY),mainX,mainY,aduX,aduY));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x+aduX,currentPos.y+aduY),mainX,mainY,aduX,aduY));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x+mainX,currentPos.y+mainY),mainX,mainY,aduX,aduY));
+				}
+
+		}	
+
+		return allLocations.ToArray();
 	}
+
 
 	private void addRange(Vector2[] moves, String tileString)
 	{
