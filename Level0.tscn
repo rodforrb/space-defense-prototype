@@ -58,7 +58,6 @@ script = ExtResource( 4 )
 
 [node name="PauseMenu" type="Popup" parent="."]
 pause_mode = 2
-editor/display_folded = true
 self_modulate = Color( 0.584314, 0.552941, 0.552941, 1 )
 margin_left = 390.0
 margin_top = 110.0
