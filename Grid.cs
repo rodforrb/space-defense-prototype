@@ -9,20 +9,21 @@ public class Grid : TileMap
 {
 	// currently selected node/sprite
 	private Ship1 selected = null;
+	// mouse position tracker, uses grid coordinates
+	private Vector2 mouseTile = new Vector2(0,0);
 
 	private Vector2[] validMoves = null;
 	private Vector2[] atkRange = null;
+	private Vector2[] mouseRange = null;
 	private List<Vector2> validShips = new List<Vector2>();
-	private bool turnEnd = false;
+
+	//array of tilemap indecies for obstacles
+	private int[] obst = new int[]{4};
 
 	public int gridSize = 32;
 	private bool playerTurn = true;
 	public List<Ship1> playerShips {get;} = new List<Ship1>();
 	public List<CompShip> computerShips {get;} = new List<CompShip>();
-	private Ship1 attackNode;
-	private Ship1 defendNode;
-	private Bullets gunNode;
-	private Vector2[] obstacles;
 	
 	public PackedScene _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
 	//public Node bullet_conatianer = GetNode("bullet_container");
@@ -90,54 +91,45 @@ public class Grid : TileMap
 	/* returns a vector array of cells in range of a given position
 	* int range - radius around central position
 	* Vector2 currentPos - central position
+	* int mainX - used to recursively check main axis. Should not be included in initial function call
+	* int mainY - used to recursively check main axis. Should not be included in initial function call
+	* int aduX - used to recursively check secondary axis. Should not be included in initial function call
+	* int aduY - used to recursively check secondary axis. Should not be included in initial function call
 	* return Vector2[] of positions within range
 	*/
-	private Vector2[] RangeCheck(int range, Vector2 currentPos)
-	{
-		// internal function to calculate sum
-		int SumOfPrevious(int startNum)
-		{
-			int final = 0;
-			for (int i = startNum; i > 0; i--)
-			{
-				final += i;
-			}
-			return final;
-		}
-		Vector2[] possibleLocations = new Vector2[((2*range+1) * (2*range+1)) - (SumOfPrevious(range)*4)];
-		int iterator = 0;
-		for (int i = 0; i <= range; i++)
-		{	
-			for(int j = range-i; j >= 0;j--)
-			{
-				if (i == 0 & j != 0)
-				{
-					possibleLocations[iterator] = new Vector2(currentPos.x + j, currentPos.y);
-					possibleLocations[iterator+1] = new Vector2(currentPos.x - j, currentPos.y);
-					iterator+=2;
-				}
-				else if (j==0 & i!=0)
-				{
-					possibleLocations[iterator] = new Vector2(currentPos.x, currentPos.y + i);
-					possibleLocations[iterator+1] = new Vector2(currentPos.x, currentPos.y - i);
-					iterator+=2;
 
-				}
-				else if ((j != 0) & (i != 0)){
-					possibleLocations[iterator] = new Vector2(currentPos.x + j, currentPos.y + i);
-					possibleLocations[iterator+1] = new Vector2(currentPos.x + j, currentPos.y - i);
-					possibleLocations[iterator+2] = new Vector2(currentPos.x - j, currentPos.y + i);
-					possibleLocations[iterator+3] = new Vector2(currentPos.x - j, currentPos.y - i);
-					iterator+=4;
+	private Vector2[] RangeCheck(int range,Vector2 currentPos, int mainX = 0, int mainY = 0, int aduX = 0, int aduY = 0)
+	{
+		List<Vector2> allLocations = new List<Vector2>();
+		//being checking along the main axis
+		if(mainX == 0 && mainY == 0)
+		{
+			
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x+1,currentPos.y),1,0,0,1));
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x-1,currentPos.y),-1,0,0,1));
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y+1),0,1,1,0));
+			allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x,currentPos.y-1),0,-1,1,0));
+		//Checks all spaces around current location. Then "moves" to those spaces and repates the process until the process is complete
+		}else if(range>=0){
+			bool isMovable = true;
+			foreach (int obs in obst){
+				if(GetCellv(currentPos) == obs){
+						isMovable = false;
 				}
 			}
-		}
-		//removes the last elenment from the array, which is always (0,0)
-		Array.Resize(ref possibleLocations, possibleLocations.Length - 1);
-		//Sets all the possible movement cells to a blue tile.
-	
-		return possibleLocations;
+			if(isMovable)
+				{	
+					allLocations.Add(currentPos);
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x-aduX,currentPos.y-aduY),mainX,mainY,aduX,aduY));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x+aduX,currentPos.y+aduY),mainX,mainY,aduX,aduY));
+					allLocations.AddRange(RangeCheck(range-1,new Vector2(currentPos.x+mainX,currentPos.y+mainY),mainX,mainY,aduX,aduY));
+				}
+
+		}	
+
+		return allLocations.ToArray();
 	}
+
 
 	private void addRange(Vector2[] moves, String tileString)
 	{
@@ -148,13 +140,34 @@ public class Grid : TileMap
 		}
 	}
 
+	private void addRange(Vector2[] moves, String tileString, TileMap tileMap)
+	{
+		int tile = TileSet.FindTileByName(tileString);
+		for(int i = 0; i < moves.Length; i++)
+		{
+			tileMap.SetCellv(moves[i], tile);
+		}
+	}
+
 	// Removes all blue tiles from the grid 
 	private void removeRange(Vector2[] moves)
 	{
+		if (moves == null) return;
 		// int tile = TileSet.FindTileByName("Sprite");
 		for(int i = 0; i < moves.Length; i++){
 			
 			SetCellv(moves[i], -1);
+		}
+	}
+
+	// Removes all blue tiles from the grid 
+	private void removeRange(Vector2[] moves, TileMap tileMap)
+	{
+		if (moves == null) return;
+		// int tile = TileSet.FindTileByName("Sprite");
+		for(int i = 0; i < moves.Length; i++){
+			
+			tileMap.SetCellv(moves[i], -1);
 		}
 	}
 
@@ -245,27 +258,15 @@ public class Grid : TileMap
 		CheckVictory();
 		return;
 	}
-	
-	public void attackhits(Vector2 cell, int fp, int pen, int acc)
-	{
-		/*for (int i = 0; i <GetChildCount(); i++)
-		{
-			Node2D child = (Node2D)GetChild(i);
-			if (cell == WorldToMap(child.GetPosition()))
-				(Ship1)child.take_damage(fp, pen);
-		}*/
-		
-		
-		defendNode.take_damage(fp, pen, acc);
-	}
 
 	/* Draws or undraws highlighted move indicator tiles
 	*/
 	public void DrawMoves()
 	{
 		// remove old range tiles
-		if (this.validMoves != null) removeRange(this.validMoves);
-		if (this.atkRange != null) removeRange(this.atkRange);
+		removeRange(this.mouseRange, GetNode<TileMap>("/root/Game/TileMapTop"));
+		removeRange(this.validMoves);
+		removeRange(this.atkRange);
 		
 		removeRange(validShips.ToArray());
 		this.validShips.Clear();
@@ -327,16 +328,32 @@ public class Grid : TileMap
 			// copy selected ship's sprite to UI panel
 			GetNode<Sprite>("/root/Game/Panel/PanelContainer/PanelSprite").Texture = this.selected.GetTexture();
 			
+			Vector2 barTile;
 			// draw HP bars on UI panel
 			int numBars = (int)Math.Ceiling(6 * (float)selected.HP / (float)selected.maxHP);
 			while (numBars > 0)
 			{
-				Vector2 barTile = new Vector2(5 + 6-numBars, 16);
+				barTile = new Vector2(4 + numBars, 16);
 				SetCellv(barTile, TileSet.FindTileByName("HPBar"));
 
 				numBars--;
 			}				
 			
+			// remove old ap bars
+			for (int x = 5; x <= 10; x++)
+			{
+				barTile = new Vector2(x+9, 16);
+				SetCellv(barTile, -1);			
+			}				
+			// draw AP bars on UI panel
+			numBars = (int)Math.Ceiling(6 * (float)selected.AP / (float)selected.maxAP);
+			while (numBars > 0)
+			{
+				barTile = new Vector2(13 + numBars, 16);
+				SetCellv(barTile, TileSet.FindTileByName("HPBar"));
+
+				numBars--;
+			}				
 			// set HP text, insert two spaces for alignment with low numbers because I can't find the align setting
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HP").Text = (selected.HP < 10 ? "  " : "") + selected.HP;
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HPMax").Text = selected.maxHP.ToString();
@@ -346,14 +363,17 @@ public class Grid : TileMap
 			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/APMax").Text = selected.maxAP.ToString();
 
 		}  
-		// no ship selected cleanup
+		// no-ship-selected cleanup
 		else 
 		{
 			GetNode<Sprite>("/root/Game/Panel/PanelContainer/PanelSprite").Texture = null;
-			// remove hp bars
+			// remove hp and ap bars
+			Vector2 barTile;
 			for (int x = 5; x <= 10; x++)
 			{
-				Vector2 barTile = new Vector2(x, 16);
+				barTile = new Vector2(x, 16);
+				SetCellv(barTile, -1);			
+				barTile = new Vector2(x+9, 16);
 				SetCellv(barTile, -1);			
 			}				
 			// unset hp text
@@ -373,6 +393,30 @@ public class Grid : TileMap
 	{
 		// ignore user input while it is not their turn
 		if (!this.playerTurn) return;
+
+		// mouseover / mouse moved event
+		if (@event is InputEventMouseMotion mouseMoved)
+		{
+			// currently nothing happens if no ship selected
+			if (this.selected == null) return;
+
+			Vector2 newMouseTile = WorldToMap(mouseMoved.Position);
+			if (newMouseTile != mouseTile)
+			{
+				this.mouseTile = newMouseTile;
+				// check if mouse position is in ship movement range
+				if (Array.Exists(RangeCheck(selected.range, WorldToMap(selected.Position)), element => element == mouseTile))
+				{
+					// draw attack range of ship at new location
+					DrawMoves();
+					this.mouseRange = RangeCheck(this.selected.getAttackRange(), mouseTile);
+					addRange(mouseRange, "RedTransparency", GetNode<TileMap>("/root/Game/TileMapTop"));
+				}
+			}
+
+
+			return;
+		}
 		
 		// mouse press/release event
 		if (@event is InputEventMouseButton mouseClick)
@@ -443,15 +487,15 @@ public class Grid : TileMap
 					if (selected.range <= 0)
 					{
 						// can't attack at all
-						if (selected.AP <= 0)
-							this.selected = null;
+						if (selected.AP <= 0){}
+							// this.selected = null;
 						else {
 							// redraw and check if anything is attackable
 							DrawMoves();
 							// if not, deselect
 							if (this.atkRange.Length == 0)
 							{
-								this.selected = null;
+								// this.selected = null;
 							}
 						}
 					}
