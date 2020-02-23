@@ -9,7 +9,7 @@ public enum Team
 
 public class Ship1 : Node2D
 {
-    private int maxHP = 10;//maximum hp
+    public int maxHP {get;} = 10;//maximum hp
     public int HP { get; set;} = 10;//current hp
 
     public Team team;
@@ -21,7 +21,7 @@ public class Ship1 : Node2D
     public int accuracy { get; set; } = 5;//odds of hitting an opponent
     public int evasion { get; set; } = 5;//odds of dodging an attack
     public int AP { get; set; } = 5;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
-    private int maxAP = 5;//the maximum action points of a ship, it will reset to this value at the start of every turn
+    public int maxAP {get;}= 5;//the maximum action points of a ship, it will reset to this value at the start of every turn
     private int maxRange = 3;//the range it can move
     public int range {get; set;} = 3;
 
@@ -164,5 +164,10 @@ public class Ship1 : Node2D
 		
 		bullet_instance.Connect("hit_target", this.GetParent(), "attackhits" );
 	}*/
+
+    public Texture GetTexture()
+    {
+        return GetChild<Sprite>(0).Texture;
+    }
 
 }

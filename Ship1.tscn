@@ -15,7 +15,6 @@ flags = 4
 load_path = "res://.import/hpbar.png-4f27aad5e9aeef79805035e1f79cdc6a.stex"
 
 [node name="Ship1" type="Area2D"]
-position = Vector2( 480, 352 )
 script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
