@@ -81,6 +81,15 @@ scale = Vector2( 2, 2 )
 [node name="HPLabel" type="CanvasLayer" parent="Panel"]
 layer = 3
 
+[node name="Label2" type="RichTextLabel" parent="Panel/HPLabel"]
+margin_left = 161.863
+margin_top = 502.634
+margin_right = 251.863
+margin_bottom = 527.634
+grow_horizontal = 2
+text = "	Hitpoints"
+scroll_active = false
+
 [node name="HP" type="RichTextLabel" parent="Panel/HPLabel"]
 margin_left = 233.0
 margin_top = 535.0
@@ -112,16 +121,15 @@ scroll_active = false
 layer = 3
 
 [node name="Label" type="RichTextLabel" parent="Panel/APLabel"]
-visible = false
-margin_left = 416.0
-margin_top = 535.905
-margin_right = 506.0
-margin_bottom = 560.905
+margin_left = 448.0
+margin_top = 501.819
+margin_right = 538.0
+margin_bottom = 526.819
 grow_horizontal = 2
-text = "Action Points:"
+text = "	Range"
 scroll_active = false
 
-[node name="AP" type="RichTextLabel" parent="Panel/APLabel"]
+[node name="Range" type="RichTextLabel" parent="Panel/APLabel"]
 margin_left = 520.906
 margin_top = 535.189
 margin_right = 543.906
@@ -139,10 +147,49 @@ grow_horizontal = 2
 text = "/"
 scroll_active = false
 
-[node name="APMax" type="RichTextLabel" parent="Panel/APLabel"]
+[node name="MaxRange" type="RichTextLabel" parent="Panel/APLabel"]
 margin_left = 552.906
 margin_top = 534.736
 margin_right = 600.906
+margin_bottom = 559.736
+grow_horizontal = 2
+text = "0"
+scroll_active = false
+
+[node name="APLabel2" type="CanvasLayer" parent="Panel"]
+layer = 3
+
+[node name="Label" type="RichTextLabel" parent="Panel/APLabel2"]
+margin_left = 704.0
+margin_top = 534.736
+margin_right = 794.0
+margin_bottom = 559.736
+grow_horizontal = 2
+text = "Attack Points:"
+scroll_active = false
+
+[node name="AP" type="RichTextLabel" parent="Panel/APLabel2"]
+margin_left = 790.209
+margin_top = 535.189
+margin_right = 813.209
+margin_bottom = 560.189
+grow_horizontal = 2
+text = "  0"
+scroll_active = false
+
+[node name="slash" type="RichTextLabel" parent="Panel/APLabel2"]
+margin_left = 812.418
+margin_top = 535.641
+margin_right = 844.418
+margin_bottom = 560.641
+grow_horizontal = 2
+text = "/"
+scroll_active = false
+
+[node name="APMax" type="RichTextLabel" parent="Panel/APLabel2"]
+margin_left = 822.209
+margin_top = 534.736
+margin_right = 870.209
 margin_bottom = 559.736
 grow_horizontal = 2
 text = "0"
