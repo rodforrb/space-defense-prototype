@@ -18,7 +18,7 @@ public class Grid : TileMap
 	private List<Vector2> validShips = new List<Vector2>();
 
 	//array of tilemap indecies for obstacles
-	private int[] obst = new int[]{4};
+	private int[] obst = new int[]{12,13};
 
 	public int gridSize = 32;
 	private bool playerTurn = true;
