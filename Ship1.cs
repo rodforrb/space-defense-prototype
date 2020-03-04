@@ -114,6 +114,7 @@ public class Ship1 : Node2D
 
         GD.Print(HP);
         GD.Print(hpb.Value);
+     
         // ship is removed by Grid if dead
 		// the hpbar naturally is removed too since it is a child node 
     }
