@@ -21,7 +21,7 @@ public class Grid : TileMap
 	private bool defeat = false;
 
 	//array of tilemap indecies for obstacles
-	private int[] obst = new int[]{4};
+	private int[] obst = new int[]{12,13};
 
 	public int gridSize = 32;
 	private bool playerTurn = true;
@@ -220,7 +220,6 @@ public class Grid : TileMap
 			// TODO
 		}
 
-		ship.AP -= distance;
 		ship.range -= distance;
 
 		return true;
@@ -238,15 +237,14 @@ public class Grid : TileMap
 		if (!Array.Exists(RangeCheck(attacker.getAttackRange(), WorldToMap(attacker.Position)), element => element == WorldToMap(defender.Position))) return;
 	
 		// not enough points to attack
-		if (attacker.AP < 2) return;
+		if (attacker.AP < 1) return;
 
 		//plays a sound effect on good attack
 		AudioStreamPlayer attack_1 = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/attack_1");
         attack_1.Play();
 
 		// consume points and proceed with attacking
-		attacker.AP = Math.Max(0, attacker.AP-2);
-		attacker.range = Math.Max(0, attacker.range-2);
+		attacker.AP = Math.Max(0, attacker.AP-1);
 
 		int f = attacker.firepower * proj.firepower;
 		int p = attacker.penetration * proj.penetration;
@@ -360,7 +358,7 @@ public class Grid : TileMap
 				SetCellv(barTile, -1);			
 			}				
 			// draw AP bars on UI panel
-			numBars = (int)Math.Ceiling(6 * (float)selected.AP / (float)selected.maxAP);
+			numBars = (int)Math.Ceiling(6 * (float)selected.range / (float)selected.maxRange);
 			while (numBars > 0)
 			{
 				barTile = new Vector2(13 + numBars, 16);
@@ -372,9 +370,15 @@ public class Grid : TileMap
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HP").Text = (selected.HP < 10 ? "  " : "") + selected.HP;
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HPMax").Text = selected.maxHP.ToString();
 						
+			// set Range text 
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/Range").Text = (selected.range < 10 ? "  " : "") + selected.range.ToString();
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/MaxRange").Text = selected.maxRange.ToString();
+			
 			// set AP text 
-			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/AP").Text = (selected.AP < 10 ? "  " : "") + selected.AP;
-			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/APMax").Text = selected.maxAP.ToString();
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel2/AP").Text = (selected.AP < 10 ? "  " : "") + selected.AP.ToString();
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel2/APMax").Text = selected.maxAP.ToString();
+			
+			
 
 		}  
 		// no-ship-selected cleanup
@@ -394,9 +398,13 @@ public class Grid : TileMap
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HP").Text = "  0";
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HPMax").Text = "0";
 
+			// uset Range text 
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/Range").Text = "  0";
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/MaxRange").Text = "0";
+			
 			// uset AP text 
-			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/AP").Text = "  0";
-			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/APMax").Text = "0";
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel2/AP").Text = "  0";
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel2/APMax").Text = "0";
 		}
 	}
 

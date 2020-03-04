@@ -20,9 +20,9 @@ public class Ship1 : Node2D
     public int armour { get; set; } = 5;//the ships resistance to damage
     public int accuracy { get; set; } = 5;//odds of hitting an opponent
     public int evasion { get; set; } = 5;//odds of dodging an attack
-    public int AP { get; set; } = 5;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
-    public int maxAP {get;}= 5;//the maximum action points of a ship, it will reset to this value at the start of every turn
-    private int maxRange = 3;//the range it can move
+    public int AP { get; set; } = 2;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
+    public int maxAP {get;}= 2;//the maximum action points of a ship, it will reset to this value at the start of every turn
+    public int maxRange {get;} = 3;//the range it can move
     public int range {get; set;} = 3;
 
 	public Projectile weapon1 { get; set; } = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");//the first weapon that the ship has
