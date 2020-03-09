@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://MainMenu.cs" type="Script" id=1]
 [ext_resource path="res://resources/graphics/UI/main_menu/logo_v2.png" type="Texture" id=2]
@@ -8,6 +8,8 @@
 [ext_resource path="res://resources/graphics/UI/labels/label_exit.png" type="Texture" id=6]
 [ext_resource path="res://resources/graphics/UI/main_menu/version.png" type="Texture" id=7]
 [ext_resource path="res://resources/graphics/UI/main_menu/title_img.png" type="Texture" id=8]
+[ext_resource path="res://resources/audio/menu_sounds/menu_select.wav" type="AudioStream" id=9]
+[ext_resource path="res://resources/audio/music/space_defense_title_music_sketch.wav" type="AudioStream" id=10]
 
 [node name="MainMenu" type="MarginContainer"]
 anchor_right = 1.0
@@ -81,7 +83,20 @@ margin_top = 150.0
 margin_right = 500.0
 margin_bottom = 450.0
 texture = ExtResource( 8 )
+
+[node name="SoundEffect" type="Node2D" parent="."]
+editor/display_folded = true
+
+[node name="menu_select" type="AudioStreamPlayer" parent="SoundEffect"]
+stream = ExtResource( 9 )
+
+[node name="Music" type="Node2D" parent="."]
+
+[node name="default_menu_music" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource( 10 )
+autoplay = true
 [connection signal="gui_input" from="HBoxContainer/VBoxContainer/MenuOptions/Continue" to="." method="_on_Continue_gui_input"]
 [connection signal="gui_input" from="HBoxContainer/VBoxContainer/MenuOptions/NewGame" to="." method="_on_NewGame_gui_input"]
 [connection signal="gui_input" from="HBoxContainer/VBoxContainer/MenuOptions/Options" to="." method="_on_Options_gui_input"]
 [connection signal="gui_input" from="HBoxContainer/VBoxContainer/MenuOptions/Quit" to="." method="_on_Quit_gui_input"]
+[connection signal="finished" from="SoundEffect/menu_select" to="." method="_on_menu_select_finished"]
