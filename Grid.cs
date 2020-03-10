@@ -17,6 +17,9 @@ public class Grid : TileMap
 	private Vector2[] mouseRange = null;
 	private List<Vector2> validShips = new List<Vector2>();
 
+	private bool victory = false;
+	private bool defeat = false;
+
 	//array of tilemap indecies for obstacles
 	private int[] obst = new int[]{12,13};
 
@@ -188,7 +191,12 @@ public class Grid : TileMap
 		Vector2 vector =  target - WorldToMap(ship.Position);
 		Vector2 intVector = new Vector2((int)vector.x, (int)vector.y);
 		int distance = (int) (Math.Abs(intVector.x) + Math.Abs(intVector.y));
-
+		//plays a sound effect for valid move
+		//known issue: cuts if destruciton ends game
+		//use signal, _on_<sound name>_finished() method
+		//This specific issue will likely be handled in end game screens
+		AudioStreamPlayer grid_interact = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/grid_interact");
+        grid_interact.Play();		
 		// move ship along path to new position
 		while (WorldToMap(ship.Position) != target)
 		{
@@ -246,6 +254,10 @@ public class Grid : TileMap
 		// not enough points to attack
 		if (attacker.AP < 1) return;
 
+		//plays a sound effect on good attack
+		AudioStreamPlayer attack_1 = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/attack_1");
+        attack_1.Play();
+
 		// consume points and proceed with attacking
 		attacker.AP = Math.Max(0, attacker.AP-1);
 
@@ -258,7 +270,9 @@ public class Grid : TileMap
 		if (defender.HP <= 0)
 		{
 			RemoveChild(defender);
-
+			//boom sound on death
+			AudioStreamPlayer destroy_1 = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/destroy_1");
+			destroy_1.Play();	   
 			// remove from the appropriate list
 			try
 			{
@@ -462,6 +476,9 @@ public class Grid : TileMap
 						if (this.selected != ship)
 						{
 							this.selected = ship;
+							//plays a sound effect
+							AudioStreamPlayer grid_interact = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/grid_interact");
+          					grid_interact.Play();
 							GD.Print("Selected: ", ship);
 							
 							// redraw movement range
@@ -606,6 +623,8 @@ public class Grid : TileMap
 
 	// check whether a victory condition has been met by either side
 	// if so, ends the match appropriately
+	//todo, screens, check for audio cutting
+	//possibly add some victory/defeat flourish too
 	private void CheckVictory()
 	{
 		// enemy has 0 ships, player wins
@@ -615,12 +634,14 @@ public class Grid : TileMap
 			State.maxLevel = State.currentLevel + 1;
 			State.currentLevel += 1;
 			// end match and return to level select
+			bool victory = true;
 			GetTree().ChangeScene("res://level_select.tscn");
 		}
 		// player has 0 ships, player loses
 		else if (playerShips.Count == 0)
 		{
 			// just end match and return to level select
+			bool defeat = true;
 			GetTree().ChangeScene("res://level_select.tscn");
 		}
 	}
