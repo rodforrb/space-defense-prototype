@@ -1,7 +1,9 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Ship1.cs" type="Script" id=1]
-[ext_resource path="res://resources/graphics/sprites/ship1/ship1.png" type="Texture" id=2]
+[ext_resource path="res://LightShipB.cs" type="Script" id=1]
+
+[sub_resource type="StreamTexture" id=1]
+load_path = "res://.import/ship1.png-e926fd9dc57dcb799efec95eb240056d.stex"
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 13.2136, 13.5469 )
@@ -19,7 +21,7 @@ script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 16, 16 )
-texture = ExtResource( 2 )
+texture = SubResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 16.0906, 17.5146 )
