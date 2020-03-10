@@ -57,6 +57,8 @@ script = ExtResource( 3 )
 [node name="Bullets" parent="Grid" instance=ExtResource( 6 )]
 visible = false
 
+[node name="Tween" type="Tween" parent="Grid"]
+
 [node name="PauseMenu" type="Popup" parent="."]
 pause_mode = 2
 editor/display_folded = true
