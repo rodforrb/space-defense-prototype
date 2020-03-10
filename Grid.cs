@@ -179,6 +179,7 @@ public class Grid : TileMap
 	public bool Move(Node2D ShipNode, Vector2 target)
 	{
 		Ship1 ship = (Ship1)ShipNode;
+		Sprite shipSprite = ship.GetNode<Sprite>("Sprite");
 		// check if target position is out of range
 		if (!Array.Exists(RangeCheck(ship.range, WorldToMap(ship.Position)), element => element == target))
 			return false;
@@ -191,18 +192,32 @@ public class Grid : TileMap
 		// move ship along path to new position
 		while (WorldToMap(ship.Position) != target)
 		{
-
+			GD.Print(intVector.x, ',', intVector.y);
 			// more vertical distance to travel
 			if (Math.Abs(intVector.x) < Math.Abs(intVector.y))
 			{
 				// move 1 unit in y direction
 				ship.SetPosition(ship.Position + new Vector2(0,intVector.y*gridSize/Math.Abs(intVector.y)));
+
+				// rotate ship
+				if (intVector.y < 0) 
+					shipSprite.RotationDegrees = 0;
+				else 
+					shipSprite.RotationDegrees = 180;
 			}
 			else // move horizontally
 			{
 				// move 1 unit in x direction
 				ship.SetPosition(ship.Position + new Vector2(intVector.x*gridSize/Math.Abs(intVector.x), 0));
+
+				// rotate ship
+				if (intVector.x < 0)
+					shipSprite.RotationDegrees = 270;
+				else
+					shipSprite.RotationDegrees = 90;
 			}
+			ship.GetNode<AnimationPlayer>("AnimationPlayer").Play("Move");
+			
 
 			// recalculate x+y movement distance
 			vector = target - WorldToMap(ship.Position);
