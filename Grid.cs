@@ -182,21 +182,31 @@ public class Grid : TileMap
 	public bool Move(Node2D ShipNode, Vector2 target)
 	{
 		Ship1 ship = (Ship1)ShipNode;
+		Vector2 pos1 = ship.Position;
 		Sprite shipSprite = ship.GetNode<Sprite>("Sprite");
 		// check if target position is out of range
 		if (!Array.Exists(RangeCheck(ship.range, WorldToMap(ship.Position)), element => element == target))
 			return false;
 
     // calculate x+y movement distance
-		Vector2 vector =  target - WorldToMap(ship.Position);
-		Vector2 intVector = new Vector2((int)vector.x, (int)vector.y);
+		Vector2 vector =  target - WorldToMap(ship.Position);									// net vector from ship to target
+		Vector2 intVector = new Vector2((int)vector.x, (int)vector.y);				// same vector as int (can be worked out to remove)
 		int distance = (int) (Math.Abs(intVector.x) + Math.Abs(intVector.y));
+
+		// vector containing relative movement to be made
+		Vector2 dirVector;
+		if (Math.Abs(intVector.x) > Math.Abs(intVector.y))
+			dirVector = new Vector2(intVector.x, 0);
+		else
+			dirVector = new Vector2(0, intVector.y);
+
 		//plays a sound effect for valid move
 		//known issue: cuts if destruciton ends game
 		//use signal, _on_<sound name>_finished() method
 		//This specific issue will likely be handled in end game screens
 		AudioStreamPlayer grid_interact = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/grid_interact");
         grid_interact.Play();		
+
 		// move ship along path to new position
 		while (WorldToMap(ship.Position) != target)
 		{
@@ -224,16 +234,29 @@ public class Grid : TileMap
 				else
 					shipSprite.RotationDegrees = 90;
 			}
-			ship.GetNode<AnimationPlayer>("AnimationPlayer").Play("Move");
+			// ship.GetNode<AnimationPlayer>("AnimationPlayer").Play("Move");
 			
+			// // animate movement
+			// Tween tween = ship.GetNode<Tween>("Tween");
+			// tween.InterpolateProperty(ship, "Position", ship.Position-MapToWorld(dirVector), ship.Position, 0.3f, Godot.Tween.TransitionType.Linear, Godot.Tween.EaseType.InOut);
+			// tween.Start();
 
 			// recalculate x+y movement distance
 			vector = target - WorldToMap(ship.Position);
 			intVector = new Vector2((int)vector.x, (int)vector.y);
 
-			// pause on each tile briefly
-			// TODO
+			if (Math.Abs(intVector.x) > Math.Abs(intVector.y))
+				dirVector = new Vector2(intVector.x, 0);
+			else
+				dirVector = new Vector2(0, intVector.y);
 		}
+
+		// animate movement directly from src to target
+		Tween tween = ship.GetNode<Tween>("Tween");
+		GD.Print(pos1);
+		GD.Print(ship.Position);
+		tween.InterpolateProperty(ship, "Position", pos1, ship.Position, 0.2f*distance, Godot.Tween.TransitionType.Linear, Godot.Tween.EaseType.InOut);
+		tween.Start();
 
 		ship.range -= distance;
 
