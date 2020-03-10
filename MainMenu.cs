@@ -7,16 +7,20 @@ public class MainMenu : MarginContainer
     // private int a = 2;
     // private string b = "text";
 
+    private string sceneDest = "";
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        
+      
     }
     //Load game (does nothing)
     public void _on_Continue_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
         {
-            GetTree().ChangeScene("res://level_select.tscn");
+            AudioStreamPlayer menu_select = (AudioStreamPlayer) GetNode("SoundEffect/menu_select");
+            menu_select.Play();
+            sceneDest = "res://level_select.tscn";
+            //GetTree().ChangeScene("res://level_select.tscn");
         }
     }
 
@@ -24,23 +28,41 @@ public class MainMenu : MarginContainer
     public void _on_NewGame_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
         {
-            GetTree().ChangeScene("res://Level1.tscn");
+            AudioStreamPlayer menu_select = (AudioStreamPlayer) GetNode("SoundEffect/menu_select");
+            menu_select.Play();
+            sceneDest = "res://Level1.tscn";
+            //GetTree().ChangeScene("res://Level1.tscn");
         }
     }
     //Options (does nothing)
     public void _on_Options_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
         {
-			// TODO
+            AudioStreamPlayer menu_select = (AudioStreamPlayer) GetNode("SoundEffect/menu_select");
+            menu_select.Play();
+            sceneDest = "";
         }
     }
     //leaves game
     public void _on_Quit_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
         {
-            GetTree().Quit();
+            AudioStreamPlayer menu_select = (AudioStreamPlayer) GetNode("SoundEffect/menu_select");
+            menu_select.Play();
+            sceneDest = "QUIT";
+            //GetTree().Quit();
         }
     }    
+
+    public void _on_menu_select_finished(){
+        if (sceneDest!= "" && sceneDest != "QUIT"){
+            GetTree().ChangeScene(sceneDest);
+        }
+        if (sceneDest == "QUIT"){
+            GetTree().Quit();
+
+        }
+    }
 
     //test function
     /*

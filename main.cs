@@ -4,7 +4,7 @@ using System;
 public class main : Node2D
 {
 	private bool compTurn = false; 
-	private bool pauseGame = false;
+	//private bool pauseGame = false;
 
 
 	// Called when the node enters the scene tree for the first time.
@@ -35,7 +35,6 @@ public class main : Node2D
 		}
 	    
 	}
-	
 	/*
     public void _on_Exit_gui_input(InputEvent @event){
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)

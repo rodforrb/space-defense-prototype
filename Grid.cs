@@ -17,6 +17,9 @@ public class Grid : TileMap
 	private Vector2[] mouseRange = null;
 	private List<Vector2> validShips = new List<Vector2>();
 
+	private bool victory = false;
+	private bool defeat = false;
+
 	//array of tilemap indecies for obstacles
 	private int[] obst = new int[]{12,13};
 
@@ -179,38 +182,81 @@ public class Grid : TileMap
 	public bool Move(Node2D ShipNode, Vector2 target)
 	{
 		Ship1 ship = (Ship1)ShipNode;
+		Vector2 pos1 = ship.Position;
+		Sprite shipSprite = ship.GetNode<Sprite>("Sprite");
 		// check if target position is out of range
 		if (!Array.Exists(RangeCheck(ship.range, WorldToMap(ship.Position)), element => element == target))
 			return false;
 
     // calculate x+y movement distance
-		Vector2 vector =  target - WorldToMap(ship.Position);
-		Vector2 intVector = new Vector2((int)vector.x, (int)vector.y);
+		Vector2 vector =  target - WorldToMap(ship.Position);									// net vector from ship to target
+		Vector2 intVector = new Vector2((int)vector.x, (int)vector.y);				// same vector as int (can be worked out to remove)
 		int distance = (int) (Math.Abs(intVector.x) + Math.Abs(intVector.y));
+
+		// vector containing relative movement to be made
+		Vector2 dirVector;
+		if (Math.Abs(intVector.x) > Math.Abs(intVector.y))
+			dirVector = new Vector2(intVector.x, 0);
+		else
+			dirVector = new Vector2(0, intVector.y);
+
+		//plays a sound effect for valid move
+		//known issue: cuts if destruciton ends game
+		//use signal, _on_<sound name>_finished() method
+		//This specific issue will likely be handled in end game screens
+		AudioStreamPlayer grid_interact = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/grid_interact");
+        grid_interact.Play();		
 
 		// move ship along path to new position
 		while (WorldToMap(ship.Position) != target)
 		{
-
+			GD.Print(intVector.x, ',', intVector.y);
 			// more vertical distance to travel
 			if (Math.Abs(intVector.x) < Math.Abs(intVector.y))
 			{
 				// move 1 unit in y direction
 				ship.SetPosition(ship.Position + new Vector2(0,intVector.y*gridSize/Math.Abs(intVector.y)));
+
+				// rotate ship
+				if (intVector.y < 0) 
+					shipSprite.RotationDegrees = 0;
+				else 
+					shipSprite.RotationDegrees = 180;
 			}
 			else // move horizontally
 			{
 				// move 1 unit in x direction
 				ship.SetPosition(ship.Position + new Vector2(intVector.x*gridSize/Math.Abs(intVector.x), 0));
+
+				// rotate ship
+				if (intVector.x < 0)
+					shipSprite.RotationDegrees = 270;
+				else
+					shipSprite.RotationDegrees = 90;
 			}
+			// ship.GetNode<AnimationPlayer>("AnimationPlayer").Play("Move");
+			
+			// // animate movement
+			// Tween tween = ship.GetNode<Tween>("Tween");
+			// tween.InterpolateProperty(ship, "Position", ship.Position-MapToWorld(dirVector), ship.Position, 0.3f, Godot.Tween.TransitionType.Linear, Godot.Tween.EaseType.InOut);
+			// tween.Start();
 
 			// recalculate x+y movement distance
 			vector = target - WorldToMap(ship.Position);
 			intVector = new Vector2((int)vector.x, (int)vector.y);
 
-			// pause on each tile briefly
-			// TODO
+			if (Math.Abs(intVector.x) > Math.Abs(intVector.y))
+				dirVector = new Vector2(intVector.x, 0);
+			else
+				dirVector = new Vector2(0, intVector.y);
 		}
+
+		// animate movement directly from src to target
+		Tween tween = ship.GetNode<Tween>("Tween");
+		GD.Print(pos1);
+		GD.Print(ship.Position);
+		tween.InterpolateProperty(ship, "Position", pos1, ship.Position, 0.2f*distance, Godot.Tween.TransitionType.Linear, Godot.Tween.EaseType.InOut);
+		tween.Start();
 
 		ship.range -= distance;
 
@@ -231,6 +277,10 @@ public class Grid : TileMap
 		// not enough points to attack
 		if (attacker.AP < 1) return;
 
+		//plays a sound effect on good attack
+		AudioStreamPlayer attack_1 = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/attack_1");
+        attack_1.Play();
+
 		// consume points and proceed with attacking
 		attacker.AP = Math.Max(0, attacker.AP-1);
 
@@ -243,7 +293,9 @@ public class Grid : TileMap
 		if (defender.HP <= 0)
 		{
 			RemoveChild(defender);
-
+			//boom sound on death
+			AudioStreamPlayer destroy_1 = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/destroy_1");
+			destroy_1.Play();	   
 			// remove from the appropriate list
 			try
 			{
@@ -447,6 +499,9 @@ public class Grid : TileMap
 						if (this.selected != ship)
 						{
 							this.selected = ship;
+							//plays a sound effect
+							AudioStreamPlayer grid_interact = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/grid_interact");
+          					grid_interact.Play();
 							GD.Print("Selected: ", ship);
 							
 							// redraw movement range
@@ -591,6 +646,8 @@ public class Grid : TileMap
 
 	// check whether a victory condition has been met by either side
 	// if so, ends the match appropriately
+	//todo, screens, check for audio cutting
+	//possibly add some victory/defeat flourish too
 	private void CheckVictory()
 	{
 		// enemy has 0 ships, player wins
@@ -600,12 +657,14 @@ public class Grid : TileMap
 			State.maxLevel = State.currentLevel + 1;
 			State.currentLevel += 1;
 			// end match and return to level select
+			bool victory = true;
 			GetTree().ChangeScene("res://level_select.tscn");
 		}
 		// player has 0 ships, player loses
 		else if (playerShips.Count == 0)
 		{
 			// just end match and return to level select
+			bool defeat = true;
 			GetTree().ChangeScene("res://level_select.tscn");
 		}
 	}

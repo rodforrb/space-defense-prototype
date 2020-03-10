@@ -10,9 +10,6 @@
 
 ### To Do:
 
+### Bugs:
 
 #### Other
-
-We could add stuff to do here
-
-Like "highlight the attack range of comp ship"
