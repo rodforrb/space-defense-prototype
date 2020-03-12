@@ -253,8 +253,6 @@ public class Grid : TileMap
 
 		// animate movement directly from src to target
 		Tween tween = ship.GetNode<Tween>("Tween");
-		GD.Print(pos1);
-		GD.Print(ship.Position);
 		tween.InterpolateProperty(ship, "Position", pos1, ship.Position, 0.2f*distance, Godot.Tween.TransitionType.Linear, Godot.Tween.EaseType.InOut);
 		tween.Start();
 
@@ -280,6 +278,20 @@ public class Grid : TileMap
 		//plays a sound effect on good attack
 		AudioStreamPlayer attack_1 = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/attack_1");
         attack_1.Play();
+		
+		// draw animation for attack
+		Node2D laser = (Node2D)attacker.laser.Instance();
+		AddChild(laser);
+
+		laser.Position = defender.Position;
+		laser.LookAt(attacker.Position);
+		Sprite sprite = laser.GetNode<Sprite>("Sprite");
+		// sprite.Offset = defender.Position - attacker.Position;
+		sprite.Offset = new Vector2(attacker.Position.x-defender.Position.x, defender.Position.y-attacker.Position.y);
+
+		Tween tween = laser.GetNode<Tween>("Tween");
+		tween.InterpolateProperty(sprite, "Offset", sprite.Offset, new Vector2(0,0), 1, Godot.Tween.TransitionType.Linear, Godot.Tween.EaseType.In);
+		tween.Start();
 
 		// consume points and proceed with attacking
 		attacker.AP = Math.Max(0, attacker.AP-1);

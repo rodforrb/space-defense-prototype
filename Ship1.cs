@@ -33,6 +33,7 @@ public class Ship1 : Node2D
 //	public (PackedScene) var bullet;
 //	public var bullet_conatianer = GetNode("bullet_container");
 	public PackedScene bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
+	public PackedScene laser = ResourceLoader.Load("Laser.tscn") as PackedScene;
 	
 
     //constructor with parameters
