@@ -300,6 +300,7 @@ public class Grid : TileMap
 			try
 			{
 				computerShips.Remove((CompShip)defender);
+				Loot.Loot.giveCurrency(1);
 				
 			} catch (System.InvalidCastException e) {
 				playerShips.Remove(defender);
@@ -488,7 +489,7 @@ public class Grid : TileMap
 				Vector2 cell = WorldToMap(mouseClick.Position);
 				int tileIndex = GetCellv(cell);
 				GD.Print("Mouse Click at: ", mouseClick.Position, ", Cell: ", cell, ", Tile: ", tileIndex);
-				
+				GD.Print(Loot.Loot.getValue());
 				// iterate player ships to find what was clicked
 				foreach (Ship1 ship in playerShips)
 				{
