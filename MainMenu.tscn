@@ -15,6 +15,9 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_right = 1104.0
@@ -85,7 +88,6 @@ margin_bottom = 450.0
 texture = ExtResource( 8 )
 
 [node name="SoundEffect" type="Node2D" parent="."]
-editor/display_folded = true
 
 [node name="menu_select" type="AudioStreamPlayer" parent="SoundEffect"]
 stream = ExtResource( 9 )

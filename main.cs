@@ -33,16 +33,16 @@ public class main : Node2D
 			compTurn = true;
 			
 		}
-	    
+		
 	}
 	/*
-    public void _on_Exit_gui_input(InputEvent @event){
-        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
-    {
-        GetTree().ChangeScene("res://main.tscn");
-        GD.Print("Exit game clicked");
-    }
-    }
+	public void _on_Exit_gui_input(InputEvent @event){
+		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+	{
+		GetTree().ChangeScene("res://main.tscn");
+		GD.Print("Exit game clicked");
+	}
+	}
 	*/
 }	
 

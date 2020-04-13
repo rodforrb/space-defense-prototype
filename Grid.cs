@@ -188,7 +188,7 @@ public class Grid : TileMap
 		if (!Array.Exists(RangeCheck(ship.range, WorldToMap(ship.Position)), element => element == target))
 			return false;
 
-    // calculate x+y movement distance
+	// calculate x+y movement distance
 		Vector2 vector =  target - WorldToMap(ship.Position);									// net vector from ship to target
 		Vector2 intVector = new Vector2((int)vector.x, (int)vector.y);				// same vector as int (can be worked out to remove)
 		int distance = (int) (Math.Abs(intVector.x) + Math.Abs(intVector.y));
@@ -205,7 +205,7 @@ public class Grid : TileMap
 		//use signal, _on_<sound name>_finished() method
 		//This specific issue will likely be handled in end game screens
 		AudioStreamPlayer grid_interact = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/grid_interact");
-        grid_interact.Play();		
+		grid_interact.Play();		
 
 		// move ship along path to new position
 		while (WorldToMap(ship.Position) != target)
@@ -277,7 +277,7 @@ public class Grid : TileMap
 
 		//plays a sound effect on good attack
 		AudioStreamPlayer attack_1 = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/attack_1");
-        attack_1.Play();
+		attack_1.Play();
 		
 		// draw animation for attack
 		Node2D laser = (Node2D)attacker.laser.Instance();
@@ -513,7 +513,7 @@ public class Grid : TileMap
 							this.selected = ship;
 							//plays a sound effect
 							AudioStreamPlayer grid_interact = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/grid_interact");
-          					grid_interact.Play();
+		  					grid_interact.Play();
 							GD.Print("Selected: ", ship);
 							
 							// redraw movement range

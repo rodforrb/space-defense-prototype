@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Bullets.cs" type="Script" id=1]
+[ext_resource path="res://Bullets.cs" type="TextFile" id=1]
 [ext_resource path="res://resources/graphics/sprites/projectiles/laser.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]

@@ -4,9 +4,9 @@ using System;
 //RigidBody2D?
 public class Bullets : Area2D
 {
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
+	// Declare member variables here. Examples:
+	// private int a = 2;
+	// private string b = "text";
 	
 	//Node2D Grid = GetParent();
 	
@@ -24,16 +24,16 @@ public class Bullets : Area2D
 	delegate void hit_target(Vector2 cell, int fp, int pen);
 	
 	public PackedScene Bullet
-    {
-        get { return _bullet; }
-        set
-        {
-            if (Engine.IsEditorHint())
-            {
-                _bullet = value;
-            }
-        }
-    }
+	{
+		get { return _bullet; }
+		set
+		{
+			if (Engine.IsEditorHint())
+			{
+				_bullet = value;
+			}
+		}
+	}
 	
 //	    // Warn users if the value hasn't been set.
 //    public String _GetConfigurationWarning()
@@ -75,11 +75,11 @@ public class Bullets : Area2D
 	}
 	
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        //set_as_toplevel(true);
-    }
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
+	{
+		//set_as_toplevel(true);
+	}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta)
