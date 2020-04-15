@@ -12,7 +12,8 @@ public class CompShip : Ship1
 	private int maxAP = 5;
 	new public int AP {get; set;} = 5;
 	
-	new public Team team = Team.Computer;
+	[Export]
+	new public Team team {get;} = Team.Computer;
 	new public int penetration { get; set; } = 5;//the ships ability to ignore armour
 	new public int armour { get; set; } = 5;//the ships resistance to damage
 	new public int accuracy { get; set; } = 5;//odds of hitting an opponent

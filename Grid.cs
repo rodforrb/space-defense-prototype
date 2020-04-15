@@ -28,7 +28,7 @@ public class Grid : TileMap
 	public List<Ship1> playerShips {get;} = new List<Ship1>();
 	public List<CompShip> computerShips {get;} = new List<CompShip>();
 	
-	public PackedScene _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
+	// public PackedScene _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
 	//public Node bullet_conatianer = GetNode("bullet_container");
 	
 	//https://docs.godotengine.org/en/3.1/getting_started/workflow/best_practices/scenes_versus_scripts.html
@@ -55,7 +55,7 @@ public class Grid : TileMap
 			Node2D child = (Node2D)GetChild(i);
 
 			// rounding to fix grid alignment issues from editor
-			child.SetPosition(MapToWorld(WorldToMap(child.GetPosition())));
+			child.Position = MapToWorld(WorldToMap(child.Position));
 			
 			/* Sometimes it's better to ask for forgiveness.
 			 * See if the child is a ship by trying to convert it to a ship.
@@ -101,7 +101,7 @@ public class Grid : TileMap
 	* return Vector2[] of positions within range
 	*/
 
-	private Vector2[] RangeCheck(int range,Vector2 currentPos, int mainX = 0, int mainY = 0, int aduX = 0, int aduY = 0)
+	public Vector2[] RangeCheck(int range,Vector2 currentPos, int mainX = 0, int mainY = 0, int aduX = 0, int aduY = 0)
 	{
 		List<Vector2> allLocations = new List<Vector2>();
 		//being checking along the main axis
@@ -133,8 +133,19 @@ public class Grid : TileMap
 		return allLocations.ToArray();
 	}
 
+	/* Calculate the difference between two pixel coordinates accurately
+	* Rounds the coordinates to align with the grid
+	* Vector2 v1 map coordinate
+	* Vector2 v2 map coordinate
+	* returns v1-v2
+	*/
+	private Vector2 CoordinateDifference(Vector2 v1, Vector2 v2)
+	{
+		return MapToWorld(WorldToMap(v1) - WorldToMap(v2));
+	}
 
-	private void addRange(Vector2[] moves, String tileString)
+
+	public void addRange(Vector2[] moves, String tileString)
 	{
 		int tile = TileSet.FindTileByName(tileString);
 		for(int i = 0; i < moves.Length; i++)
@@ -143,7 +154,7 @@ public class Grid : TileMap
 		}
 	}
 
-	private void addRange(Vector2[] moves, String tileString, TileMap tileMap)
+	public void addRange(Vector2[] moves, String tileString, TileMap tileMap)
 	{
 		int tile = TileSet.FindTileByName(tileString);
 		for(int i = 0; i < moves.Length; i++)
@@ -153,7 +164,7 @@ public class Grid : TileMap
 	}
 
 	// Removes all blue tiles from the grid 
-	private void removeRange(Vector2[] moves)
+	public void removeRange(Vector2[] moves)
 	{
 		if (moves == null) return;
 		// int tile = TileSet.FindTileByName("Sprite");
@@ -164,7 +175,7 @@ public class Grid : TileMap
 	}
 
 	// Removes all blue tiles from the grid 
-	private void removeRange(Vector2[] moves, TileMap tileMap)
+	public void removeRange(Vector2[] moves, TileMap tileMap)
 	{
 		if (moves == null) return;
 		// int tile = TileSet.FindTileByName("Sprite");
@@ -210,12 +221,11 @@ public class Grid : TileMap
 		// move ship along path to new position
 		while (WorldToMap(ship.Position) != target)
 		{
-			GD.Print(intVector.x, ',', intVector.y);
 			// more vertical distance to travel
 			if (Math.Abs(intVector.x) < Math.Abs(intVector.y))
 			{
 				// move 1 unit in y direction
-				ship.SetPosition(ship.Position + new Vector2(0,intVector.y*gridSize/Math.Abs(intVector.y)));
+				ship.Position = (ship.Position + new Vector2(0,intVector.y*gridSize/Math.Abs(intVector.y)));
 
 				// rotate ship
 				if (intVector.y < 0) 
@@ -226,7 +236,7 @@ public class Grid : TileMap
 			else // move horizontally
 			{
 				// move 1 unit in x direction
-				ship.SetPosition(ship.Position + new Vector2(intVector.x*gridSize/Math.Abs(intVector.x), 0));
+				ship.Position = (ship.Position + new Vector2(intVector.x*gridSize/Math.Abs(intVector.x), 0));
 
 				// rotate ship
 				if (intVector.x < 0)
@@ -267,7 +277,7 @@ public class Grid : TileMap
 	* ProjectileType projType
 	* return true if hit, false if miss
 	*/
-	public void Attack(Ship1 attacker, Ship1 defender, Projectile proj) //TODO
+	public async void Attack(Ship1 attacker, Ship1 defender, Projectile proj) //TODO
 	{
 		// target out of range
 		if (!Array.Exists(RangeCheck(attacker.getAttackRange(), WorldToMap(attacker.Position)), element => element == WorldToMap(defender.Position))) return;
@@ -282,16 +292,26 @@ public class Grid : TileMap
 		// draw animation for attack
 		Node2D laser = (Node2D)attacker.laser.Instance();
 		AddChild(laser);
+		Vector2 halfTile = new Vector2(8,-8); // center on grid tile
 
-		laser.Position = defender.Position;
-		laser.LookAt(attacker.Position);
-		Sprite sprite = laser.GetNode<Sprite>("Sprite");
-		// sprite.Offset = defender.Position - attacker.Position;
-		sprite.Offset = new Vector2(attacker.Position.x-defender.Position.x, defender.Position.y-attacker.Position.y);
+		// laser.Position = defender.Position + halfTile;
+		// laser.LookAt(attacker.Position);
+		// Sprite sprite = laser.GetNode<Sprite>("Sprite");
+		
+		// sprite.Offset = CoordinateDifference(laser.Position, attacker.Position+halfTile);
 
+		// Tween tween = laser.GetNode<Tween>("Tween");
+		// tween.InterpolateProperty(sprite, "Offset", sprite.Offset, halfTile, 0.5f);
+		// tween.Start();
+
+
+		laser.Position = attacker.Position + halfTile;
+		
 		Tween tween = laser.GetNode<Tween>("Tween");
-		tween.InterpolateProperty(sprite, "Offset", sprite.Offset, new Vector2(0,0), 1, Godot.Tween.TransitionType.Linear, Godot.Tween.EaseType.In);
+		tween.InterpolateProperty(laser, "Position", laser.Position, defender.Position + halfTile, 0.5f);
 		tween.Start();
+
+		await ToSignal(tween, "tween_completed");
 
 		// consume points and proceed with attacking
 		attacker.AP = Math.Max(0, attacker.AP-1);
@@ -514,7 +534,6 @@ public class Grid : TileMap
 							//plays a sound effect
 							AudioStreamPlayer grid_interact = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/grid_interact");
 		  					grid_interact.Play();
-							GD.Print("Selected: ", ship);
 							
 							// redraw movement range
 							DrawMoves();

@@ -12,7 +12,8 @@ public class Ship1 : Node2D
 	public int maxHP {get;} = 10;//maximum hp
 	public int HP { get; set;} = 10;//current hp
 
-	public Team team;
+	[Export]
+	public Team team {get;} = Team.Player;
    
 
 	public int firepower { get; set; } = 5;//the ships firepower multiplier
@@ -32,7 +33,7 @@ public class Ship1 : Node2D
 																									 //int yes = shipClass.Projectile.firepower;
 //	public (PackedScene) var bullet;
 //	public var bullet_conatianer = GetNode("bullet_container");
-	public PackedScene bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
+//	public PackedScene bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
 	public PackedScene laser = ResourceLoader.Load("Laser.tscn") as PackedScene;
 	
 
