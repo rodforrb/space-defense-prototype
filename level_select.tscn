@@ -206,6 +206,14 @@ text = "Current Difficulty:
  NULL"
 align = 1
 
+[node name="Currency" type="Label" parent="Panel"]
+margin_left = 270.559
+margin_top = 15.2869
+margin_right = 460.559
+margin_bottom = 36.2869
+text = "Currency: NULL"
+align = 1
+
 [node name="CurrentLevel" type="Label" parent="Panel"]
 margin_left = 540.0
 margin_top = 14.0
