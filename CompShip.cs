@@ -7,21 +7,21 @@ public class CompShip : Ship1
 	/*
 	name or id?
 	*/
+	private int maxRange = 3;
+	new public int range {get; set;} = 3;
+	private int maxAP = 5;
+	new public int AP {get; set;} = 5;
 	
-	new public Team team = Team.Computer;
-	public override int maxHP {get;} = 10;//maximum hp
-    public override int HP { get; set;} = 10;//current hp   
-
-    public override int firepower { get; set; } = 5;//the ships firepower multiplier
-    public override int penetration { get; set; } = 5;//the ships ability to ignore armour
-    public override int armour { get; set; } = 5;//the ships resistance to damage
-    public override int accuracy { get; set; } = 5;//odds of hitting an opponent
-    public override int evasion { get; set; } = 5;//odds of dodging an attack
-    public override int AP { get; set; } = 5;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
-    public override int maxAP {get;}= 5;//the maximum action points of a ship, it will reset to this value at the start of every turn
-    public int maxRange = 3;//the range it can move
-    public override int range {get; set;} = 3;
+	[Export]
+	new public Team team {get;} = Team.Computer;
+	[Export]
+	public Type type {get; set; } = Type.Medium;
 	
+	/*new public int penetration { get; set; } = 5;//the ships ability to ignore armour
+	new public int armour { get; set; } = 5;//the ships resistance to damage
+	new public int accuracy { get; set; } = 5;//odds of hitting an opponent
+	new public int evasion { get; set; } = 5;//odds of dodging an attack
+	*/
 	/* Used to get instantiated Grid object
 	 * Unfortunately GetNode cannot be used by a static class.
 	 * @return Grid

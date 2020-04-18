@@ -2,31 +2,31 @@
 
 [ext_resource path="res://Ship1.cs" type="Script" id=1]
 
-[sub_resource type="StreamTexture" id=5]
-load_path = "res://.import/ship1.png-e926fd9dc57dcb799efec95eb240056d.stex"
+[sub_resource type="StreamTexture" id=1]
+load_path = "res://.import/DestroyerB.png-13836dc9da651e5788dc16d7a89a0378.stex"
 
-[sub_resource type="RectangleShape2D" id=4]
+[sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 13.2136, 13.5469 )
-
-[sub_resource type="StreamTexture" id=2]
-flags = 4
-load_path = "res://.import/hpbar.png-4f27aad5e9aeef79805035e1f79cdc6a.stex"
 
 [sub_resource type="StreamTexture" id=3]
 flags = 4
 load_path = "res://.import/hpbar.png-4f27aad5e9aeef79805035e1f79cdc6a.stex"
 
-[node name="Ship1" type="Area2D"]
+[sub_resource type="StreamTexture" id=4]
+flags = 4
+load_path = "res://.import/hpbar.png-4f27aad5e9aeef79805035e1f79cdc6a.stex"
+
+[node name="DestroyerB" type="Area2D"]
 script = ExtResource( 1 )
-type = 1
+type = 3
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 16, 16 )
-texture = SubResource( 5 )
+texture = SubResource( 1 )
+centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 16.0906, 17.5146 )
-shape = SubResource( 4 )
+position = Vector2( 16.1953, 17.5146 )
+shape = SubResource( 2 )
 
 [node name="HPbar" type="TextureProgress" parent="."]
 margin_left = 1.0
@@ -35,7 +35,7 @@ margin_right = 31.0
 margin_bottom = -1.0
 step = 0.1
 value = 100.0
-texture_under = SubResource( 2 )
-texture_progress = SubResource( 3 )
+texture_under = SubResource( 3 )
+texture_progress = SubResource( 4 )
 tint_under = Color( 0, 0, 0, 1 )
 nine_patch_stretch = true
