@@ -13,12 +13,16 @@ public enum ProjectileType
 
 public class Projectile : Node2D
 {
+	[Export]
 	public ProjectileType proj {get; set;} = ProjectileType.Default;//the name of the projectile
+	[Export]
 	public int firepower {get; set;} = 0;//the firepower of the projectile
 	public int penetration {get; set;} = 0;//the penetration multiplier of the projectile
 	public int accuracy {get; set;} = 0;//the accuracy multiplier of the projectile
 	public int range {get; set;} = 0;//the range of the weapon in tiles
-	public int APcost {get; set;} = 0;//the action point cost
+	
+	[Export]
+	public int cost {get; set;} = 0;//the action point cost
 	public string type {get; set;} = "";//the type of weapon it is, some types of weapons will be more effective against certain foes
 	
 
@@ -30,7 +34,7 @@ public class Projectile : Node2D
 		penetration = pen;
 		accuracy = acc;
 		range = ran;
-		APcost = ap;
+		cost = ap;
 		type = typ;
 	}
 
@@ -42,7 +46,7 @@ public class Projectile : Node2D
 		penetration = pen;
 		accuracy = acc;
 		range = ran;
-		APcost = ap;
+		cost = ap;
 		type = typ;
 	}
 
@@ -98,7 +102,7 @@ public class Projectile : Node2D
 	}
 	public int getAPCost()
 	{
-		return APcost;
+		return cost;
 	}
 	public ProjectileType getProjectileType()
 	{

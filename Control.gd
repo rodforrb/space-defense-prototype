@@ -1,4 +1,5 @@
 extends TileMap
+var state
 var gridCS
 var grid
 var laser
@@ -17,6 +18,7 @@ var mouseTile = null
 
 
 func _ready():
+	state = preload("state.gd").new()
 	laser = preload("Laser.tscn")
 	var ships = get_children()
 	for ship in ships:
@@ -73,26 +75,35 @@ func move(ship, target):
 		return false
 	
 	var vector = target - world_to_map(ship.position)
-	var distance = int(sqrt(abs(vector.x) + abs(vector.y)))
+	var steps = abs(vector.x) + abs(vector.y)
+	
+	var distance = sqrt(vector.x*vector.x + vector.y*vector.y)
 
 	# sound effect
 	get_node("../SoundEffect/grid_interact").play();
 
 	# prep movement
 	var sprite = ship.get_node("Sprite")
-	sprite.look_at(map_to_world(target) + Vector2(16,16))
-	sprite.rotation_degrees += 90
-
-	# move ship
-	ship.position = map_to_world(target)
+	ship.range -= steps
 
 	# animate movement
 	var tween = ship.get_node("Tween")
-	tween.interpolate_property(sprite, "offset", Vector2(0, distance*32), Vector2(0,0), 0.2*distance);
+
+	# align sprite
+	sprite.look_at(map_to_world(target) + Vector2(16,16))
+	sprite.rotation_degrees += 90
+	
+	# move ship
 	ship.position = map_to_world(target)
+
+	# animate sprite
+	tween.interpolate_property(sprite, "offset", Vector2(0, 32*distance), Vector2(0,0), 0.2);
 	tween.start();
 
-	return true
+	# wait for animation to complete
+	yield(tween, "tween_completed")
+
+	return true	
 
 # handles request for an attack
 # Ship ship1, attacking ship
@@ -104,9 +115,6 @@ func attack(ship1, ship2):
 		return false
 
 	if ship1.AP < 1: return false
-
-	# proceed with attack
-	playerTurn = false
 
 	var distance = ship2.position.distance_to(ship1.position)
 
@@ -127,9 +135,23 @@ func attack(ship1, ship2):
 	tween.interpolate_property(projectile, "position", ship1.position, ship2.position, distance/320);
 	tween.start();
 	
+	# wait for animation to complete
 	yield(tween, "tween_completed")
+
+	# apply damage
+	ship1.AP = max(0, ship1.AP-projectile.cost)
+	ship2.HP -= projectile.firepower
+
+	# handle destroyed ship
+	if ship2.HP <= 0:
+		get_node("../SoundEffect/destroy_1").play()
+
+		enemyShips.remove(enemyShips.find(ship2))
+		remove_child(ship2)
+		check_victory()
+
+	# cleanup projectile animation and return to player
 	remove_child(projectile)
-	playerTurn = true
 	
 	
 
@@ -156,7 +178,9 @@ func _input(event):
 
 		# left click down
 		if event.button_index == BUTTON_LEFT and event.is_pressed():
+			playerTurn = false
 			on_left_clicked(tile)
+			playerTurn = true
 
 			# update movement tiles
 			draw_moves()
@@ -212,17 +236,24 @@ func on_left_clicked(tile):
 	
 	return
 
-# called when end turn button is pressed
-func on_end_turn():
-	pass
-
-func comp_turn():
-	pass
-
+# check whether a victory condition is met
 func check_victory():
-	pass
+	# no enemy ships; player wins
+	if enemyShips.size() == 0:
+		state.max_level = max(state.max_level, state.current_level + 1)
+		state.current_level += 1
 
-# calculate tiles within range of a given location
+		# end and return to level select
+		yield(get_tree().create_timer(2), "timeout")
+		get_tree().change_scene("res://level_select.tscn")
+
+	# no player ships; player loses
+	elif playerShips.size() == 0:
+		yield(get_tree().create_timer(2), "timeout")
+		get_tree().change_scene("res://level_select.tscn")
+
+
+# calculate which tiles are within range of a given location
 # return an array of Vector2 tile locations
 func range_check(rng, tile, mainX = 0, mainY = 0, aduX = 0, aduY = 0):
 	var locations = []
@@ -240,3 +271,14 @@ func range_check(rng, tile, mainX = 0, mainY = 0, aduX = 0, aduY = 0):
 			locations += (range_check(rng-1, Vector2(tile.x+mainX, tile.y+mainY),mainX,mainY,aduX,aduY));
 	
 	return locations
+
+# handles "end turn" button press
+func _on_end_turn():
+	playerTurn = false
+	comp_turn()
+	check_victory()
+	playerTurn = true
+
+# responsible for computer ship turn
+func comp_turn():
+	pass

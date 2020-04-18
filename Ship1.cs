@@ -9,6 +9,8 @@ public enum Team
 
 public class Ship1 : Node2D
 {
+	
+	[Export]
 	public int maxHP {get;} = 10;//maximum hp
 	public int HP { get; set;} = 10;//current hp
 
