@@ -85,7 +85,6 @@ margin_bottom = 450.0
 texture = ExtResource( 8 )
 
 [node name="SoundEffect" type="Node2D" parent="."]
-editor/display_folded = true
 
 [node name="menu_select" type="AudioStreamPlayer" parent="SoundEffect"]
 stream = ExtResource( 9 )

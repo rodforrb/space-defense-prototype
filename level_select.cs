@@ -3,12 +3,12 @@ using System;
 
 public class level_select : Node2D
 {
-    // Called when the node enters the scene tree for the first time.
+	// Called when the node enters the scene tree for the first time.
 
 	
-    public override void _Ready()
-    {
-        Label curr = (Label) this.GetNode("Panel/Currency");
+	public override void _Ready()
+	{
+		Label curr = (Label) this.GetNode("Panel/Currency");
 		Label diff = (Label) this.GetNode("Panel/CurrentDifficulty");
 		Label selected = (Label) this.GetNode("Panel/CurrentLevel");
 		Sprite arrow = (Sprite) this.GetNode("Grid/Selected/Arrow");
@@ -32,7 +32,7 @@ public class level_select : Node2D
 			arrow.SetGlobalPosition(new Vector2 (254,222));
 		}
 		
-    }
+	}
 	
 	// load a level
 	private void _on_Start_pressed()
