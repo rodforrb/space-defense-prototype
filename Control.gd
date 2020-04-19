@@ -4,18 +4,24 @@ var gridCS
 var grid
 var laser
 
-var validShips = []	 # array of grid positions
+# board state information
+var validShips = []	 # array of grid positions of movable ships
 var playerShips = [] # array of ships
 var enemyShips = []  # array of ships
 
+# obstacle tile indices
 var obstacle_tiles = [12, 13]
 
+# active ship selection information
 var selectedShip = null
 var selectedRange = []
+var attackRange
 
+# turn information
 var playerTurn = true
-var mouseTile = null
+var mouseTile = null	# tile under mouse
 
+# async signal to resynchronize turns
 signal computer_done
 
 func _ready():
@@ -35,7 +41,9 @@ func _ready():
 func draw_moves():
 	del_range(validShips)
 	del_range(selectedRange)
+	del_range(attackRange)
 	validShips.clear()
+	attackRange.clear()
 
 	if selectedShip != null:
 		# draw selected ship movement range tiles
