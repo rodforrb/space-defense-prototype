@@ -31,9 +31,10 @@ public class CompShip : Ship1
 	 * Unfortunately GetNode cannot be used by a static class.
 	 * @return Grid
 	*/
-	public Grid GetGrid ()
+	public Node GetGrid ()
 	{
-		return (GetNode<Grid>("/root/Game/Grid"));
+		return (GetNode("/root/Game/Grid"));
+		// return ResourceLoader.Load
 	}
 	
 	// Called when the node enters the scene tree for the first time.
@@ -60,19 +61,20 @@ public class CompShip : Ship1
 	//FOR THE SAKE OF GETTING SOME LEVEL OF AI LOGIC PUSHED TO MASTER
 	public void PlayTurn()
 	{
+		Godot.Collections.Array PlayerShips = GetGrid().Get("playerShips") as Godot.Collections.Array;
 		// nothing to do but game might not have ended yet because of async
 		try
 		{
-		if (GetGrid().playerShips.Count == 0) return;
+		if (PlayerShips.Count == 0) return;
 		} catch (System.Exception e) {
 			return;
 		}
 
-		Ship1 target = GetGrid().playerShips[0];
+		Ship1 target = (Ship1)PlayerShips[0];
 		float distance = 10000000;
 		//may need to switch targetting?
 		//or like modify BFS so it gets the path dist to ALL ships and uses that?
-		foreach (Ship1 ship in GetGrid().playerShips)
+		foreach (Ship1 ship in PlayerShips)
 		{
 			float lenSquared = (this.Position - ship.Position).LengthSquared();
 			if (lenSquared < distance)
@@ -103,8 +105,8 @@ public class CompShip : Ship1
 		*/
 		fight = 1;
 		//generating path
-		Vector2 shipCell = GetGrid().WorldToMap(this.GetPosition());
-		Vector2 targetCell = GetGrid().WorldToMap(target.Position); 
+		Vector2 shipCell = (Vector2)GetGrid().Call("world_to_map",this.GetPosition());
+		Vector2 targetCell = (Vector2)GetGrid().Call("world_to_map", target.Position); 
 		Vector2 moveNorth = new Vector2(shipCell.x, shipCell.y - 1);
 		Vector2 moveEast = new Vector2(shipCell.x + 1, shipCell.y);
 		Vector2 moveSouth = new Vector2(shipCell.x, shipCell.y + 1);
@@ -137,7 +139,7 @@ public class CompShip : Ship1
 		Queue queue = new Queue();
 		//assuming forever square grids
 		//BFS
-		int v = GetGrid().gridSize;
+		int v = 32;
 		bool[,] visited = new bool[v, v]; 
 		int[,] dist = new int[v,v]; 
 		int[,] pred = new int[v,v];
@@ -158,11 +160,11 @@ public class CompShip : Ship1
 		posHolder[1] = 66;	
 		queue.Enqueue(posHolder.Clone());
 
-        GD.Print("\nQueue contains:");
-        foreach( int[] number in queue )
-        {
-            GD.Print(number[0],", " number[1]);
-        }	
+		GD.Print("\nQueue contains:");
+		foreach( int[] number in queue )
+		{
+			GD.Print(number[0],", " number[1]);
+		}	
 		*/
 		//GD.Print((int)shipCell[0], (int)shipCell[1]);
 		visited[(int)shipCell[0], (int)shipCell[1]] = true;
@@ -194,13 +196,13 @@ public class CompShip : Ship1
 				if(((0 <= (activeStep[0] + addX) && (activeStep[0] + addX) < v) && (0 <= (activeStep[1] + addY) && (activeStep[1] + addY)< v) ) && (visited[activeStep[0] + addX, activeStep[1]+addY] == false)){
 					//obst check todo
 					bool freeTile = true;
-					foreach (int obs in GetGrid().obst){
-						if(GetGrid().GetCellv(new Vector2((activeStep[0] + addX), (activeStep[1] + addY))) == obs){
+					Godot.Collections.Array tiles = GetGrid().Get("obstacle_tiles") as Godot.Collections.Array;
+					foreach (int obs in tiles){
+						if((int)GetGrid().Call("get_cellv", new Vector2((activeStep[0] + addX), (activeStep[1] + addY))) == obs){
 								freeTile = false;
 						}
 					}
 					if(freeTile){
-
 						visited[activeStep[0] + addX, activeStep[1]+addY] = true;
 						dist[activeStep[0] + addX, activeStep[1]+addY] = dist[activeStep[0], activeStep[1]] + 1;
 						
@@ -265,10 +267,11 @@ public class CompShip : Ship1
 			Vector2 difference = (targetCell - shipCell);
 			if(fight==1){
 				if((Math.Abs(difference.x)+Math.Abs(difference.y)) <= range){
-					GetGrid().Attack(this, target, new Projectile(ProjectileType.Gun));
+					// GetGrid().Attack(this, target, new Projectile(ProjectileType.Gun));
+					GetGrid().Call("attack", this, target);
 				}
 				else{
-					GetGrid().Move(this, movePath[i]);
+					GetGrid().Call("move", this, movePath[i]);
 					this.moveStep = i;
 					}
 			}
@@ -277,16 +280,16 @@ public class CompShip : Ship1
 				int randDirection = r.Next(0, 4); //0 = north, 1 east, 2 south, 3 west						
 				switch (randDirection){
 					case 0:
-						GetGrid().Move(this, moveNorth);	
+						GetGrid().Call("move", this, moveNorth);	
 						break;			
 					case 1:
-						GetGrid().Move(this, moveEast);
+						GetGrid().Call("move", this, moveEast);
 						break;
 					case 2:
-						GetGrid().Move(this, moveSouth);
+						GetGrid().Call("move", this, moveSouth);
 						break;			
 					case 3:
-						GetGrid().Move(this, moveWest);
+						GetGrid().Call("move", this, moveWest);
 						break;
 				}								
 			}			

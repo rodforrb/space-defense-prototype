@@ -40,9 +40,9 @@ public class Grid : TileMap
 	 * Unfortunately GetNode cannot be used by a static class.
 	 * @return Grid
 	*/
-	public Grid GetGrid ()
+	public Node GetGrid ()
 	{
-		return (GetNode<Grid>("/root/Game/Grid"));
+		return (GetNode("/root/Game/Grid"));
 	}
 	
 	// Called when the node enters the scene tree for the first time.

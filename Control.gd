@@ -16,6 +16,7 @@ var selectedRange = []
 var playerTurn = true
 var mouseTile = null
 
+signal computer_done
 
 func _ready():
 	state = preload("state.gd").new()
@@ -41,18 +42,14 @@ func draw_moves():
 		selectedRange = range_check(selectedShip.range, world_to_map(selectedShip.position))
 		add_range(selectedRange, "YellowTransparency")
 
-	for ship in playerShips:
-		if ship.range > 0:
-			validShips.append(world_to_map(ship.position))
-		
-		# if ship can only attack, check if any enemy ships are within range
-		# elif ship.AP > 2:
-		# 	for compShip in enemyShips:
-		# 		
+	if playerTurn:
+		for ship in playerShips:
+			if ship.range > 0 or ship.AP > 0:
+				validShips.append(world_to_map(ship.position))	
 	
-	# highlight ships which can move
-	if validShips.size() > 0:
-		add_range(validShips, "YellowTransparency")
+		# highlight ships which can move
+		if validShips.size() > 0:
+			add_range(validShips, "YellowTransparency")
 	
 
 		
@@ -74,9 +71,9 @@ func move(ship, target):
 	if !target in range_check(ship.range, world_to_map(ship.position)):
 		return false
 	
+	# calculate movement
 	var vector = target - world_to_map(ship.position)
 	var steps = abs(vector.x) + abs(vector.y)
-	
 	var distance = sqrt(vector.x*vector.x + vector.y*vector.y)
 
 	# sound effect
@@ -86,18 +83,19 @@ func move(ship, target):
 	var sprite = ship.get_node("Sprite")
 	ship.range -= steps
 
-	# animate movement
-	var tween = ship.get_node("Tween")
-
 	# align sprite
 	sprite.look_at(map_to_world(target) + Vector2(16,16))
 	sprite.rotation_degrees += 90
 	
 	# move ship
 	ship.position = map_to_world(target)
+	sprite.offset = Vector2(0, 32*distance)
+
+	# animate movement
+	var tween = ship.get_node("Tween")
 
 	# animate sprite
-	tween.interpolate_property(sprite, "offset", Vector2(0, 32*distance), Vector2(0,0), 0.2);
+	tween.interpolate_property(sprite, "offset", sprite.offset, Vector2(0,0), 0.2);
 	tween.start();
 
 	# wait for animation to complete
@@ -111,21 +109,24 @@ func move(ship, target):
 # return true if hit, false if miss
 func attack(ship1, ship2):
 	# target ship is not in range
-	if !(world_to_map(ship2.position) in range_check(ship1.range, world_to_map(ship1.position))):
+	if !(world_to_map(ship2.position) in range_check(ship1.maxRange, world_to_map(ship1.position))):
 		return false
 
+	# ship must have enough AP
 	if ship1.AP < 1: return false
 
+	# calculate distance
 	var distance = ship2.position.distance_to(ship1.position)
 
 	# sound effect
 	get_node("../SoundEffect/attack_1").play()
 
-	# create the object
+	# create the projectile
 	var projectile = laser.instance()
 	add_child(projectile)
 	projectile.position = ship1.position
 	
+	# align projectile
 	var sprite = projectile.get_node("Sprite")
 	sprite.look_at(ship2.position + Vector2(16,16))
 	sprite.rotation_degrees += 90
@@ -144,10 +145,18 @@ func attack(ship1, ship2):
 
 	# handle destroyed ship
 	if ship2.HP <= 0:
+		# sound effect
 		get_node("../SoundEffect/destroy_1").play()
 
-		enemyShips.remove(enemyShips.find(ship2))
+		# remove from team list
+		if ship2.team == 0:
+			playerShips.remove(playerShips.find(ship2))
+		else:
+			enemyShips.remove(enemyShips.find(ship2))
+
+		# remove from grid
 		remove_child(ship2)
+
 		check_victory()
 
 	# cleanup projectile animation and return to player
@@ -240,8 +249,7 @@ func on_left_clicked(tile):
 func check_victory():
 	# no enemy ships; player wins
 	if enemyShips.size() == 0:
-		state.max_level = max(state.max_level, state.current_level + 1)
-		state.current_level += 1
+		State.nextLevel()
 
 		# end and return to level select
 		yield(get_tree().create_timer(2), "timeout")
@@ -274,11 +282,39 @@ func range_check(rng, tile, mainX = 0, mainY = 0, aduX = 0, aduY = 0):
 
 # handles "end turn" button press
 func _on_end_turn():
+	# end the player's turn
 	playerTurn = false
+	selectedShip = null
+	draw_moves()
+
+	# run the computer's turn
 	comp_turn()
 	check_victory()
-	playerTurn = true
 
-# responsible for computer ship turn
+	# wait for all ships to finish their turns
+	yield(self, "computer_done")
+
+	# restore per-turn ship points
+	for ship in playerShips:
+		ship.AP = ship.maxAP
+		ship.range = ship.maxRange
+
+	for ship in enemyShips:
+		ship.AP = ship.maxAP
+		ship.range = ship.maxRange
+
+	# enable player's next turn
+	playerTurn = true
+	draw_moves()
+
+# responsible for playing the computer's turn
 func comp_turn():
-	pass
+	for ship in enemyShips:
+		while ship.range > 0:
+			ship.call("PlayTurn")
+
+			# wait for movement and pause
+			yield(get_tree().create_timer(0.4), "timeout")
+
+	# let parent function know it can continue
+	emit_signal("computer_done")
