@@ -21,7 +21,7 @@ public class Grid : TileMap
 	private bool defeat = false;
 
 	//array of tilemap indecies for obstacles
-	private int[] obst = new int[]{12,13};
+	public int[] obst = new int[]{12,13};
 
 	public int gridSize = 32;
 	private bool playerTurn = true;
