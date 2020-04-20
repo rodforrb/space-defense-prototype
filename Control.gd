@@ -15,7 +15,7 @@ var obstacle_tiles = [12, 13]
 # active ship selection information
 var selectedShip = null
 var selectedRange = []
-var attackRange
+var attackTiles = [] 
 
 # turn information
 var playerTurn = true
@@ -41,9 +41,7 @@ func _ready():
 func draw_moves():
 	del_range(validShips)
 	del_range(selectedRange)
-	del_range(attackRange)
 	validShips.clear()
-	attackRange.clear()
 
 	if selectedShip != null:
 		# draw selected ship movement range tiles
@@ -59,17 +57,46 @@ func draw_moves():
 		if validShips.size() > 0:
 			add_range(validShips, "YellowTransparency")
 	
+func draw_attack(tile = null):
+	del_range(attackTiles, true)
+	attackTiles.clear()
 
-		
-func add_range(moves, tileString):
+	if selectedShip == null: return
+
+	elif tile == null:
+		tile = world_to_map(selectedShip.position)
+	
+	
+	var shipTile
+
+	var attackRange = range_check(selectedShip.maxRange, tile)
+	for ship in enemyShips:
+		shipTile = world_to_map(ship.position)
+		if world_to_map(ship.position) in attackRange:
+			attackTiles.append(shipTile)
+	add_range(attackTiles, "RedTransparency", true)
+
+
+func add_range(moves, tileString, top = false):
 	var tile = tile_set.find_tile_by_name(tileString)
-	for cell in moves:
-		set_cellv(cell, tile)
+	if !top:
+		for cell in moves:
+			set_cellv(cell, tile)
+	else:
+		var tileMap = get_node("../TileMapTop")
+		for cell in moves:
+			tileMap.set_cellv(cell, tile)
 
-func del_range(moves):
-	for cell in moves:
-		set_cellv(cell, -1)
-		
+func del_range(moves, top = false):
+	if !top:
+		for cell in moves:
+			set_cellv(cell, -1)
+	else:
+		var tileMap = get_node("../TileMapTop")
+		for cell in moves:
+			tileMap.set_cellv(cell, -1)
+
+
 # Receives a request to move a ship
 # Ship1 ship, ship to move
 # Vector2 target, target space coordinates
@@ -187,7 +214,7 @@ func _input(event):
 		# update if mouse moved over a new tile
 		if tile != mouseTile:
 			mouseTile = tile
-			on_mouse_moved(event)
+			on_mouse_moved(tile)
 
 	# mouse click (up or down)
 	elif event is InputEventMouseButton:
@@ -207,7 +234,8 @@ func _input(event):
 # handles mouse movement
 # called when a new tile is hovered over
 func on_mouse_moved(tile):
-	pass
+	draw_attack(tile)
+		
 
 # handles left clicks
 # called when left mouse button is pressed down
