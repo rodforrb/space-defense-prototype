@@ -1,7 +1,6 @@
 extends TileMap
-var state
-var gridCS
-var grid
+
+# projectile scene
 var laser
 
 # board state information
@@ -24,8 +23,8 @@ var mouseTile = null	# tile under mouse
 # async signal to resynchronize turns
 signal computer_done
 
+# runs when node (grid) is loaded
 func _ready():
-	state = preload("state.gd").new()
 	laser = preload("Laser.tscn")
 	var ships = get_children()
 	for ship in ships:
@@ -38,45 +37,65 @@ func _ready():
 	
 	draw_moves()
 	
+# calculates and updates available movement tiles
+# should be called whenever ship selection or the grid is updated
 func draw_moves():
 	del_range(validShips)
 	del_range(selectedRange)
 	validShips.clear()
 
+	# no movement if not player's turn.
+	if !playerTurn: return
+
+
+	# if ship is selected, draw movement range
 	if selectedShip != null:
 		# draw selected ship movement range tiles
 		selectedRange = range_check(selectedShip.range, world_to_map(selectedShip.position))
 		add_range(selectedRange, "YellowTransparency")
 
-	if playerTurn:
-		for ship in playerShips:
-			if ship.range > 0 or ship.AP > 0:
-				validShips.append(world_to_map(ship.position))	
+	# draw ships with available moves
+	for ship in playerShips:
+		if ship.range > 0 or ship.AP > 0:
+			validShips.append(world_to_map(ship.position))	
+
+	# highlight ships which can move
+	if validShips.size() > 0:
+		add_range(validShips, "YellowTransparency")
 	
-		# highlight ships which can move
-		if validShips.size() > 0:
-			add_range(validShips, "YellowTransparency")
-	
+# redraw red attack tiles on the grid
+# called during player turn every time mouse moves over a new tile
+# @param tile, tile coordinates under mouse (when a ship is selected)
 func draw_attack(tile = null):
+	# remove old tiles
 	del_range(attackTiles, true)
 	attackTiles.clear()
 
+	# if no ship selected, no attacks to draw
 	if selectedShip == null: return
 
+	# if no mouse tile is provided, centre on the selected ship
 	if tile == null:
 		tile = world_to_map(selectedShip.position)
 	
-	var shipTile
-
+	# get array of cells which can be attacked
 	var attackRange = range_check(selectedShip.maxRange, tile)
 	attackRange.append(tile)
+
+	# iterate enemy ships to find ones in range
+	var shipTile
 	for ship in enemyShips:
 		shipTile = world_to_map(ship.position)
 		if world_to_map(ship.position) in attackRange:
 			attackTiles.append(shipTile)
+	
+	# draw attackable tiles in range on the grid
 	add_range(attackTiles, "RedTransparency", true)
 
-
+# draws range tiles on the grid
+# @param moves, set of move/tile coordinates
+# @param tileString, name of tile to use
+# @param top, whether to draw tiles above everything (used for stacking tiles)
 func add_range(moves, tileString, top = false):
 	var tile = tile_set.find_tile_by_name(tileString)
 	if !top:
@@ -87,6 +106,9 @@ func add_range(moves, tileString, top = false):
 		for cell in moves:
 			tileMap.set_cellv(cell, tile)
 
+# removes/undraws range tiles from the grid
+# @param moves, set of move/tile coordinates
+# @param top, whether the tiles are in the topmost layer
 func del_range(moves, top = false):
 	if !top:
 		for cell in moves:
@@ -222,6 +244,7 @@ func _input(event):
 
 		# left click down
 		if event.button_index == BUTTON_LEFT and event.is_pressed():
+			# block player input and process (potentially async) click
 			playerTurn = false
 			on_left_clicked(tile)
 			playerTurn = true
@@ -233,7 +256,9 @@ func _input(event):
 
 # handles mouse movement
 # called when a new tile is hovered over
+# @param tile, grid coordinates of mouseover cell
 func on_mouse_moved(tile):
+	# update attackable cells
 	draw_attack(tile)
 		
 
@@ -277,14 +302,16 @@ func on_left_clicked(tile):
 	# lastly, try to move to empty space
 	# inner block runs if moved successfully
 	if move(selectedShip, tile):
+		# (allowed and successful move )
 		return
 	
 	return
 
-# check whether a victory condition is met
+# check whether a victory condition is met and end the match if necessary
 func check_victory():
 	# no enemy ships; player wins
 	if enemyShips.size() == 0:
+		# update the global state
 		State.nextLevel()
 
 		# end and return to level select
@@ -299,6 +326,9 @@ func check_victory():
 
 # calculate which tiles are within range of a given location
 # return an array of Vector2 tile locations
+# @param rng, range in tiles
+# @param tile, grid coordinate of central tile
+# @return array of tiles within range
 func range_check(rng, tile, mainX = 0, mainY = 0, aduX = 0, aduY = 0):
 	var locations = []
 	if mainX == 0 and mainY == 0:
@@ -318,6 +348,7 @@ func range_check(rng, tile, mainX = 0, mainY = 0, aduX = 0, aduY = 0):
 
 # handles "end turn" button press
 func _on_end_turn():
+	# cannot end turn if it isn't the player's turn
 	if !playerTurn: return
 
 	# end the player's turn
@@ -349,6 +380,7 @@ func _on_end_turn():
 func comp_turn():
 	for ship in enemyShips:
 		while ship.range > 0:
+			# run individual ship AI
 			ship.call("PlayTurn")
 
 			# wait for movement and pause
