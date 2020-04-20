@@ -311,6 +311,9 @@ func on_left_clicked(tile):
 func check_victory():
 	# no enemy ships; player wins
 	if enemyShips.size() == 0:
+		# stop turn
+		playerTurn = false
+
 		# update the global state
 		State.nextLevel()
 
@@ -320,6 +323,10 @@ func check_victory():
 
 	# no player ships; player loses
 	elif playerShips.size() == 0:
+		# stop turn
+		playerTurn = false
+
+		# end and return to level select
 		yield(get_tree().create_timer(2), "timeout")
 		get_tree().change_scene("res://level_select.tscn")
 
