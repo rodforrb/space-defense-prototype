@@ -115,13 +115,21 @@ public class Ship1 : Node2D
 		//then calculate it as a percentage for the HPbar
 		double fraction = ((double) HP / maxHP) * 100.0;
 		hpb.Value = (int)(fraction);
-
-		GD.Print(HP);
-		GD.Print(hpb.Value);
 	 
 		// ship is removed by Grid if dead
 		// the hpbar naturally is removed too since it is a child node 
 	}
+
+	public void take_hit(int damage)
+	{
+		HP = Math.Max(0, HP-damage);
+		var bar = (TextureProgress)GetNode("HPbar");
+
+		bar.Value = (int)((double) HP / maxHP * 100.0);
+	}
+
+
+
 	public void heal_damage(int heal)
 	{
 		HP = Math.Min(maxHP, heal + HP);

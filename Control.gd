@@ -63,13 +63,13 @@ func draw_attack(tile = null):
 
 	if selectedShip == null: return
 
-	elif tile == null:
+	if tile == null:
 		tile = world_to_map(selectedShip.position)
-	
 	
 	var shipTile
 
 	var attackRange = range_check(selectedShip.maxRange, tile)
+	attackRange.append(tile)
 	for ship in enemyShips:
 		shipTile = world_to_map(ship.position)
 		if world_to_map(ship.position) in attackRange:
@@ -175,8 +175,8 @@ func attack(ship1, ship2):
 	yield(tween, "tween_completed")
 
 	# apply damage
+	ship2.call("take_hit", projectile.firepower)
 	ship1.AP = max(0, ship1.AP-projectile.cost)
-	ship2.HP -= projectile.firepower
 
 	# handle destroyed ship
 	if ship2.HP <= 0:
@@ -318,6 +318,8 @@ func range_check(rng, tile, mainX = 0, mainY = 0, aduX = 0, aduY = 0):
 
 # handles "end turn" button press
 func _on_end_turn():
+	if !playerTurn: return
+
 	# end the player's turn
 	playerTurn = false
 	selectedShip = null
