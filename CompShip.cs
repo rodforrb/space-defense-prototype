@@ -59,6 +59,8 @@ public class CompShip : Ship1
 	//SOMETIMES SHIPS GET STUCK PINGING THEMSELVES UP AND DOWN OVER AND OVER
 	//WE'LL FILE THIS UNDER "KNOWN BUGS" FOR NOW
 	//FOR THE SAKE OF GETTING SOME LEVEL OF AI LOGIC PUSHED TO MASTER
+	//BUG: I think the ship tries to attack over an asteroid
+	//ie if
 	public void PlayTurn()
 	{
 		Godot.Collections.Array PlayerShips = GetGrid().Get("playerShips") as Godot.Collections.Array;
@@ -271,9 +273,11 @@ public class CompShip : Ship1
 					GetGrid().Call("attack", this, target);
 				}
 				else{
-					GetGrid().Call("move", this, movePath[i]);
-					this.moveStep = i;
+					if(i <= movePath.Length - 1){
+						GetGrid().Call("move", this, movePath[i]);
+						this.moveStep = i;
 					}
+				}
 			}
 			else if(fight == 0){
 				
@@ -294,6 +298,7 @@ public class CompShip : Ship1
 				}								
 			}			
 		}
+
 		this.oldMoves = new Vector2[movePath.Length -  this.moveStep];
 		Array.Copy(movePath, this.moveStep, this.oldMoves,  this.oldMoves.GetLowerBound(0), movePath.Length -  this.moveStep );
 		this.targX = (int)targetCell[0];
