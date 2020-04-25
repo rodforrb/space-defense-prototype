@@ -34,7 +34,6 @@ public class CompShip : Ship1
 	public Node GetGrid ()
 	{
 		return (GetNode("/root/Game/Grid"));
-		// return ResourceLoader.Load
 	}
 	
 	// Called when the node enters the scene tree for the first time.

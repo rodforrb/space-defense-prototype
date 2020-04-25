@@ -228,9 +228,8 @@ func _input(event):
 
 	# mouse movement
 	if event is InputEventMouseMotion:
-		# currently nothing happens if no ship selected
-		if selectedShip == null: return
 
+		# get mouse tile
 		var tile = world_to_map(event.position)
 
 		# update if mouse moved over a new tile
@@ -247,10 +246,12 @@ func _input(event):
 			# block player input and process (potentially async) click
 			playerTurn = false
 			on_left_clicked(tile)
-			playerTurn = true
 
+			playerTurn = true
 			# update movement tiles
 			draw_moves()
+			# update interface
+			get_node("../Panel").update()
 
 	# gridCS._Input(event)
 
@@ -260,6 +261,17 @@ func _input(event):
 func on_mouse_moved(tile):
 	# update attackable cells
 	draw_attack(tile)
+
+	# hover over enemy ship to see stats
+	var hover = selectedShip
+	# find if any ship is hovered
+	for ship in enemyShips + playerShips:
+		# ship is under mouse
+		if tile == world_to_map(ship.position):
+			hover = ship
+			break
+	# update interface
+	get_node("../Panel").update(hover)
 		
 
 # handles left clicks
