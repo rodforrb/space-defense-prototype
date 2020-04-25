@@ -10,12 +10,16 @@ public class level_select : Node2D
 		Label diff = (Label) this.GetNode("Panel/CurrentDifficulty");
 		Label selected = (Label) this.GetNode("Panel/CurrentLevel");
 		Sprite arrow = (Sprite) this.GetNode("Grid/Selected/Arrow");
+		TileMap grid = (TileMap) this.GetNode("TileMap");
 		curr.SetText("Currency: " +  (Loot.Loot.getValue()).ToString());
 		int l = State.currentLevel;
+		int m = State.maxLevel;
 		if(l == 1){
 			diff.SetText("Current Difficulty:\n 1");
 			selected.SetText("Current Selected Level:\n Gala");
 			arrow.SetGlobalPosition(new Vector2 (254,222));
+			grid.SetCellv(new Vector2 (14,9), 60);
+			grid.SetCellv(new Vector2 (25,4), 61);
 		}else if (l == 2){
 			diff.SetText("Current Difficulty:\n 1");
 			selected.SetText("Current Selected Level:\n Keplar");
@@ -28,6 +32,23 @@ public class level_select : Node2D
 			diff.SetText("Current Difficulty:\n NULL");
 			selected.SetText("Current Selected Level:\n NULL");
 			arrow.SetGlobalPosition(new Vector2 (254,222));
+		}
+		if(m == 1){
+			grid.SetCellv(new Vector2 (3,6), 43);
+			grid.SetCellv(new Vector2 (14,9), 60);
+			grid.SetCellv(new Vector2 (25,4), 61);
+		}else if (m == 2){
+			grid.SetCellv(new Vector2 (3,6), 43);
+			grid.SetCellv(new Vector2 (14,9), 44);
+			grid.SetCellv(new Vector2 (25,4), 61);
+		}else if (m == 3){
+			grid.SetCellv(new Vector2 (3,6), 43);
+			grid.SetCellv(new Vector2 (14,9), 44);
+			grid.SetCellv(new Vector2 (25,4), 45);
+		}else{
+			grid.SetCellv(new Vector2 (3,6), 59);
+			grid.SetCellv(new Vector2 (14,9), 60);
+			grid.SetCellv(new Vector2 (25,4), 61);
 		}
 		
 	}

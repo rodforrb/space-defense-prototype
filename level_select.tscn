@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://level_select.cs" type="Script" id=1]
 [ext_resource path="res://resources/graphics/levelselect/levelselect.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://resources/graphics/UI/labels/label_loadgame.png" type="Texture" id=7]
 [ext_resource path="res://resources/graphics/UI/labels/label_options.png" type="Texture" id=8]
 [ext_resource path="res://resources/graphics/UI/labels/label_exit.png" type="Texture" id=9]
+[ext_resource path="res://resources/graphics/levelselect/levelselectgrey.png" type="Texture" id=10]
 
 [sub_resource type="TileSet" id=1]
 43/name = "levelselect.png 43"
@@ -221,8 +222,51 @@
 58/shape_one_way_margin = 0.0
 58/shapes = [  ]
 58/z_index = 0
+59/name = "levelselectgrey.png 59"
+59/texture = ExtResource( 10 )
+59/tex_offset = Vector2( 0, 0 )
+59/modulate = Color( 1, 1, 1, 1 )
+59/region = Rect2( 176, 0, 128, 128 )
+59/tile_mode = 0
+59/occluder_offset = Vector2( 0, 0 )
+59/navigation_offset = Vector2( 0, 0 )
+59/shape_offset = Vector2( 0, 0 )
+59/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+59/shape_one_way = false
+59/shape_one_way_margin = 0.0
+59/shapes = [  ]
+59/z_index = 0
+60/name = "levelselectgrey.png 60"
+60/texture = ExtResource( 10 )
+60/tex_offset = Vector2( 0, 0 )
+60/modulate = Color( 1, 1, 1, 1 )
+60/region = Rect2( 352, 0, 128, 128 )
+60/tile_mode = 0
+60/occluder_offset = Vector2( 0, 0 )
+60/navigation_offset = Vector2( 0, 0 )
+60/shape_offset = Vector2( 0, 0 )
+60/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+60/shape_one_way = false
+60/shape_one_way_margin = 0.0
+60/shapes = [  ]
+60/z_index = 0
+61/name = "levelselectgrey.png 61"
+61/texture = ExtResource( 10 )
+61/tex_offset = Vector2( 0, 0 )
+61/modulate = Color( 1, 1, 1, 1 )
+61/region = Rect2( 528, 0, 128, 128 )
+61/tile_mode = 0
+61/occluder_offset = Vector2( 0, 0 )
+61/navigation_offset = Vector2( 0, 0 )
+61/shape_offset = Vector2( 0, 0 )
+61/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+61/shape_one_way = false
+61/shape_one_way_margin = 0.0
+61/shapes = [  ]
+61/z_index = 0
 
 [node name="Level" type="Node2D"]
+position = Vector2( -2, 0 )
 script = ExtResource( 1 )
 
 [node name="TileMap" type="TileMap" parent="."]
