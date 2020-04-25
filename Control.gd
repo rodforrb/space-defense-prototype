@@ -34,9 +34,18 @@ func _ready():
 			playerShips.append(ship)
 		else:
 			enemyShips.append(ship)
-	
+	upgrade_turn()
 	draw_moves()
+
+
+func upgrade_turn():
+	var upMenu = get_node("../UpgradeMenu")
+	for ship in playerShips:
+		upMenu.call("addShip",ship)
+	upMenu.call("printShips")
 	
+	return
+
 # calculates and updates available movement tiles
 # should be called whenever ship selection or the grid is updated
 func draw_moves():
@@ -210,6 +219,7 @@ func attack(ship1, ship2):
 			playerShips.remove(playerShips.find(ship2))
 		else:
 			enemyShips.remove(enemyShips.find(ship2))
+			ship2.call("DropLoot")
 
 		# remove from grid
 		remove_child(ship2)

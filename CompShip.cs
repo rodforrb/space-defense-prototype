@@ -59,6 +59,11 @@ public class CompShip : Ship1
 	//SOMETIMES SHIPS GET STUCK PINGING THEMSELVES UP AND DOWN OVER AND OVER
 	//WE'LL FILE THIS UNDER "KNOWN BUGS" FOR NOW
 	//FOR THE SAKE OF GETTING SOME LEVEL OF AI LOGIC PUSHED TO MASTER
+
+	public void DropLoot()
+	{
+		Loot.Loot.giveCurrency(1);
+	}
 	public void PlayTurn()
 	{
 		Godot.Collections.Array PlayerShips = GetGrid().Get("playerShips") as Godot.Collections.Array;
