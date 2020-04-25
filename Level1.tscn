@@ -20,3 +20,17 @@ position = Vector2( 576, 384 )
 
 [node name="CompShip" parent="Grid" index="2" instance=ExtResource( 3 )]
 position = Vector2( 512, 96 )
+
+[node name="ColorRect" parent="DefeatEnd" index="0"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 315.0
+margin_bottom = 141.0
+
+[node name="VictoryEnd" parent="." index="7"]
+visible = true
+
+[node name="VictoryConfirm" parent="VictoryEnd" index="2"]
+margin_left = 0.0
+margin_top = 124.0
+margin_right = 321.0

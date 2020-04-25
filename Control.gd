@@ -23,6 +23,10 @@ var mouseTile = null	# tile under mouse
 # async signal to resynchronize turns
 signal computer_done
 
+#endscreen confirmations
+var defeatConfirm = false
+var victoryConfirm = false
+
 # runs when node (grid) is loaded
 func _ready():
 	laser = preload("Laser.tscn")
@@ -318,16 +322,26 @@ func check_victory():
 		State.nextLevel()
 
 		# end and return to level select
-		yield(get_tree().create_timer(2), "timeout")
+		#yield(get_tree().create_timer(1), "timeout")
+		
+		get_node("../VictoryEnd").popup()
+		#I'll put a soudn queue here later
+		#We also could make the pop up have fancier graphics
+		while(!victoryConfirm):
+			yield(get_tree().create_timer(0.1), "timeout")
 		get_tree().change_scene("res://level_select.tscn")
 
 	# no player ships; player loses
 	elif playerShips.size() == 0:
 		# stop turn
 		playerTurn = false
-
 		# end and return to level select
-		yield(get_tree().create_timer(2), "timeout")
+		#yield(get_tree().create_timer(1), "timeout")
+		get_node("../DefeatEnd").popup()
+		#play sound q
+		while(!defeatConfirm):
+			yield(get_tree().create_timer(0.1), "timeout")
+		
 		get_tree().change_scene("res://level_select.tscn")
 
 
@@ -395,3 +409,14 @@ func comp_turn():
 
 	# let parent function know it can continue
 	emit_signal("computer_done")
+
+
+
+
+
+func _on_DefeatConfirm_pressed():
+	defeatConfirm = true
+
+
+func _on_VictoryConfirm_pressed():
+	victoryConfirm = true
