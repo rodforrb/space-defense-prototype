@@ -47,14 +47,14 @@ public class PauseMenu : Popup
 			return;
 		}
 	}
-	//Save game (does nothing)
+	//Save game
 	public void _on_Save_gui_input(InputEvent @event){
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
 		{
 			State.Save();
 		}
 	}      
-	//Load game (does nothing)
+	//Load game
 	public void _on_Load_gui_input(InputEvent @event){
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
 		{
@@ -74,10 +74,4 @@ public class PauseMenu : Popup
 			GD.Print("Exit game clicked");
 		}
 	}
-
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
 }

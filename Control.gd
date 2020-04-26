@@ -334,7 +334,7 @@ func check_victory():
 		State.nextLevel()
 
 		# end and return to level select
-		#yield(get_tree().create_timer(1), "timeout")
+		yield(get_tree().create_timer(1), "timeout")
 		
 		get_node("../VictoryEnd").popup()
 		#I'll put a soudn queue here later
@@ -348,7 +348,7 @@ func check_victory():
 		# stop turn
 		playerTurn = false
 		# end and return to level select
-		#yield(get_tree().create_timer(1), "timeout")
+		yield(get_tree().create_timer(1), "timeout")
 		get_node("../DefeatEnd").popup()
 		#play sound q
 		while(!defeatConfirm):

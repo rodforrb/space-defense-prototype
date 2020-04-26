@@ -286,6 +286,9 @@ margin_top = 10.0
 margin_right = 1010.0
 margin_bottom = 50.0
 text = "Embark"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Save" type="Button" parent="Panel"]
 margin_left = 10.0
