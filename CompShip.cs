@@ -22,10 +22,10 @@ public class CompShip : Ship1
 	new public int accuracy { get; set; } = 5;//odds of hitting an opponent
 	new public int evasion { get; set; } = 5;//odds of dodging an attack
 
-	private int targX = -1;//used for avoiding move deadlock
-	private int targY = -1;
-	private Vector2[] oldMoves;
-	private int moveStep = 0;
+	//private int targX = -1;//used for avoiding move deadlock
+	//private int targY = -1;
+	//private Vector2[] oldMoves;
+	//private int moveStep = 0;
 	
 	/* Used to get instantiated Grid object
 	 * Unfortunately GetNode cannot be used by a static class.
@@ -59,7 +59,6 @@ public class CompShip : Ship1
 	//WE'LL FILE THIS UNDER "KNOWN BUGS" FOR NOW
 	//FOR THE SAKE OF GETTING SOME LEVEL OF AI LOGIC PUSHED TO MASTER
 	//BUG: I think the ship tries to attack over an asteroid
-	//ie if
 	public void PlayTurn()
 	{
 		Godot.Collections.Array PlayerShips = GetGrid().Get("playerShips") as Godot.Collections.Array;
@@ -264,19 +263,23 @@ public class CompShip : Ship1
 
 
 		for (int i = 0; i < maxRange; i++){
-
+			
 			Vector2 difference = (targetCell - shipCell);
 			if(fight==1){
-				if((Math.Abs(difference.x)+Math.Abs(difference.y)) <= range){
+				//needs to check for valid attack
+				if(this.AP != 0 && (Math.Abs(difference.x)+Math.Abs(difference.y)) <= maxRange){
 					// GetGrid().Attack(this, target, new Projectile(ProjectileType.Gun));
 					GetGrid().Call("attack", this, target);
 				}
-				else{
-					if(i <= movePath.Length - 1){
-						GetGrid().Call("move", this, movePath[i]);
-						this.moveStep = i;
-					}
+				
+				if(i <= movePath.Length - 1){
+					//Might need to add a last move check to stop ships from ending up inside each other
+					//Godot.Collections.Array ship = GetGrid().Get("enemy_ships") as Godot.Collections.Array;
+					GetGrid().Call("move", this, movePath[i]);
+					//GD.Print(movePath[i]);
+					//this.moveStep = i;
 				}
+				
 			}
 			else if(fight == 0){
 				
@@ -295,13 +298,31 @@ public class CompShip : Ship1
 						GetGrid().Call("move", this, moveWest);
 						break;
 				}								
-			}			
+			}
+			//update ship position
+			shipCell = (Vector2)GetGrid().Call("world_to_map",this.GetPosition());						
 		}
+		//post-move attacking
+		//todo: retargetting?
+		//todo: valid aiming?
 
-		this.oldMoves = new Vector2[movePath.Length -  this.moveStep];
-		Array.Copy(movePath, this.moveStep, this.oldMoves,  this.oldMoves.GetLowerBound(0), movePath.Length -  this.moveStep );
-		this.targX = (int)targetCell[0];
-		this.targY = (int)targetCell[1];	
+		//update ship position
+		shipCell = (Vector2)GetGrid().Call("world_to_map",this.GetPosition());			
+		Vector2 finalDifference = (targetCell - shipCell);
+		if((Math.Abs(finalDifference.x)+Math.Abs(finalDifference.y)) <= maxRange){
+			while(target.HP > 0 && this.AP > 0){
+				var preAP = this.AP;
+				GetGrid().Call("attack", this, target);
+				//No AP change indicates invalid attack, avoids infinite loop.
+				//GD.Print("Attack Loop");
+				if (preAP == this.AP) break;
+			}
+
+		}
+		//this.oldMoves = new Vector2[movePath.Length -  this.moveStep];
+		//Array.Copy(movePath, this.moveStep, this.oldMoves,  this.oldMoves.GetLowerBound(0), movePath.Length -  this.moveStep );
+		//this.targX = (int)targetCell[0];
+		//this.targY = (int)targetCell[1];	
 		/*
 		foreach(int number in GetGrid().obst){
 			GD.Print(number);
