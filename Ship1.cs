@@ -19,6 +19,7 @@ public enum Type
 
 public class Ship1 : Node2D
 {
+	[Export]
 	public int maxHP {get;} = 10;//maximum hp
 	public int HP { get; set;} = 10;//current hp
 
@@ -35,7 +36,7 @@ public class Ship1 : Node2D
 			if (type == Type.Destroyer) 
 				return 7; 
 			else if (type == Type.Sniper) 
-				return 3; 
+				return 5; 
 			else 
 				return 5;
 		} 
@@ -82,7 +83,7 @@ public class Ship1 : Node2D
 			this.evasion = value;
 		}
 	}//odds of dodging an attack
-	public int AP { get; set; } = 5;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
+	public int AP { get; set; } = 2;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
 	public int maxAP {get;}= 5;//the maximum action points of a ship, it will reset to this value at the start of every turn
 	public int maxRange {get;} = 3;//the range it can move
 	public int range {get; set;} = 3;
@@ -161,16 +162,18 @@ public class Ship1 : Node2D
 		Random random = new Random();
 		int result = random.Next(0, 100);
 		
-		// removed randomness for now
-		// if (result <= chance)
-		// {
-		// 	HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
-		// }
+		
 		
 		var hpb = (TextureProgress)GetNode("HPbar");
 		
+		// we can remove randomness if we want to, I just left it in to test the results
+		if (result <= chance)
+		{
+			HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
+		}
+		
 		//first calculate the actual hp
-		HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
+		//HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
 		//then calculate it as a percentage for the HPbar
 		double fraction = ((double) HP / maxHP) * 100.0;
 		hpb.Value = (int)(fraction);

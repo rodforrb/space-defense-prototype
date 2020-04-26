@@ -17,11 +17,59 @@ public class CompShip : Ship1
 	[Export]
 	public Type type {get; set; } = Type.Medium;
 	
-	/*new public int penetration { get; set; } = 5;//the ships ability to ignore armour
-	new public int armour { get; set; } = 5;//the ships resistance to damage
-	new public int accuracy { get; set; } = 5;//odds of hitting an opponent
-	new public int evasion { get; set; } = 5;//odds of dodging an attack
-	*/
+		public int firepower { get; set; } = 5;//the ships firepower multiplier
+	public int penetration { 
+		get{
+			if (type == Type.Destroyer) 
+				return 7; 
+			else if (type == Type.Sniper) 
+				return 5; 
+			else 
+				return 5;
+		} 
+		set{
+			this.penetration = value;
+		}
+	}//the ships ability to ignore armour
+	public int armour { 
+		get{
+			if (type == Type.Heavy) 
+				return 6; 
+			else if (type == Type.Lite) 
+				return 3; 
+			else 
+				return 5;
+		} 
+		set{
+			this.armour = value;
+		}
+	}//the ships resistance to damage
+	public int accuracy { 
+		get{
+			if (type == Type.Destroyer) 
+				return 10; 
+			else if (type == Type.Sniper) 
+				return 20; 
+			else 
+				return 15;
+		} 
+		set{
+			this.accuracy = value;
+		}
+	}//odds of hitting an opponent
+	public int evasion { 
+		get{
+			if (type == Type.Heavy) 
+				return 3; 
+			else if (type == Type.Lite) 
+				return 10; 
+			else 
+				return 5;
+		} 
+		set{
+			this.evasion = value;
+		}
+	}//odds of dodging an attack
 	/* Used to get instantiated Grid object
 	 * Unfortunately GetNode cannot be used by a static class.
 	 * @return Grid
