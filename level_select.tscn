@@ -296,6 +296,9 @@ margin_top = 10.0
 margin_right = 100.0
 margin_bottom = 50.0
 text = "Save Game"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Exit" type="Button" parent="Panel"]
 margin_left = 120.0
@@ -453,6 +456,8 @@ margin_bottom = 50.0
 mouse_default_cursor_shape = 2
 texture = ExtResource( 9 )
 [connection signal="pressed" from="Panel/Start" to="." method="_on_Start_pressed"]
+[connection signal="pressed" from="Panel/Save" to="." method="_on_Save_pressed"]
+[connection signal="pressed" from="Panel/Exit" to="." method="_on_Exit_pressed"]
 [connection signal="gui_input" from="PauseMenu/Menu/VBoxContainer/Continue" to="PauseMenu" method="_on_Continue_gui_input"]
 [connection signal="gui_input" from="PauseMenu/Menu/CenterContainer/Save" to="PauseMenu" method="_on_Save_gui_input"]
 [connection signal="gui_input" from="PauseMenu/Menu/CenterContainer2/Load" to="PauseMenu" method="_on_Load_gui_input"]

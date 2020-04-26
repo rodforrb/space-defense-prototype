@@ -72,6 +72,15 @@ public class level_select : Node2D
 				break;
 		}
 	}
+	
+	private void _on_Save_pressed()
+	{
+		State.Save();
+	}
+	
+	
+	private void _on_Exit_pressed()
+	{
+		GetTree().ChangeScene("res://MainMenu.tscn");
+	}
 }
-
-
