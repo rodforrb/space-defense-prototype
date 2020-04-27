@@ -17,15 +17,18 @@ public class Grid : TileMap
 	private Vector2[] mouseRange = null;
 	private List<Vector2> validShips = new List<Vector2>();
 
+	private bool victory = false;
+	private bool defeat = false;
+
 	//array of tilemap indecies for obstacles
-	private int[] obst = new int[]{4};
+	public int[] obst = new int[]{12,13};
 
 	public int gridSize = 32;
 	private bool playerTurn = true;
 	public List<Ship1> playerShips {get;} = new List<Ship1>();
 	public List<CompShip> computerShips {get;} = new List<CompShip>();
 	
-	public PackedScene _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
+	// public PackedScene _bullet = ResourceLoader.Load("Bullets.tscn") as PackedScene;
 	//public Node bullet_conatianer = GetNode("bullet_container");
 	
 	//https://docs.godotengine.org/en/3.1/getting_started/workflow/best_practices/scenes_versus_scripts.html
@@ -37,9 +40,9 @@ public class Grid : TileMap
 	 * Unfortunately GetNode cannot be used by a static class.
 	 * @return Grid
 	*/
-	public Grid GetGrid ()
+	public Node GetGrid ()
 	{
-		return (GetNode<Grid>("/root/Game/Grid"));
+		return (GetNode("/root/Game/Grid"));
 	}
 	
 	// Called when the node enters the scene tree for the first time.
@@ -52,7 +55,7 @@ public class Grid : TileMap
 			Node2D child = (Node2D)GetChild(i);
 
 			// rounding to fix grid alignment issues from editor
-			child.SetPosition(MapToWorld(WorldToMap(child.GetPosition())));
+			child.Position = MapToWorld(WorldToMap(child.Position));
 			
 			/* Sometimes it's better to ask for forgiveness.
 			 * See if the child is a ship by trying to convert it to a ship.
@@ -98,7 +101,7 @@ public class Grid : TileMap
 	* return Vector2[] of positions within range
 	*/
 
-	private Vector2[] RangeCheck(int range,Vector2 currentPos, int mainX = 0, int mainY = 0, int aduX = 0, int aduY = 0)
+	public Vector2[] RangeCheck(int range,Vector2 currentPos, int mainX = 0, int mainY = 0, int aduX = 0, int aduY = 0)
 	{
 		List<Vector2> allLocations = new List<Vector2>();
 		//being checking along the main axis
@@ -130,8 +133,19 @@ public class Grid : TileMap
 		return allLocations.ToArray();
 	}
 
+	/* Calculate the difference between two pixel coordinates accurately
+	* Rounds the coordinates to align with the grid
+	* Vector2 v1 map coordinate
+	* Vector2 v2 map coordinate
+	* returns v1-v2
+	*/
+	private Vector2 CoordinateDifference(Vector2 v1, Vector2 v2)
+	{
+		return MapToWorld(WorldToMap(v1) - WorldToMap(v2));
+	}
 
-	private void addRange(Vector2[] moves, String tileString)
+
+	public void addRange(Vector2[] moves, String tileString)
 	{
 		int tile = TileSet.FindTileByName(tileString);
 		for(int i = 0; i < moves.Length; i++)
@@ -140,7 +154,7 @@ public class Grid : TileMap
 		}
 	}
 
-	private void addRange(Vector2[] moves, String tileString, TileMap tileMap)
+	public void addRange(Vector2[] moves, String tileString, TileMap tileMap)
 	{
 		int tile = TileSet.FindTileByName(tileString);
 		for(int i = 0; i < moves.Length; i++)
@@ -150,7 +164,7 @@ public class Grid : TileMap
 	}
 
 	// Removes all blue tiles from the grid 
-	private void removeRange(Vector2[] moves)
+	public void removeRange(Vector2[] moves)
 	{
 		if (moves == null) return;
 		// int tile = TileSet.FindTileByName("Sprite");
@@ -161,7 +175,7 @@ public class Grid : TileMap
 	}
 
 	// Removes all blue tiles from the grid 
-	private void removeRange(Vector2[] moves, TileMap tileMap)
+	public void removeRange(Vector2[] moves, TileMap tileMap)
 	{
 		if (moves == null) return;
 		// int tile = TileSet.FindTileByName("Sprite");
@@ -179,40 +193,79 @@ public class Grid : TileMap
 	public bool Move(Node2D ShipNode, Vector2 target)
 	{
 		Ship1 ship = (Ship1)ShipNode;
+		Vector2 pos1 = ship.Position;
+		Sprite shipSprite = ship.GetNode<Sprite>("Sprite");
 		// check if target position is out of range
 		if (!Array.Exists(RangeCheck(ship.range, WorldToMap(ship.Position)), element => element == target))
 			return false;
 
-    // calculate x+y movement distance
-		Vector2 vector =  target - WorldToMap(ship.Position);
-		Vector2 intVector = new Vector2((int)vector.x, (int)vector.y);
+	// calculate x+y movement distance
+		Vector2 vector =  target - WorldToMap(ship.Position);									// net vector from ship to target
+		Vector2 intVector = new Vector2((int)vector.x, (int)vector.y);				// same vector as int (can be worked out to remove)
 		int distance = (int) (Math.Abs(intVector.x) + Math.Abs(intVector.y));
+
+		// vector containing relative movement to be made
+		Vector2 dirVector;
+		if (Math.Abs(intVector.x) > Math.Abs(intVector.y))
+			dirVector = new Vector2(intVector.x, 0);
+		else
+			dirVector = new Vector2(0, intVector.y);
+
+		//plays a sound effect for valid move
+		//known issue: cuts if destruciton ends game
+		//use signal, _on_<sound name>_finished() method
+		//This specific issue will likely be handled in end game screens
+		AudioStreamPlayer grid_interact = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/grid_interact");
+		grid_interact.Play();		
 
 		// move ship along path to new position
 		while (WorldToMap(ship.Position) != target)
 		{
-
 			// more vertical distance to travel
 			if (Math.Abs(intVector.x) < Math.Abs(intVector.y))
 			{
 				// move 1 unit in y direction
-				ship.SetPosition(ship.Position + new Vector2(0,intVector.y*gridSize/Math.Abs(intVector.y)));
+				ship.Position = (ship.Position + new Vector2(0,intVector.y*gridSize/Math.Abs(intVector.y)));
+
+				// rotate ship
+				if (intVector.y < 0) 
+					shipSprite.RotationDegrees = 0;
+				else 
+					shipSprite.RotationDegrees = 180;
 			}
 			else // move horizontally
 			{
 				// move 1 unit in x direction
-				ship.SetPosition(ship.Position + new Vector2(intVector.x*gridSize/Math.Abs(intVector.x), 0));
+				ship.Position = (ship.Position + new Vector2(intVector.x*gridSize/Math.Abs(intVector.x), 0));
+
+				// rotate ship
+				if (intVector.x < 0)
+					shipSprite.RotationDegrees = 270;
+				else
+					shipSprite.RotationDegrees = 90;
 			}
+			// ship.GetNode<AnimationPlayer>("AnimationPlayer").Play("Move");
+			
+			// // animate movement
+			// Tween tween = ship.GetNode<Tween>("Tween");
+			// tween.InterpolateProperty(ship, "Position", ship.Position-MapToWorld(dirVector), ship.Position, 0.3f, Godot.Tween.TransitionType.Linear, Godot.Tween.EaseType.InOut);
+			// tween.Start();
 
 			// recalculate x+y movement distance
 			vector = target - WorldToMap(ship.Position);
 			intVector = new Vector2((int)vector.x, (int)vector.y);
 
-			// pause on each tile briefly
-			// TODO
+			if (Math.Abs(intVector.x) > Math.Abs(intVector.y))
+				dirVector = new Vector2(intVector.x, 0);
+			else
+				dirVector = new Vector2(0, intVector.y);
 		}
 
-		ship.AP -= distance;
+		// animate movement directly from src to target
+		Tween tween = ship.GetNode<Tween>("Tween");
+		tween.InterpolateProperty(ship, "Position", pos1, ship.Position, 0.2f*distance, Godot.Tween.TransitionType.Linear, Godot.Tween.EaseType.InOut);
+		tween.Start();
+
 		ship.range -= distance;
 
 		return true;
@@ -224,17 +277,44 @@ public class Grid : TileMap
 	* ProjectileType projType
 	* return true if hit, false if miss
 	*/
-	public void Attack(Ship1 attacker, Ship1 defender, Projectile proj) //TODO
+	public async void Attack(Ship1 attacker, Ship1 defender, Projectile proj) //TODO
 	{
 		// target out of range
 		if (!Array.Exists(RangeCheck(attacker.getAttackRange(), WorldToMap(attacker.Position)), element => element == WorldToMap(defender.Position))) return;
 	
 		// not enough points to attack
-		if (attacker.AP < 2) return;
+		if (attacker.AP < 1) return;
+
+		//plays a sound effect on good attack
+		AudioStreamPlayer attack_1 = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/attack_1");
+		attack_1.Play();
+		
+		// draw animation for attack
+		Node2D laser = (Node2D)attacker.laser.Instance();
+		AddChild(laser);
+		Vector2 halfTile = new Vector2(8,-8); // center on grid tile
+
+		// laser.Position = defender.Position + halfTile;
+		// laser.LookAt(attacker.Position);
+		// Sprite sprite = laser.GetNode<Sprite>("Sprite");
+		
+		// sprite.Offset = CoordinateDifference(laser.Position, attacker.Position+halfTile);
+
+		// Tween tween = laser.GetNode<Tween>("Tween");
+		// tween.InterpolateProperty(sprite, "Offset", sprite.Offset, halfTile, 0.5f);
+		// tween.Start();
+
+
+		laser.Position = attacker.Position + halfTile;
+		
+		Tween tween = laser.GetNode<Tween>("Tween");
+		tween.InterpolateProperty(laser, "Position", laser.Position, defender.Position + halfTile, 0.5f);
+		tween.Start();
+
+		await ToSignal(tween, "tween_completed");
 
 		// consume points and proceed with attacking
-		attacker.AP = Math.Max(0, attacker.AP-2);
-		attacker.range = Math.Max(0, attacker.range-2);
+		attacker.AP = Math.Max(0, attacker.AP-1);
 
 		int f = attacker.firepower * proj.firepower;
 		int p = attacker.penetration * proj.penetration;
@@ -245,11 +325,14 @@ public class Grid : TileMap
 		if (defender.HP <= 0)
 		{
 			RemoveChild(defender);
-
+			//boom sound on death
+			AudioStreamPlayer destroy_1 = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/destroy_1");
+			destroy_1.Play();	   
 			// remove from the appropriate list
 			try
 			{
 				computerShips.Remove((CompShip)defender);
+				Loot.Loot.giveCurrency(1);
 				
 			} catch (System.InvalidCastException e) {
 				playerShips.Remove(defender);
@@ -346,7 +429,7 @@ public class Grid : TileMap
 				SetCellv(barTile, -1);			
 			}				
 			// draw AP bars on UI panel
-			numBars = (int)Math.Ceiling(6 * (float)selected.AP / (float)selected.maxAP);
+			numBars = (int)Math.Ceiling(6 * (float)selected.range / (float)selected.maxRange);
 			while (numBars > 0)
 			{
 				barTile = new Vector2(13 + numBars, 16);
@@ -358,9 +441,15 @@ public class Grid : TileMap
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HP").Text = (selected.HP < 10 ? "  " : "") + selected.HP;
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HPMax").Text = selected.maxHP.ToString();
 						
+			// set Range text 
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/Range").Text = (selected.range < 10 ? "  " : "") + selected.range.ToString();
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/MaxRange").Text = selected.maxRange.ToString();
+			
 			// set AP text 
-			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/AP").Text = (selected.AP < 10 ? "  " : "") + selected.AP;
-			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/APMax").Text = selected.maxAP.ToString();
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel2/AP").Text = (selected.AP < 10 ? "  " : "") + selected.AP.ToString();
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel2/APMax").Text = selected.maxAP.ToString();
+			
+			
 
 		}  
 		// no-ship-selected cleanup
@@ -380,9 +469,13 @@ public class Grid : TileMap
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HP").Text = "  0";
 			GetNode<RichTextLabel>("/root/Game/Panel/HPLabel/HPMax").Text = "0";
 
+			// uset Range text 
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/Range").Text = "  0";
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/MaxRange").Text = "0";
+			
 			// uset AP text 
-			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/AP").Text = "  0";
-			GetNode<RichTextLabel>("/root/Game/Panel/APLabel/APMax").Text = "0";
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel2/AP").Text = "  0";
+			GetNode<RichTextLabel>("/root/Game/Panel/APLabel2/APMax").Text = "0";
 		}
 	}
 
@@ -428,7 +521,7 @@ public class Grid : TileMap
 				Vector2 cell = WorldToMap(mouseClick.Position);
 				int tileIndex = GetCellv(cell);
 				GD.Print("Mouse Click at: ", mouseClick.Position, ", Cell: ", cell, ", Tile: ", tileIndex);
-				
+				GD.Print(Loot.Loot.getValue());
 				// iterate player ships to find what was clicked
 				foreach (Ship1 ship in playerShips)
 				{
@@ -439,7 +532,9 @@ public class Grid : TileMap
 						if (this.selected != ship)
 						{
 							this.selected = ship;
-							GD.Print("Selected: ", ship);
+							//plays a sound effect
+							AudioStreamPlayer grid_interact = (AudioStreamPlayer) GetNode("/root/Game/SoundEffect/grid_interact");
+		  					grid_interact.Play();
 							
 							// redraw movement range
 							DrawMoves();
@@ -583,6 +678,8 @@ public class Grid : TileMap
 
 	// check whether a victory condition has been met by either side
 	// if so, ends the match appropriately
+	//todo, screens, check for audio cutting
+	//possibly add some victory/defeat flourish too
 	private void CheckVictory()
 	{
 		// enemy has 0 ships, player wins
@@ -592,12 +689,14 @@ public class Grid : TileMap
 			State.maxLevel = State.currentLevel + 1;
 			State.currentLevel += 1;
 			// end match and return to level select
+			bool victory = true;
 			GetTree().ChangeScene("res://level_select.tscn");
 		}
 		// player has 0 ships, player loses
 		else if (playerShips.Count == 0)
 		{
 			// just end match and return to level select
+			bool defeat = true;
 			GetTree().ChangeScene("res://level_select.tscn");
 		}
 	}

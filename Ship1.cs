@@ -19,6 +19,7 @@ public enum Type
 
 public class Ship1 : Node2D
 {
+	
 	[Export]
 	public int maxHP {get;} = 10;//maximum hp
 	public int HP { get; set;} = 10;//current hp
@@ -184,6 +185,17 @@ public class Ship1 : Node2D
 		// ship is removed by Grid if dead
 		// the hpbar naturally is removed too since it is a child node 
 	}
+
+	public void take_hit(int damage)
+	{
+		HP = Math.Max(0, HP-damage);
+		var bar = (TextureProgress)GetNode("HPbar");
+
+		bar.Value = (int)((double) HP / maxHP * 100.0);
+	}
+
+
+
 	public void heal_damage(int heal)
 	{
 		HP = Math.Min(maxHP, heal + HP);
