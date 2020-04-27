@@ -288,7 +288,7 @@ public class CompShip : Ship1
 				GetGrid().Call("attack", this, target);
 			}
 			
-			else if(movePath.Length>= 0){
+			else if(movePath.Length > 0){
 				//Might need to add a last move check to stop ships from ending up inside each other
 				//Godot.Collections.Array ship = GetGrid().Get("enemy_ships") as Godot.Collections.Array;
 				GetGrid().Call("move", this, movePath[0]);
@@ -368,13 +368,18 @@ public class CompShip : Ship1
 		//update ship position
 		shipCell = (Vector2)GetGrid().Call("world_to_map",this.GetPosition());			
 		Vector2 finalDifference = (targetCell - shipCell);
+		bool contAtk = true;
 		if((Math.Abs(finalDifference.x)+Math.Abs(finalDifference.y)) <= maxRange){
-			while(target.HP > 0 && this.AP > 0){
+			while(target.HP > 0 && this.AP > 0 && contAtk == true){
 				var preAP = this.AP;
 				GetGrid().Call("attack", this, target);
 				//No AP change indicates invalid attack, avoids infinite loop.
-				//GD.Print("Attack Loop");
-				if (preAP == this.AP) break;
+				//GD.Print("Attack Loop, PREAP:", preAP, "POST AP:", this.AP);
+				if (preAP == this.AP){
+					contAtk = false;
+					//GD.Print("SHOULD BREAK?");
+
+				}
 			}
 
 		}
