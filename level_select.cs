@@ -7,11 +7,17 @@ public class level_select : Node2D
 	public override void _Ready()
 	{
 		Label curr = (Label) this.GetNode("Panel/Currency");
+		curr.SetText("Currency: " +  (Loot.Loot.getValue()).ToString());
+		int l = State.currentLevel;
+		update(l);
+	}
+	
+	private void update(int l)
+	{
 		Label diff = (Label) this.GetNode("Panel/CurrentDifficulty");
 		Label selected = (Label) this.GetNode("Panel/CurrentLevel");
 		Sprite arrow = (Sprite) this.GetNode("Grid/Selected/Arrow");
-		curr.SetText("Currency: " +  (Loot.Loot.getValue()).ToString());
-		int l = State.currentLevel;
+		State.currentLevel = l;
 		if(l == 1){
 			diff.SetText("Current Difficulty:\n 1");
 			selected.SetText("Current Selected Level:\n Gala");
@@ -29,7 +35,6 @@ public class level_select : Node2D
 			selected.SetText("Current Selected Level:\n NULL");
 			arrow.SetGlobalPosition(new Vector2 (254,222));
 		}
-		
 	}
 	
 	// load a level
@@ -51,6 +56,32 @@ public class level_select : Node2D
 				break;
 		}
 	}
+	
+	private void _on_selectGala_gui_input(object @event)
+	{
+		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+		{
+			GD.Print("Testing");
+			int l = 1;
+			update(l);
+		}
+	}
+
+	private void _on_selectKeplar_gui_input(object @event)
+	{
+		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+		{
+			int l = 2;
+			update(l);
+		}
+	}
+
+	private void _on_selectGliese_gui_input(object @event)
+	{
+		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+		{
+			int l = 3;
+			update(l);
+		}
+	}
 }
-
-

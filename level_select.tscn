@@ -235,6 +235,9 @@ tile_data = PoolIntArray( 0, 31, 0, 1, 31, 0, 2, 31, 0, 3, 31, 0, 4, 31, 0, 5, 3
 margin_top = 540.0
 margin_right = 1030.0
 margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Start" type="Button" parent="Panel"]
 margin_left = 920.0
@@ -242,6 +245,9 @@ margin_top = 10.0
 margin_right = 1010.0
 margin_bottom = 50.0
 text = "Embark"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Save" type="Button" parent="Panel"]
 margin_left = 10.0
@@ -299,6 +305,9 @@ margin_bottom = 186.0
 text = "1. Gala"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Keplar" type="Label" parent="Grid"]
 margin_left = 482.0
@@ -324,6 +333,33 @@ valign = 1
 position = Vector2( 254, 222 )
 scale = Vector2( 0.6, 0.6 )
 texture = ExtResource( 3 )
+
+[node name="selectGala" type="Label" parent="Grid"]
+margin_left = 104.0
+margin_top = 200.0
+margin_right = 219.0
+margin_bottom = 318.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="selectKeplar" type="Label" parent="Grid"]
+margin_left = 451.0
+margin_top = 296.0
+margin_right = 571.0
+margin_bottom = 413.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="selectGliese" type="Label" parent="Grid"]
+margin_left = 805.0
+margin_top = 134.0
+margin_right = 928.0
+margin_bottom = 255.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="PauseMenu" type="Popup" parent="."]
 pause_mode = 2
@@ -406,6 +442,9 @@ margin_bottom = 50.0
 mouse_default_cursor_shape = 2
 texture = ExtResource( 9 )
 [connection signal="pressed" from="Panel/Start" to="." method="_on_Start_pressed"]
+[connection signal="gui_input" from="Grid/selectGala" to="." method="_on_selectGala_gui_input"]
+[connection signal="gui_input" from="Grid/selectKeplar" to="." method="_on_selectKeplar_gui_input"]
+[connection signal="gui_input" from="Grid/selectGliese" to="." method="_on_selectGliese_gui_input"]
 [connection signal="gui_input" from="PauseMenu/Menu/VBoxContainer/Continue" to="PauseMenu" method="_on_Continue_gui_input"]
 [connection signal="gui_input" from="PauseMenu/Menu/CenterContainer/Save" to="PauseMenu" method="_on_Save_gui_input"]
 [connection signal="gui_input" from="PauseMenu/Menu/CenterContainer2/Load" to="PauseMenu" method="_on_Load_gui_input"]
