@@ -40,11 +40,11 @@ public class PauseMenu : Popup
 			pauseGame = false;
 		}
 	}
-	//Options (does nothing)
+	//Options
 	public void _on_Options_gui_input(InputEvent @event){
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
 		{
-			return;
+      return;
 		}
 	}
 	//Save game
@@ -71,7 +71,6 @@ public class PauseMenu : Popup
 			GetTree().Paused = false;
 			pauseGame = false;
 			GetTree().ChangeScene("res://MainMenu.tscn");
-			GD.Print("Exit game clicked");
 		}
 	}
 }

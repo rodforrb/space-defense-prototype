@@ -269,6 +269,36 @@
 position = Vector2( -2, 0 )
 script = ExtResource( 1 )
 
+[node name="selectGala" type="Label" parent="."]
+margin_left = 104.0
+margin_top = 200.0
+margin_right = 219.0
+margin_bottom = 318.0
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="selectKeplar" type="Label" parent="."]
+margin_left = 451.0
+margin_top = 296.0
+margin_right = 571.0
+margin_bottom = 413.0
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="selectGliese" type="Label" parent="."]
+margin_left = 805.0
+margin_top = 134.0
+margin_right = 928.0
+margin_bottom = 255.0
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
 cell_size = Vector2( 32, 32 )
@@ -358,6 +388,9 @@ margin_bottom = 186.0
 text = "1. Gala"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Keplar" type="Label" parent="Grid"]
 margin_left = 482.0
@@ -464,6 +497,9 @@ margin_right = 403.0
 margin_bottom = 50.0
 mouse_default_cursor_shape = 2
 texture = ExtResource( 9 )
+[connection signal="gui_input" from="selectGala" to="." method="_on_selectGala_gui_input"]
+[connection signal="gui_input" from="selectKeplar" to="." method="_on_selectKeplar_gui_input"]
+[connection signal="gui_input" from="selectGliese" to="." method="_on_selectGliese_gui_input"]
 [connection signal="pressed" from="Panel/Start" to="." method="_on_Start_pressed"]
 [connection signal="pressed" from="Panel/Save" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="Panel/Exit" to="." method="_on_Exit_pressed"]

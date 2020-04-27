@@ -7,6 +7,13 @@ public class level_select : Node2D
 	public override void _Ready()
 	{
 		Label curr = (Label) this.GetNode("Panel/Currency");
+		curr.SetText("Currency: " +  (Loot.Loot.getValue()).ToString());
+		int l = State.currentLevel;
+		update(l);
+	}
+	
+	private void update(int l)
+	{
 		Label diff = (Label) this.GetNode("Panel/CurrentDifficulty");
 		Label selected = (Label) this.GetNode("Panel/CurrentLevel");
 		Sprite arrow = (Sprite) this.GetNode("Grid/Selected/Arrow");
@@ -73,6 +80,37 @@ public class level_select : Node2D
 		}
 	}
 	
+	private void _on_selectGala_gui_input(object @event)
+	{
+		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+		{
+			if (State.maxLevel >= 1){
+				int l = 1;
+				update(l);
+			}
+		}
+	}
+
+	private void _on_selectKeplar_gui_input(object @event)
+	{
+		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+		{
+			if (State.maxLevel >= 2){
+				int l = 2;
+				update(l);
+			}
+		}
+	}
+
+	private void _on_selectGliese_gui_input(object @event)
+	{
+		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
+		{
+			if (State.maxLevel >= 3){
+				int l = 3;
+				update(l);
+			}
+		}
 	private void _on_Save_pressed()
 	{
 		State.Save();
