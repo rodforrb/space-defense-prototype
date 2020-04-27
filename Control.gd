@@ -32,12 +32,16 @@ func _ready():
 	laser = preload("Laser.tscn")
 	var ships = get_children()
 	for ship in ships:
+		# round pixel positions to grid
+		ship.position = map_to_world(world_to_map(ship.position))
+
 		# 0: player
 		# 1: computer
 		if ship.team == 0:
 			playerShips.append(ship)
 		else:
 			enemyShips.append(ship)
+		
 	
 	draw_moves()
 	
