@@ -418,6 +418,16 @@ func comp_turn():
 
 			# wait for movement and pause
 			yield(get_tree().create_timer(0.4), "timeout")
+			#No moves left attacks
+			var contAtk = true
+			while(ship.AP > 0 && contAtk):
+				var preAP = ship.AP
+				ship.call("PlayTurn")
+				yield(get_tree().create_timer(0.4), "timeout")
+				#make sure the attack actually happened
+				if(preAP == ship.AP):
+					contAtk = false
+				
 
 	# let parent function know it can continue
 	emit_signal("computer_done")
