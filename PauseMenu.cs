@@ -38,28 +38,28 @@ public class PauseMenu : Popup
 			Hide();
 			GetTree().Paused = false;
 			pauseGame = false;
-			GD.Print("Contiue game clicked");
 		}
 	}
-	//Options (does nothing)
+	//Options
 	public void _on_Options_gui_input(InputEvent @event){
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
 		{
-			GD.Print("Options clicked");
+      return;
 		}
 	}
-	//Save game (does nothing)
+	//Save game
 	public void _on_Save_gui_input(InputEvent @event){
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
 		{
-			GD.Print("Save game clicked");
+			State.Save();
 		}
 	}      
-	//Load game (does nothing)
+	//Load game
 	public void _on_Load_gui_input(InputEvent @event){
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
 		{
-			GD.Print("Load game clicked");
+			if (State.Load())
+				GetTree().ChangeScene("res://level_select.tscn");
 		}
 	}
 
@@ -71,13 +71,6 @@ public class PauseMenu : Popup
 			GetTree().Paused = false;
 			pauseGame = false;
 			GetTree().ChangeScene("res://MainMenu.tscn");
-			GD.Print("Exit game clicked");
 		}
 	}
-
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
 }

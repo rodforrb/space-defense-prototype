@@ -23,17 +23,25 @@ var mouseTile = null	# tile under mouse
 # async signal to resynchronize turns
 signal computer_done
 
+#endscreen confirmations
+var defeatConfirm = false
+var victoryConfirm = false
+
 # runs when node (grid) is loaded
 func _ready():
 	laser = preload("Laser.tscn")
 	var ships = get_children()
 	for ship in ships:
+		# round pixel positions to grid
+		ship.position = map_to_world(world_to_map(ship.position))
+
 		# 0: player
 		# 1: computer
 		if ship.team == 0:
 			playerShips.append(ship)
 		else:
 			enemyShips.append(ship)
+		
 	
 	draw_moves()
 	
@@ -56,12 +64,30 @@ func draw_moves():
 
 	# draw ships with available moves
 	for ship in playerShips:
-		if ship.range > 0 or ship.AP > 0:
-			validShips.append(world_to_map(ship.position))	
+		# ship can be moved
+		if ship.range > 0:
+			validShips.append(world_to_map(ship.position))
+		# otherwise, check for attacks
+		else:
+			var attackRange = range_check(ship.maxRange, world_to_map(ship.position))
+			for eShip in enemyShips:
+				# at least one attackable ship
+				if world_to_map(eShip.position) in attackRange:
+					validShips.append(world_to_map(ship.position))
+					break
+
 
 	# highlight ships which can move
 	if validShips.size() > 0:
 		add_range(validShips, "YellowTransparency")
+		# regular end turn button
+		get_node("../Panel/EndTurn/Sprite").visible = false
+
+	# no ships left; player's turn is over
+	else:
+		# highlight end turn button
+		get_node("../Panel/EndTurn/Sprite").visible = true
+
 	
 # redraw red attack tiles on the grid
 # called during player turn every time mouse moves over a new tile
@@ -228,9 +254,8 @@ func _input(event):
 
 	# mouse movement
 	if event is InputEventMouseMotion:
-		# currently nothing happens if no ship selected
-		if selectedShip == null: return
 
+		# get mouse tile
 		var tile = world_to_map(event.position)
 
 		# update if mouse moved over a new tile
@@ -247,10 +272,12 @@ func _input(event):
 			# block player input and process (potentially async) click
 			playerTurn = false
 			on_left_clicked(tile)
-			playerTurn = true
 
+			playerTurn = true
 			# update movement tiles
 			draw_moves()
+			# update interface
+			get_node("../Panel").update()
 
 	# gridCS._Input(event)
 
@@ -260,6 +287,17 @@ func _input(event):
 func on_mouse_moved(tile):
 	# update attackable cells
 	draw_attack(tile)
+
+	# hover over enemy ship to see stats
+	var hover = selectedShip
+	# find if any ship is hovered
+	for ship in enemyShips + playerShips:
+		# ship is under mouse
+		if tile == world_to_map(ship.position):
+			hover = ship
+			break
+	# update interface
+	get_node("../Panel").update(hover)
 		
 
 # handles left clicks
@@ -318,16 +356,26 @@ func check_victory():
 		State.nextLevel()
 
 		# end and return to level select
-		yield(get_tree().create_timer(2), "timeout")
+		yield(get_tree().create_timer(1), "timeout")
+		
+		get_node("../VictoryEnd").popup()
+		#I'll put a soudn queue here later
+		#We also could make the pop up have fancier graphics
+		while(!victoryConfirm):
+			yield(get_tree().create_timer(0.1), "timeout")
 		get_tree().change_scene("res://level_select.tscn")
 
 	# no player ships; player loses
 	elif playerShips.size() == 0:
 		# stop turn
 		playerTurn = false
-
 		# end and return to level select
-		yield(get_tree().create_timer(2), "timeout")
+		yield(get_tree().create_timer(1), "timeout")
+		get_node("../DefeatEnd").popup()
+		#play sound q
+		while(!defeatConfirm):
+			yield(get_tree().create_timer(0.1), "timeout")
+		
 		get_tree().change_scene("res://level_select.tscn")
 
 
@@ -395,3 +443,14 @@ func comp_turn():
 
 	# let parent function know it can continue
 	emit_signal("computer_done")
+
+
+
+
+
+func _on_DefeatConfirm_pressed():
+	defeatConfirm = true
+
+
+func _on_VictoryConfirm_pressed():
+	victoryConfirm = true
