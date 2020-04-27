@@ -60,12 +60,30 @@ func draw_moves():
 
 	# draw ships with available moves
 	for ship in playerShips:
-		if ship.range > 0 or ship.AP > 0:
-			validShips.append(world_to_map(ship.position))	
+		# ship can be moved
+		if ship.range > 0:
+			validShips.append(world_to_map(ship.position))
+		# otherwise, check for attacks
+		else:
+			var attackRange = range_check(ship.maxRange, world_to_map(ship.position))
+			for eShip in enemyShips:
+				# at least one attackable ship
+				if world_to_map(eShip.position) in attackRange:
+					validShips.append(world_to_map(ship.position))
+					break
+
 
 	# highlight ships which can move
 	if validShips.size() > 0:
 		add_range(validShips, "YellowTransparency")
+		# regular end turn button
+		get_node("../Panel/EndTurn/Sprite").visible = false
+
+	# no ships left; player's turn is over
+	else:
+		# highlight end turn button
+		get_node("../Panel/EndTurn/Sprite").visible = true
+
 	
 # redraw red attack tiles on the grid
 # called during player turn every time mouse moves over a new tile
