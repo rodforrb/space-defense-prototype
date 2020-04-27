@@ -17,6 +17,7 @@ public class Projectile : Node2D
 	public ProjectileType proj {get; set;} = ProjectileType.Default;//the name of the projectile
 	[Export]
 	public int firepower {get; set;} = 0;//the firepower of the projectile
+	[Export]
 	public int penetration {get; set;} = 0;//the penetration multiplier of the projectile
 	public int accuracy {get; set;} = 0;//the accuracy multiplier of the projectile
 	public int range {get; set;} = 0;//the range of the weapon in tiles

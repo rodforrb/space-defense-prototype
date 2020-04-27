@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://MainMenu.cs" type="TextFile" id=1]
+[ext_resource path="res://MainMenu.cs" type="Script" id=1]
 [ext_resource path="res://resources/graphics/UI/main_menu/logo_v2.png" type="Texture" id=2]
 [ext_resource path="res://resources/graphics/UI/labels/label_loadgame.png" type="Texture" id=3]
 [ext_resource path="res://resources/graphics/UI/labels/label_newgame.png" type="Texture" id=4]

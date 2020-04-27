@@ -10,23 +10,28 @@ public class CompShip : Ship1
 	/*
 	name or id?
 	*/
-	private int maxRange = 3;
+	[Export]
+	new public int maxRange = 3;
+	[Export]
 	new public int range {get; set;} = 3;
-	private int maxAP = 5;
-	new public int AP {get; set;} = 5;
+	
+	[Export]
+	public int maxAP = 2;
+	[Export]
+	new public int AP {get; set;} = 2;
 	
 	[Export]
 	new public Team team {get;} = Team.Computer;
 	[Export]
-	public Type type {get; set; } = Type.Medium;
-	
-		public int firepower { get; set; } = 5;//the ships firepower multiplier
-	public int penetration { 
+	new public Type type {get; set; } = Type.Medium;
+	/*
+	public int firepower { get; set; } = 5;//the ships firepower multiplier
+	new public int penetration { 
 		get{
 			if (type == Type.Destroyer) 
-				return 7; 
-			else if (type == Type.Sniper) 
-				return 5; 
+				return 9; 
+			else if (type == Type.Lite) 
+				return 3; 
 			else 
 				return 5;
 		} 
@@ -34,10 +39,10 @@ public class CompShip : Ship1
 			this.penetration = value;
 		}
 	}//the ships ability to ignore armour
-	public int armour { 
+	new public int armour { 
 		get{
 			if (type == Type.Heavy) 
-				return 6; 
+				return 9; 
 			else if (type == Type.Lite) 
 				return 3; 
 			else 
@@ -47,7 +52,7 @@ public class CompShip : Ship1
 			this.armour = value;
 		}
 	}//the ships resistance to damage
-	public int accuracy { 
+	new public int accuracy { 
 		get{
 			if (type == Type.Destroyer) 
 				return 10; 
@@ -60,7 +65,7 @@ public class CompShip : Ship1
 			this.accuracy = value;
 		}
 	}//odds of hitting an opponent
-	public int evasion { 
+	new public int evasion { 
 		get{
 			if (type == Type.Heavy) 
 				return 3; 
@@ -73,6 +78,23 @@ public class CompShip : Ship1
 			this.evasion = value;
 		}
 	}//odds of dodging an attack
+	*/
+	/*
+	public void take_hit(int damage, int pen)
+	{
+		//HP = Math.Max(0, HP-damage);
+		HP = Math.Max(0, HP - ( (damage) / (1 + (Math.Max(0, ((armour - pen) )) ))) );
+		var bar = (TextureProgress)GetNode("HPbar");
+
+		bar.Value = (int)((double) HP / maxHP * 100.0);
+	}*/
+	
+	private int targX = -1;//used for avoiding move deadlock
+	private int targY = -1;
+	private Vector2[] oldMoves;
+	private int moveStep = 0;
+	
+	
 	/* Used to get instantiated Grid object
 	 * Unfortunately GetNode cannot be used by a static class.
 	 * @return Grid

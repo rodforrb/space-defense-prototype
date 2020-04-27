@@ -3,7 +3,7 @@
 [ext_resource path="res://CompShip.cs" type="Script" id=1]
 [ext_resource path="res://resources/graphics/sprites/ship2/ship32.png" type="Texture" id=2]
 
-[sub_resource type="RectangleShape2D" id=4]
+[sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 13.4172, 13.2848 )
 
 [sub_resource type="StreamTexture" id=2]
@@ -16,7 +16,9 @@ load_path = "res://.import/hpbar.png-4f27aad5e9aeef79805035e1f79cdc6a.stex"
 
 [node name="CompShip" type="Area2D"]
 script = ExtResource( 1 )
+range = 5
 type = 1
+maxRange = 5
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 16, 16 )
@@ -25,7 +27,7 @@ texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 16.2673, 15.5895 )
-shape = SubResource( 4 )
+shape = SubResource( 1 )
 
 [node name="HPbar" type="TextureProgress" parent="."]
 margin_left = 1.0

@@ -1,18 +1,50 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Ship1.cs" type="Script" id=1]
 
-[sub_resource type="StreamTexture" id=1]
+[sub_resource type="StreamTexture" id=3]
 load_path = "res://.import/SniperB.png-884da2f354a2f41d5c4eb5a73cc5e153.stex"
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="Animation" id=1]
+resource_name = "Move"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 32 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "MoveUp"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 32 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 13.2136, 13.5469 )
 
-[sub_resource type="StreamTexture" id=3]
+[sub_resource type="StreamTexture" id=5]
 flags = 4
 load_path = "res://.import/hpbar.png-4f27aad5e9aeef79805035e1f79cdc6a.stex"
 
-[sub_resource type="StreamTexture" id=4]
+[sub_resource type="StreamTexture" id=6]
 flags = 4
 load_path = "res://.import/hpbar.png-4f27aad5e9aeef79805035e1f79cdc6a.stex"
 
@@ -21,12 +53,16 @@ script = ExtResource( 1 )
 type = 4
 
 [node name="Sprite" type="Sprite" parent="."]
-texture = SubResource( 1 )
+texture = SubResource( 3 )
 centered = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Move = SubResource( 1 )
+anims/MoveUp = SubResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 16.0906, 17.5146 )
-shape = SubResource( 2 )
+shape = SubResource( 4 )
 
 [node name="HPbar" type="TextureProgress" parent="."]
 margin_left = 1.0
@@ -35,7 +71,9 @@ margin_right = 31.0
 margin_bottom = -1.0
 step = 0.1
 value = 100.0
-texture_under = SubResource( 3 )
-texture_progress = SubResource( 4 )
+texture_under = SubResource( 5 )
+texture_progress = SubResource( 6 )
 tint_under = Color( 0, 0, 0, 1 )
 nine_patch_stretch = true
+
+[node name="Tween" type="Tween" parent="."]

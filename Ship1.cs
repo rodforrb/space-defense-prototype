@@ -35,9 +35,9 @@ public class Ship1 : Node2D
 	public int penetration { 
 		get{
 			if (type == Type.Destroyer) 
-				return 7; 
-			else if (type == Type.Sniper) 
-				return 5; 
+				return 9; 
+			else if (type == Type.Lite) 
+				return 3; 
 			else 
 				return 5;
 		} 
@@ -48,7 +48,7 @@ public class Ship1 : Node2D
 	public int armour { 
 		get{
 			if (type == Type.Heavy) 
-				return 6; 
+				return 9; 
 			else if (type == Type.Lite) 
 				return 3; 
 			else 
@@ -84,12 +84,34 @@ public class Ship1 : Node2D
 			this.evasion = value;
 		}
 	}//odds of dodging an attack
+	
+	[Export]
 	public int AP { get; set; } = 2;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
-	public int maxAP {get;}= 5;//the maximum action points of a ship, it will reset to this value at the start of every turn
-	public int maxRange {get;} = 3;//the range it can move
+	
+	[Export]
+	public int maxAP = 2;//the maximum action points of a ship, it will reset to this value at the start of every turn
+	
+	[Export]
+	public int maxRange = 3;//the range it can move
+	
+	[Export]
 	public int range {get; set;} = 3;
 
-	public Projectile weapon1 { get; set; } = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");//the first weapon that the ship has
+	public Projectile weapon1 { 
+		get{
+			if (type == Type.Destroyer) {
+				Projectile wep = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "missile");
+				return wep;
+			}
+			else { 
+				Projectile wep = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "laser");
+				return wep; 
+			}
+		} 
+		set{
+			this.weapon1 = value;
+		}
+	}//the first weapon that the ship has
 	//public shipClass.Projectile weapon0 = shipClass.Weapons.getGun();//the first weapon that the ship has
 	public Projectile weapon2 { get; set;} = new Projectile(ProjectileType.Missile, 2, 3, 2, 10, 2, "solid");//the second weapon a ship has
 	public Projectile weapon3 { get; set;} = new Projectile(ProjectileType.Laser, 2, 2, 3, 10, 2, "shiny");//the third weapon a ship has
@@ -186,9 +208,10 @@ public class Ship1 : Node2D
 		// the hpbar naturally is removed too since it is a child node 
 	}
 
-	public void take_hit(int damage)
+	public void take_hit(int damage, int pen)
 	{
-		HP = Math.Max(0, HP-damage);
+		//HP = Math.Max(0, HP-damage);
+		HP = Math.Max(0, HP - ( (damage) / (1+(Math.Max(0, ((armour) - pen) ) ))) );
 		var bar = (TextureProgress)GetNode("HPbar");
 
 		bar.Value = (int)((double) HP / maxHP * 100.0);

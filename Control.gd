@@ -1,7 +1,8 @@
 extends TileMap
 
-# projectile scene
+# projectile scenes
 var laser
+#var missile
 
 # board state information
 var validShips = []	 # array of grid positions of movable ships
@@ -30,6 +31,7 @@ var victoryConfirm = false
 # runs when node (grid) is loaded
 func _ready():
 	laser = preload("Laser.tscn")
+	#laser = preload("Missile.tscn")
 	var ships = get_children()
 	for ship in ships:
 		# 0: player
@@ -184,6 +186,10 @@ func attack(ship1, ship2):
 
 	# create the projectile
 	var projectile = laser.instance()
+	
+	#if ship1.Type == Destroyer: projectile = missile.instance()
+	#if ship1.weapon1.type == "missile": projectile = missile.instance()
+	
 	add_child(projectile)
 	projectile.position = ship1.position
 	
@@ -201,7 +207,8 @@ func attack(ship1, ship2):
 	yield(tween, "tween_completed")
 
 	# apply damage
-	ship2.call("take_hit", projectile.firepower)
+	#ship2.call("take_hit", projectile.firepower)
+	ship2.call("take_hit", projectile.firepower, projectile.penetration * ship1.penetration)
 	ship1.AP = max(0, ship1.AP-projectile.cost)
 
 	# handle destroyed ship

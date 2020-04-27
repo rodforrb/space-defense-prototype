@@ -540,7 +540,6 @@ stream = ExtResource( 14 )
 stream = ExtResource( 15 )
 [connection signal="pressed" from="DefeatEnd/DefeatConfirm" to="Grid" method="_on_DefeatConfirm_pressed"]
 [connection signal="pressed" from="VictoryEnd/VictoryConfirm" to="Grid" method="_on_VictoryConfirm_pressed"]
-[connection signal="pressed" from="Panel/Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Panel/EndTurn" to="Grid" method="_on_end_turn"]
 [connection signal="gui_input" from="PauseMenu/Menu/VBoxContainer/Continue" to="PauseMenu" method="_on_Continue_gui_input"]
 [connection signal="gui_input" from="PauseMenu/Menu/CenterContainer/Save" to="PauseMenu" method="_on_Save_gui_input"]
