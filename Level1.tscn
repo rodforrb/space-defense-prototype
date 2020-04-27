@@ -24,10 +24,10 @@ __meta__ = {
 }
 
 [node name="background" type="ColorRect" parent="Grid/Ship1/UpgradeMenu" index="0"]
-margin_left = -153.416
+margin_left = -149.733
 margin_top = -161.861
-margin_right = -6.41614
-margin_bottom = -2.86136
+margin_right = -2.73299
+margin_bottom = -2.8613
 color = Color( 0.584314, 0.552941, 0.552941, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -36,37 +36,256 @@ __meta__ = {
 [node name="ATK+" type="Button" parent="Grid/Ship1/UpgradeMenu" index="1"]
 margin_left = -50.6525
 margin_top = -138.456
-margin_right = -22.6525
-margin_bottom = -112.456
+margin_right = -10.6525
+margin_bottom = -118.456
 text = "+"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ATK-" type="Button" parent="Grid/Ship1/UpgradeMenu" index="2"]
-margin_left = -136.594
-margin_top = -139.683
-margin_right = -108.594
-margin_bottom = -113.683
+margin_left = -145.188
+margin_top = -136.0
+margin_right = -105.188
+margin_bottom = -116.0
 text = "-"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Grid/Ship1/UpgradeMenu" index="3"]
-margin_left = -98.0
-margin_top = -132.0
-margin_right = -69.0
-margin_bottom = -117.0
-rect_scale = Vector2( 1.2, 1.2 )
+[node name="ATK" type="Label" parent="Grid/Ship1/UpgradeMenu" index="3"]
+margin_left = -89.4059
+margin_top = -133.228
+margin_right = -49.4059
+margin_bottom = -119.228
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "ATK"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RANGE" type="Label" parent="Grid/Ship1/UpgradeMenu" index="4"]
+margin_left = -100.456
+margin_top = -87.8015
+margin_right = -56.4556
+margin_bottom = -73.8015
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "RANGE"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RANGE+" type="Button" parent="Grid/Ship1/UpgradeMenu" index="5"]
+margin_left = -50.6526
+margin_top = -91.8019
+margin_right = -10.6526
+margin_bottom = -71.8019
+text = "+"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RANGE-" type="Button" parent="Grid/Ship1/UpgradeMenu" index="6"]
+margin_left = -143.08
+margin_top = -93.4949
+margin_right = -103.08
+margin_bottom = -72.4949
+text = "-"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HEALTH" type="Label" parent="Grid/Ship1/UpgradeMenu" index="7"]
+margin_left = -100.0
+margin_top = -45.2277
+margin_right = -50.0
+margin_bottom = -31.2277
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "HEALTH"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HEALTH+" type="Button" parent="Grid/Ship1/UpgradeMenu" index="8"]
+margin_left = -48.1971
+margin_top = -50.0588
+margin_right = -8.19711
+margin_bottom = -30.0588
+text = "+"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HEALTH-" type="Button" parent="Grid/Ship1/UpgradeMenu" index="9"]
+margin_left = -144.308
+margin_top = -46.8408
+margin_right = -104.308
+margin_bottom = -25.8408
+text = "-"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="Grid/Ship1/UpgradeMenu" index="10"]
+margin_left = -151.0
+margin_top = -156.634
+margin_right = -30.0
+margin_bottom = -133.634
+rect_scale = Vector2( 1.2, 1.2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Upgrade Menu"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Currency" type="Label" parent="Grid/Ship1/UpgradeMenu" index="11"]
+margin_left = -144.0
+margin_top = -20.0
+margin_right = -8.0
+margin_bottom = -6.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Currency: NULL"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Ship2" parent="Grid" index="1" instance=ExtResource( 2 )]
 position = Vector2( 576, 384 )
 
-[node name="CompShip" parent="Grid" index="2" instance=ExtResource( 3 )]
-position = Vector2( 512, 96 )
+[node name="UpgradeMenu2" type="Popup" parent="Grid" index="2"]
+visible = true
+margin_left = 571.0
+margin_top = 376.0
+margin_right = 612.0
+margin_bottom = 416.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Background" parent="PauseMenu" index="0"]
+[node name="background" type="ColorRect" parent="Grid/UpgradeMenu2" index="0"]
+margin_left = 39.3388
+margin_top = -153.267
+margin_right = 186.339
+margin_bottom = 5.73288
 color = Color( 0.584314, 0.552941, 0.552941, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ATK+" type="Button" parent="Grid/UpgradeMenu2" index="1"]
+margin_left = 138.419
+margin_top = -129.862
+margin_right = 178.419
+margin_bottom = -109.862
+text = "+"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ATK-" type="Button" parent="Grid/UpgradeMenu2" index="2"]
+margin_left = 43.8835
+margin_top = -127.406
+margin_right = 83.8835
+margin_bottom = -107.406
+text = "-"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ATK" type="Label" parent="Grid/UpgradeMenu2" index="3"]
+margin_left = 99.6658
+margin_top = -124.634
+margin_right = 139.666
+margin_bottom = -110.634
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "ATK"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RANGE" type="Label" parent="Grid/UpgradeMenu2" index="4"]
+margin_left = 88.6161
+margin_top = -79.2073
+margin_right = 132.616
+margin_bottom = -65.2073
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "RANGE"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RANGE+" type="Button" parent="Grid/UpgradeMenu2" index="5"]
+margin_left = 138.419
+margin_top = -83.2077
+margin_right = 178.419
+margin_bottom = -63.2077
+text = "+"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RANGE-" type="Button" parent="Grid/UpgradeMenu2" index="6"]
+margin_left = 45.9913
+margin_top = -84.9007
+margin_right = 85.9913
+margin_bottom = -63.9007
+text = "-"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HEALTH" type="Label" parent="Grid/UpgradeMenu2" index="7"]
+margin_left = 89.0717
+margin_top = -36.6335
+margin_right = 139.072
+margin_bottom = -22.6335
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "HEALTH"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HEALTH+" type="Button" parent="Grid/UpgradeMenu2" index="8"]
+margin_left = 140.875
+margin_top = -41.4647
+margin_right = 180.875
+margin_bottom = -21.4647
+text = "+"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HEALTH-" type="Button" parent="Grid/UpgradeMenu2" index="9"]
+margin_left = 44.7636
+margin_top = -38.2466
+margin_right = 84.7636
+margin_bottom = -17.2466
+text = "-"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="Grid/UpgradeMenu2" index="10"]
+margin_left = 38.0717
+margin_top = -148.039
+margin_right = 159.072
+margin_bottom = -125.039
+rect_scale = Vector2( 1.2, 1.2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Upgrade Menu"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Currency" type="Label" parent="Grid/UpgradeMenu2" index="11"]
+margin_left = 46.654
+margin_top = -12.2774
+margin_right = 144.654
+margin_bottom = 1.7226
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Currency: NULL"
+
+[node name="CompShip" parent="Grid" index="3" instance=ExtResource( 3 )]
+position = Vector2( 512, 96 )
