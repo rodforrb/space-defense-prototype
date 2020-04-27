@@ -1,10 +1,10 @@
 extends MarginContainer
 
 var difficulty = State.difficulty
-var volume
+var volume = State.volume
 
 func _ready():
-	get_node("VBox except the labels show up/Volume/HSlider").value = 100*db2linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master")))
+	get_node("VBox except the labels show up/Volume/HSlider").value = volume
 	
 	if difficulty == 0: _on_diff_0_pressed()
 	elif difficulty == 1: _on_diff_1_pressed()
@@ -18,10 +18,6 @@ func _on_Return_pressed():
 func _on_HSlider_value_changed(value):
 	volume = get_node("VBox except the labels show up/Volume/HSlider").value
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear2db(volume/100.0))
-	
-	
-
-
 
 # Easy
 func _on_diff_0_pressed():
