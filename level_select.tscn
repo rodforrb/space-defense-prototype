@@ -299,6 +299,9 @@ margin_bottom = 186.0
 text = "1. Gala"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Keplar" type="Label" parent="Grid"]
 margin_left = 482.0
