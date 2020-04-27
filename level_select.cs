@@ -61,9 +61,10 @@ public class level_select : Node2D
 	{
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
 		{
-			GD.Print("Testing");
-			int l = 1;
-			update(l);
+			if (State.maxLevel >= 1){
+				int l = 1;
+				update(l);
+			}
 		}
 	}
 
@@ -71,8 +72,10 @@ public class level_select : Node2D
 	{
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
 		{
-			int l = 2;
-			update(l);
+			if (State.maxLevel >= 2){
+				int l = 2;
+				update(l);
+			}
 		}
 	}
 
@@ -80,8 +83,10 @@ public class level_select : Node2D
 	{
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
 		{
-			int l = 3;
-			update(l);
+			if (State.maxLevel >= 3){
+				int l = 3;
+				update(l);
+			}
 		}
 	}
 }

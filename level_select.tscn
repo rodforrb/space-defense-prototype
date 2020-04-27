@@ -225,6 +225,36 @@
 [node name="Level" type="Node2D"]
 script = ExtResource( 1 )
 
+[node name="selectGala" type="Label" parent="."]
+margin_left = 104.0
+margin_top = 200.0
+margin_right = 219.0
+margin_bottom = 318.0
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="selectKeplar" type="Label" parent="."]
+margin_left = 451.0
+margin_top = 296.0
+margin_right = 571.0
+margin_bottom = 413.0
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="selectGliese" type="Label" parent="."]
+margin_left = 805.0
+margin_top = 134.0
+margin_right = 928.0
+margin_bottom = 255.0
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
 cell_size = Vector2( 32, 32 )
@@ -334,33 +364,6 @@ position = Vector2( 254, 222 )
 scale = Vector2( 0.6, 0.6 )
 texture = ExtResource( 3 )
 
-[node name="selectGala" type="Label" parent="Grid"]
-margin_left = 104.0
-margin_top = 200.0
-margin_right = 219.0
-margin_bottom = 318.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="selectKeplar" type="Label" parent="Grid"]
-margin_left = 451.0
-margin_top = 296.0
-margin_right = 571.0
-margin_bottom = 413.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="selectGliese" type="Label" parent="Grid"]
-margin_left = 805.0
-margin_top = 134.0
-margin_right = 928.0
-margin_bottom = 255.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="PauseMenu" type="Popup" parent="."]
 pause_mode = 2
 self_modulate = Color( 0.584314, 0.552941, 0.552941, 1 )
@@ -441,10 +444,10 @@ margin_right = 403.0
 margin_bottom = 50.0
 mouse_default_cursor_shape = 2
 texture = ExtResource( 9 )
+[connection signal="gui_input" from="selectGala" to="." method="_on_selectGala_gui_input"]
+[connection signal="gui_input" from="selectKeplar" to="." method="_on_selectKeplar_gui_input"]
+[connection signal="gui_input" from="selectGliese" to="." method="_on_selectGliese_gui_input"]
 [connection signal="pressed" from="Panel/Start" to="." method="_on_Start_pressed"]
-[connection signal="gui_input" from="Grid/selectGala" to="." method="_on_selectGala_gui_input"]
-[connection signal="gui_input" from="Grid/selectKeplar" to="." method="_on_selectKeplar_gui_input"]
-[connection signal="gui_input" from="Grid/selectGliese" to="." method="_on_selectGliese_gui_input"]
 [connection signal="gui_input" from="PauseMenu/Menu/VBoxContainer/Continue" to="PauseMenu" method="_on_Continue_gui_input"]
 [connection signal="gui_input" from="PauseMenu/Menu/CenterContainer/Save" to="PauseMenu" method="_on_Save_gui_input"]
 [connection signal="gui_input" from="PauseMenu/Menu/CenterContainer2/Load" to="PauseMenu" method="_on_Load_gui_input"]
