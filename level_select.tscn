@@ -279,6 +279,9 @@ tile_data = PoolIntArray( 0, 31, 0, 1, 31, 0, 2, 31, 0, 3, 31, 0, 4, 31, 0, 5, 3
 margin_top = 540.0
 margin_right = 1030.0
 margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Start" type="Button" parent="Panel"]
 margin_left = 920.0
@@ -306,6 +309,9 @@ margin_top = 10.0
 margin_right = 210.0
 margin_bottom = 50.0
 text = "Exit to Menu"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CurrentDifficulty" type="Label" parent="Panel"]
 margin_left = 720.0
@@ -336,6 +342,9 @@ align = 1
 [node name="Panel2" type="Panel" parent="."]
 margin_right = 1030.0
 margin_bottom = 30.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Grid" type="TileMap" parent="."]
 cell_size = Vector2( 32, 32 )
