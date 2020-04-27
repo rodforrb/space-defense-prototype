@@ -287,8 +287,7 @@ public class CompShip : Ship1
 				// GetGrid().Attack(this, target, new Projectile(ProjectileType.Gun));
 				GetGrid().Call("attack", this, target);
 			}
-			
-			else if(movePath.Length > 0){
+			if(movePath.Length > 0){
 				//Might need to add a last move check to stop ships from ending up inside each other
 				//Godot.Collections.Array ship = GetGrid().Get("enemy_ships") as Godot.Collections.Array;
 				GetGrid().Call("move", this, movePath[0]);

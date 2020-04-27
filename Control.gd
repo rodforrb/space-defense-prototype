@@ -423,7 +423,7 @@ func comp_turn():
 			#No moves left attacks
 			if(preAP == ship.AP && preRg == ship.range):
 				break
-				print("ERR MV")
+				#print("ERR MV")
 		var contAtk = true
 		
 		while(ship.AP > 0 && contAtk == true):
@@ -431,10 +431,10 @@ func comp_turn():
 			ship.call("PlayTurn")
 			yield(get_tree().create_timer(0.4), "timeout")
 			#make sure the attack actually happened
-			print("CTRL ATK")
+			#print("CTRL ATK")
 			if(preAP == ship.AP):
 				contAtk = false
-				print("ERR ATK")
+				#print("ERR ATK")
 				
 
 	# let parent function know it can continue
