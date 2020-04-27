@@ -3,10 +3,11 @@ using System;
 
 public class level_select : Node2D
 {
+	Label curr;
 	// Called when the node enters the scene tree for the first time.	
 	public override void _Ready()
 	{
-		Label curr = (Label) this.GetNode("Panel/Currency");
+		curr = (Label) this.GetNode("Panel/Currency");
 		curr.SetText("Currency: " +  (Loot.Loot.getValue()).ToString());
 		int l = State.currentLevel;
 		update(l);
@@ -19,7 +20,7 @@ public class level_select : Node2D
 		Sprite arrow = (Sprite) this.GetNode("Grid/Selected/Arrow");
 		TileMap grid = (TileMap) this.GetNode("TileMap");
 		curr.SetText("Currency: " +  (Loot.Loot.getValue()).ToString());
-		int l = State.currentLevel;
+//		int l = State.currentLevel;
 		int m = State.maxLevel;
 		if(l == 1){
 			diff.SetText("Current Difficulty:\n 1");
@@ -111,6 +112,8 @@ public class level_select : Node2D
 				update(l);
 			}
 		}
+	}
+	
 	private void _on_Save_pressed()
 	{
 		State.Save();

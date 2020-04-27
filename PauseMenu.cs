@@ -44,7 +44,7 @@ public class PauseMenu : Popup
 	public void _on_Options_gui_input(InputEvent @event){
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == (int)ButtonList.Left && mbe.Pressed)
 		{
-      return;
+	  return;
 		}
 	}
 	//Save game
