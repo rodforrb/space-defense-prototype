@@ -1,0 +1,128 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://resources/graphics/backgrounds/bg/main.png" type="Texture" id=1]
+[ext_resource path="res://resources/graphics/UI/options/options.png" type="Texture" id=2]
+[ext_resource path="res://resources/graphics/UI/options/volume.png" type="Texture" id=3]
+[ext_resource path="res://resources/graphics/UI/options/return.png" type="Texture" id=4]
+[ext_resource path="res://resources/graphics/UI/options/easy.png" type="Texture" id=5]
+[ext_resource path="res://resources/graphics/UI/options/difficulty.png" type="Texture" id=6]
+[ext_resource path="res://resources/graphics/UI/options/normal.png" type="Texture" id=7]
+[ext_resource path="res://resources/graphics/UI/options/hard.png" type="Texture" id=8]
+[ext_resource path="res://OptionsMenu.gd" type="Script" id=9]
+[ext_resource path="res://resources/audio/music/space_defense_title_music_sketch.wav" type="AudioStream" id=10]
+
+[node name="MarginContainer" type="MarginContainer"]
+margin_right = 1023.0
+margin_bottom = 607.0
+script = ExtResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 1024.0
+margin_bottom = 608.0
+texture = ExtResource( 1 )
+
+[node name="VBox except the labels show up" type="Node2D" parent="."]
+
+[node name="Options" type="TextureRect" parent="VBox except the labels show up"]
+margin_left = 369.61
+margin_top = 42.6473
+margin_right = 669.61
+margin_bottom = 112.647
+texture = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Difficulty" type="TextureRect" parent="VBox except the labels show up"]
+margin_left = 375.755
+margin_top = 183.577
+margin_right = 675.755
+margin_bottom = 253.577
+texture = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="diff_0" type="TextureButton" parent="VBox except the labels show up/Difficulty"]
+modulate = Color( 0.7, 0.9, 1, 1 )
+margin_left = -145.212
+margin_top = 65.293
+margin_right = 154.788
+margin_bottom = 115.293
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="diff_1" type="TextureButton" parent="VBox except the labels show up/Difficulty"]
+modulate = Color( 1, 0.984314, 0, 1 )
+margin_left = 29.1716
+margin_top = 68.0785
+margin_right = 329.172
+margin_bottom = 118.079
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="diff_2" type="TextureButton" parent="VBox except the labels show up/Difficulty"]
+modulate = Color( 0.7, 0.9, 1, 1 )
+margin_left = 297.214
+margin_top = 68.5319
+margin_right = 597.214
+margin_bottom = 118.532
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Volume" type="TextureRect" parent="VBox except the labels show up"]
+margin_left = 267.342
+margin_top = 348.907
+margin_right = 567.342
+margin_bottom = 418.907
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSlider" type="HSlider" parent="VBox except the labels show up/Volume"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 270.0
+margin_top = -13.0
+margin_right = 220.0
+margin_bottom = 10.0
+rect_pivot_offset = Vector2( -900.681, -151.929 )
+mouse_default_cursor_shape = 2
+value = 100.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Return" type="TextureButton" parent="VBox except the labels show up"]
+margin_left = 411.55
+margin_top = 463.243
+margin_right = 711.55
+margin_bottom = 513.243
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+autoplay = true
+[connection signal="pressed" from="VBox except the labels show up/Difficulty/diff_0" to="." method="_on_diff_0_pressed"]
+[connection signal="pressed" from="VBox except the labels show up/Difficulty/diff_1" to="." method="_on_diff_1_pressed"]
+[connection signal="pressed" from="VBox except the labels show up/Difficulty/diff_2" to="." method="_on_diff_2_pressed"]
+[connection signal="value_changed" from="VBox except the labels show up/Volume/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="pressed" from="VBox except the labels show up/Return" to="." method="_on_Return_pressed"]

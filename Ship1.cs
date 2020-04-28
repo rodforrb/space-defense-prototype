@@ -31,6 +31,15 @@ public class Ship1 : Node2D
 	
 	[Export]
 	public Type type {get; set; } = Type.Medium;
+
+	[Export]
+	public Team team {get;} = Team.Player;
+
+	[Export]
+	public bool hasDoneUpgrade {get;set;} = false;//has the ship taken its upgrade turn
+	
+	[Export]
+	public int CurrInvested {get;set;} = 0;//how much currency is invested
    
 	[Export]
 	public int firepower = 5;//the ships firepower multiplier
@@ -132,21 +141,9 @@ public class Ship1 : Node2D
 		}
 	}//the range the ship can attack from
 
-	public Projectile weapon1 { 
-		get{
-			if (type == Type.Destroyer) {
-				Projectile wep = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "missile");
-				return wep;
-			}
-			else { 
-				Projectile wep = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "laser");
-				return wep; 
-			}
-		} 
-		set{
-			this.weapon1 = value;
-		}
-	}//the first weapon that the ship has
+	
+
+	public Projectile weapon1 { get; set; } = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");//the first weapon that the ship has
 	//public shipClass.Projectile weapon0 = shipClass.Weapons.getGun();//the first weapon that the ship has
 	public Projectile weapon2 { get; set;} = new Projectile(ProjectileType.Missile, 2, 3, 2, 10, 2, "solid");//the second weapon a ship has
 	public Projectile weapon3 { get; set;} = new Projectile(ProjectileType.Laser, 2, 2, 3, 10, 2, "shiny");//the third weapon a ship has
@@ -273,6 +270,13 @@ public class Ship1 : Node2D
 		//when it is the ship's turn again it will regain all of it's action points
 		AP = maxAP;
 		range = maxRange;
+	}
+
+	//Refunds the invested currency in a ship
+	public void refundCurr()
+	{
+		Loot.Loot.giveCurrency(CurrInvested);
+		CurrInvested = 0;
 	}
 
 

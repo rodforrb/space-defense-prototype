@@ -124,11 +124,11 @@ public class CompShip : Ship1
 		bar.Value = (int)((double) HP / maxHP * 100.0);
 	}
 	
-	private int targX = -1;//used for avoiding move deadlock
+	/*private int targX = -1;//used for avoiding move deadlock
 	private int targY = -1;
 	private Vector2[] oldMoves;
 	private int moveStep = 0;
-	
+	*/
 	
 	/* Used to get instantiated Grid object
 	 * Unfortunately GetNode cannot be used by a static class.
@@ -145,12 +145,11 @@ public class CompShip : Ship1
 			
 	}
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
-
+	public void DropLoot()
+	{
+		Loot.Loot.giveCurrency(1);
+	}
+  
 	//Exhibits strange diagonal movement
 	//The calling loop in grid and this code
 	//interact in an odd manner
@@ -394,7 +393,7 @@ public class CompShip : Ship1
 				// GetGrid().Attack(this, target, new Projectile(ProjectileType.Gun));
 				GetGrid().Call("attack", this, target);
 			}
-			if(movePath.Length > 0){
+			if(movePath.Length > 1){
 				//Might need to add a last move check to stop ships from ending up inside each other
 				//Godot.Collections.Array ship = GetGrid().Get("enemy_ships") as Godot.Collections.Array;
 				GetGrid().Call("move", this, movePath[0]);
@@ -402,6 +401,10 @@ public class CompShip : Ship1
 				//GD.Print("\nShip position: (", shipCell.x, ", ", shipCell.y, ") Move0: ", movePath[0], "Target: (", targetCell.x, ", ", targetCell.y, ")" );
 				//this.moveStep = i;
 			}
+			//stop ship from entering player ship
+			else if(movePath.Length == 1){
+				//GetGrid().Call("move", this, movePath[0]);
+			}			
 			//"just in case" rando movement
 			else{
 				//set for random movement
@@ -470,6 +473,21 @@ public class CompShip : Ship1
 
 		//post-move attacking
 
+		//post-move attacking
+
+		//update ship position
+		shipCell = (Vector2)GetGrid().Call("world_to_map",this.GetPosition());			
+		Vector2 finalDifference = (targetCell - shipCell);
+		bool contAtk = true;
+		if((Math.Abs(finalDifference.x)+Math.Abs(finalDifference.y)) <= maxRange){
+			while(target.HP > 0 && this.AP > 0 && contAtk == true){
+				var preAP = this.AP;
+				GetGrid().Call("attack", this, target);
+				//No AP change indicates invalid attack, avoids infinite loop.
+				//GD.Print("Attack Loop, PREAP:", preAP, "POST AP:", this.AP);
+				if (preAP == this.AP){
+					contAtk = false;
+					//GD.Print("SHOULD BREAK?");
 
 		//update ship position
 		shipCell = (Vector2)GetGrid().Call("world_to_map",this.GetPosition());			

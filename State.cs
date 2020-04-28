@@ -8,7 +8,9 @@ using Godot.Collections;
 public class State : Node
 {
 	public static int maxLevel {get; set;} = 1;
-  public static int currentLevel {get; set;} = 1;
+ 	public static int currentLevel {get; set;} = 1;
+	public static int volume {get; set;} = 100;
+	public static int difficulty {get; set;} = 1;
   public static void nextLevel()
   {
 	// increment state variables to unlock next level
@@ -20,6 +22,8 @@ public class State : Node
 	return new Dictionary<string, object>()
 	{
 	  {"maxLevel", maxLevel},
+	{"difficulty", difficulty},
+	{"volume", volume},
 	  {"date", DateTime.Now}
 	};
   }
@@ -68,12 +72,17 @@ public class State : Node
 	  switch (key)
 	  {
 	  case "maxLevel":
-
-	  // cannot cast from object (System.Single) to int, for some reason.
-	  // fortunately we can parse the string it gives instead...
-	  maxLevel = Int32.Parse(entry.Value.ToString());
-	  currentLevel = maxLevel;
-	  break;
+		// cannot cast from object (System.Single) to int, for some reason.
+		// fortunately we can parse the string it gives instead...
+		maxLevel = Int32.Parse(entry.Value.ToString());
+		currentLevel = maxLevel;
+		break;
+	  case "difficulty":
+		difficulty = Int32.Parse(entry.Value.ToString());
+		break;
+	  case "volume":
+		volume = Int32.Parse(entry.Value.ToString());
+		break;
 	  }
 	  }
 	}
