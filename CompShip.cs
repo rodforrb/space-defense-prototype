@@ -34,6 +34,18 @@ public class CompShip : Ship1
 	[Export]
 	new public int armour = 5;
 	
+	public int atkRange {
+		get{
+			if (type == Type.Lite)
+				return 4;
+			else
+				return 3;
+		}
+		set{
+			this.atkRange = value;
+		}
+	}//the range the ship can attack from
+	
 	new public string name {
 		get{
 			if (type == Type.Destroyer) 

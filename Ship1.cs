@@ -130,7 +130,7 @@ public class Ship1 : Node2D
 		set{
 			this.atkRange = value;
 		}
-	}
+	}//the range the ship can attack from
 
 	public Projectile weapon1 { 
 		get{
