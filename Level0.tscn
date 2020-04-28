@@ -21,7 +21,7 @@
 [ext_resource path="res://resources/graphics/UI/bars/yellow_bar.png" type="Texture" id=19]
 [ext_resource path="res://resources/graphics/backgrounds/bg/space_03.png" type="Texture" id=20]
 [ext_resource path="res://UpgradeMenu.cs" type="Script" id=21]
-[ext_resource path="res://resources/audio/music/space_defense_battle_1wav.wav" type="AudioStream" id=22]
+[ext_resource path="res://resources/audio/music/space_defense_battle_1.wav" type="AudioStream" id=22]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
@@ -561,11 +561,10 @@ stream = ExtResource( 14 )
 [node name="destroy_1" type="AudioStreamPlayer" parent="SoundEffect"]
 stream = ExtResource( 15 )
 
-
 [node name="Music" type="Node2D" parent="."]
 
 [node name="default_battle_music" type="AudioStreamPlayer" parent="Music"]
-stream = ExtResource( 21 )
+stream = ExtResource( 22 )
 volume_db = -3.514
 autoplay = true
 
@@ -713,7 +712,6 @@ margin_top = 100.7
 margin_right = 153.9
 margin_bottom = 114.7
 text = "Current Range: NULL"
-
 [connection signal="pressed" from="DefeatEnd/DefeatConfirm" to="Grid" method="_on_DefeatConfirm_pressed"]
 [connection signal="pressed" from="VictoryEnd/VictoryConfirm" to="Grid" method="_on_VictoryConfirm_pressed"]
 [connection signal="pressed" from="Panel/EndTurn" to="Grid" method="_on_end_turn"]
