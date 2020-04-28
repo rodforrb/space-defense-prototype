@@ -8,7 +8,9 @@ using Godot.Collections;
 public class State : Node
 {
 	public static int maxLevel {get; set;} = 1;
-  public static int currentLevel {get; set;} = 1;
+ 	public static int currentLevel {get; set;} = 1;
+	public static int volume {get; set;} = 100;
+	public static int difficulty {get; set;} = 1;
   public static void nextLevel()
   {
 	// increment state variables to unlock next level
@@ -20,10 +22,14 @@ public class State : Node
 	return new Dictionary<string, object>()
 	{
 	  {"maxLevel", maxLevel},
+	{"difficulty", difficulty},
+	{"volume", volume},
 	  {"date", DateTime.Now}
 	};
   }
 
+  /* Save the current state to file
+  */
   public static bool Save()
   {
 	try {
@@ -42,6 +48,9 @@ public class State : Node
 	return true;
   }
 
+  /* load a savestate from file
+  * @returns true if loaded sucessfully, false if errors
+  */
   public static bool Load()
   {try{
 	var saveFile = new File();
@@ -51,24 +60,30 @@ public class State : Node
 	saveFile.Open("sav.sd", File.ModeFlags.Read);
 
 	while (!saveFile.EofReached())
-	{	  
-	GD.Print(JSON.Parse(saveFile.GetLine()).Result.GetType());
-
-	  var currentLine = (Dictionary<object, object>)JSON.Parse(saveFile.GetLine()).Result;
+	{
+	  var currentLine = (Dictionary)JSON.Parse(saveFile.GetLine()).Result;
 	  if (currentLine == null)
 		continue;
 
-	  // Now we set the remaining variables.
-	  foreach (System.Collections.Generic.KeyValuePair<object, object> entry in currentLine)
+	  // Now we set the remaining variables.	  
+	  foreach (System.Collections.DictionaryEntry entry in currentLine)
 	  {
-		string key = entry.Key.ToString();
-		switch (key)
-		{
-		case "maxLevel":
-		  maxLevel = (int)entry.Value;
-		  currentLevel = maxLevel;
-		  break;
-		}
+	  string key = entry.Key.ToString();
+	  switch (key)
+	  {
+	  case "maxLevel":
+		// cannot cast from object (System.Single) to int, for some reason.
+		// fortunately we can parse the string it gives instead...
+		maxLevel = Int32.Parse(entry.Value.ToString());
+		currentLevel = maxLevel;
+		break;
+	  case "difficulty":
+		difficulty = Int32.Parse(entry.Value.ToString());
+		break;
+	  case "volume":
+		volume = Int32.Parse(entry.Value.ToString());
+		break;
+	  }
 	  }
 	}
 	saveFile.Close();

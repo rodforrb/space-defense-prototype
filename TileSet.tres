@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=11 format=2]
+[gd_resource type="TileSet" load_steps=12 format=2]
 
 [ext_resource path="res://resources/graphics/UI/bars/health_energy_bars.png" type="Texture" id=1]
 [ext_resource path="res://resources/graphics/sprites/yellow_tint.png" type="Texture" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://resources/graphics/backgrounds/redSelector.png" type="Texture" id=8]
 [ext_resource path="res://resources/graphics/backgrounds/blueSelector_transparency.png" type="Texture" id=9]
 [ext_resource path="res://resources/graphics/backgrounds/redSelector_transparency.png" type="Texture" id=10]
+[ext_resource path="res://resources/graphics/backgrounds/32_border.png" type="Texture" id=11]
 
 [resource]
 1/name = "HPFrame"
@@ -194,3 +195,17 @@
 15/shape_one_way_margin = 0.0
 15/shapes = [  ]
 15/z_index = 0
+16/name = "32_border.png 16"
+16/texture = ExtResource( 11 )
+16/tex_offset = Vector2( 0, 0 )
+16/modulate = Color( 1, 1, 1, 1 )
+16/region = Rect2( 0, 0, 32, 32 )
+16/tile_mode = 0
+16/occluder_offset = Vector2( 0, 0 )
+16/navigation_offset = Vector2( 0, 0 )
+16/shape_offset = Vector2( 0, 0 )
+16/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+16/shape_one_way = false
+16/shape_one_way_margin = 0.0
+16/shapes = [  ]
+16/z_index = 0

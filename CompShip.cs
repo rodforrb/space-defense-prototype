@@ -38,12 +38,11 @@ public class CompShip : Ship1
 			
 	}
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
-
+	public void DropLoot()
+	{
+		Loot.Loot.giveCurrency(1);
+	}
+  
 	//Exhibits strange diagonal movement
 	//The calling loop in grid and this code
 	//interact in an odd manner

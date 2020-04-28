@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://MainMenu.cs" type="Script" id=1]
 [ext_resource path="res://resources/graphics/UI/main_menu/logo_v2.png" type="Texture" id=2]
@@ -10,14 +10,22 @@
 [ext_resource path="res://resources/graphics/UI/main_menu/title_img.png" type="Texture" id=8]
 [ext_resource path="res://resources/audio/menu_sounds/menu_select.wav" type="AudioStream" id=9]
 [ext_resource path="res://resources/audio/music/space_defense_title_music_sketch.wav" type="AudioStream" id=10]
+[ext_resource path="res://resources/graphics/backgrounds/bg/main.png" type="Texture" id=11]
 
 [node name="MainMenu" type="MarginContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_right = 80.0
+margin_bottom = -1.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 1104.0
+margin_bottom = 608.0
+texture = ExtResource( 11 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_right = 1104.0

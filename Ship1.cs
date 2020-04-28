@@ -11,11 +11,17 @@ public class Ship1 : Node2D
 {
 	
 	[Export]
-	public int maxHP {get;} = 10;//maximum hp
+	public int maxHP {get;set;} = 10;//maximum hp
 	public int HP { get; set;} = 10;//current hp
 
 	[Export]
 	public Team team {get;} = Team.Player;
+
+	[Export]
+	public bool hasDoneUpgrade {get;set;} = false;//has the ship taken its upgrade turn
+	
+	[Export]
+	public int CurrInvested {get;set;} = 0;//how much currency is invested
    
 
 	public int firepower { get; set; } = 5;//the ships firepower multiplier
@@ -25,8 +31,10 @@ public class Ship1 : Node2D
 	public int evasion { get; set; } = 5;//odds of dodging an attack
 	public int AP { get; set; } = 2;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
 	public int maxAP {get;}= 2;//the maximum action points of a ship, it will reset to this value at the start of every turn
-	public int maxRange {get;} = 3;//the range it can move
+	public int maxRange {get;set;} = 3;//the range it can move
 	public int range {get; set;} = 3;
+
+	
 
 	public Projectile weapon1 { get; set; } = new Projectile(ProjectileType.Gun, 1, 2, 2, 8, 1, "normal");//the first weapon that the ship has
 	//public shipClass.Projectile weapon0 = shipClass.Weapons.getGun();//the first weapon that the ship has
@@ -149,6 +157,13 @@ public class Ship1 : Node2D
 		//when it is the ship's turn again it will regain all of it's action points
 		AP = maxAP;
 		range = maxRange;
+	}
+
+	//Refunds the invested currency in a ship
+	public void refundCurr()
+	{
+		Loot.Loot.giveCurrency(CurrInvested);
+		CurrInvested = 0;
 	}
 
 
