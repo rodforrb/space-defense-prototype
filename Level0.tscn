@@ -35,10 +35,11 @@ __meta__ = {
 }
 
 [node name="DefeatEnd" type="Popup" parent="."]
+visible = true
 margin_left = 400.0
 margin_top = 173.0
 margin_right = 719.0
-margin_bottom = 318.0
+margin_bottom = 342.0
 rect_rotation = -0.0636252
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -80,6 +81,9 @@ margin_bottom = 147.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 text = "Return to Level Select"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="VictoryEnd" type="Popup" parent="."]
 margin_left = 400.0
