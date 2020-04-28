@@ -36,6 +36,7 @@ position = Vector2( 512, 96 )
 
 [node name="MediumShipB" parent="Grid" index="3" instance=ExtResource( 5 )]
 position = Vector2( 420, 320 )
+penetration = 5
 
 [node name="MediumShipR" parent="Grid" index="4" instance=ExtResource( 4 )]
 position = Vector2( 420, 160 )

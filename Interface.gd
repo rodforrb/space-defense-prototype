@@ -54,7 +54,7 @@ func update(selected = get_node("../Grid").selectedShip):
 
 		name.text = selected.name
 		hp_bar.value = (100*selected.HP)/selected.maxHP
-		if selected.HP < selected.maxHP: hp.text = "  "
+		if selected.HP < 10: hp.text = "  "
 		else: hp.text = ""
 		hp.text += str(selected.HP)
 		hp0.text = str(selected.maxHP)
@@ -76,7 +76,7 @@ func update(selected = get_node("../Grid").selectedShip):
 		else:
 			alignment.text = "Hostile"
 
-		atkRange.text = str(selected.maxRange)
+		atkRange.text = str(selected.atkRange)
 
 		damage.text = str(selected.firepower)
 

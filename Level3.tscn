@@ -22,12 +22,18 @@ position = Vector2( 929, 448 )
 
 [node name="DestroyerB" parent="Grid" index="2" instance=ExtResource( 3 )]
 position = Vector2( 129, 352.999 )
+penetration = 5
+armour = 5
 
 [node name="DestroyerB2" parent="Grid" index="3" instance=ExtResource( 3 )]
 position = Vector2( 992.998, 352.999 )
+penetration = 5
+armour = 5
 
 [node name="HeavyShipR" parent="Grid" index="4" instance=ExtResource( 5 )]
 position = Vector2( 511.999, 95.9998 )
+maxHP = 10
+HP = 10
 
 [node name="MediumShipR" parent="Grid" index="5" instance=ExtResource( 4 )]
 position = Vector2( 992.998, 225 )

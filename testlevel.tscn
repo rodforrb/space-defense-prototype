@@ -62,3 +62,21 @@ position = Vector2( 865, 64.1426 )
 
 [node name="HeavyShipB2" parent="Grid" index="10" instance=ExtResource( 8 )]
 position = Vector2( 800, 64 )
+
+[node name="MediumShipB2" parent="Grid" index="11" instance=ExtResource( 9 )]
+position = Vector2( 128.367, 96.8413 )
+
+[node name="MediumShipB3" parent="Grid" index="12" instance=ExtResource( 9 )]
+position = Vector2( 96.8413, 418.839 )
+
+[node name="MediumShipB4" parent="Grid" index="13" instance=ExtResource( 9 )]
+position = Vector2( 801.993, 129.417 )
+
+[node name="Ship3" parent="Grid" index="14" instance=ExtResource( 6 )]
+position = Vector2( 577.785, 130.42 )
+
+[node name="HeavyShipB3" parent="Grid" index="15" instance=ExtResource( 8 )]
+position = Vector2( 450.365, 128.262 )
+
+[node name="HeavyShipB4" parent="Grid" index="16" instance=ExtResource( 8 )]
+position = Vector2( 96.9992, 96.9992 )

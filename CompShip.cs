@@ -103,15 +103,14 @@ public class CompShip : Ship1
 		}
 	}//odds of dodging an attack
 	*/
-	/*
 	public void take_hit(int damage, int pen)
 	{
 		//HP = Math.Max(0, HP-damage);
-		HP = Math.Max(0, HP - ( (damage) / (1 + (Math.Max(0, ((armour - pen) )) ))) );
+		HP = Math.Max(0, HP - ( Math.Max(1, (damage) / ((Math.Max(1, ((armour) - pen) ) ))) ));
 		var bar = (TextureProgress)GetNode("HPbar");
 
 		bar.Value = (int)((double) HP / maxHP * 100.0);
-	}*/
+	}
 	
 	private int targX = -1;//used for avoiding move deadlock
 	private int targY = -1;
@@ -383,8 +382,7 @@ public class CompShip : Ship1
 				// GetGrid().Attack(this, target, new Projectile(ProjectileType.Gun));
 				GetGrid().Call("attack", this, target);
 			}
-			
-			else if(movePath.Length>= 0){
+			if(movePath.Length > 0){
 				//Might need to add a last move check to stop ships from ending up inside each other
 				//Godot.Collections.Array ship = GetGrid().Get("enemy_ships") as Godot.Collections.Array;
 				GetGrid().Call("move", this, movePath[0]);

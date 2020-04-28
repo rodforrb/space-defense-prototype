@@ -85,7 +85,7 @@ func draw_attack(tile = null):
 		tile = world_to_map(selectedShip.position)
 	
 	# get array of cells which can be attacked
-	var attackRange = range_check(selectedShip.maxRange, tile)
+	var attackRange = range_check(selectedShip.atkRange, tile)
 	attackRange.append(tile)
 
 	# iterate enemy ships to find ones in range
@@ -172,7 +172,7 @@ func move(ship, target):
 # return true if hit, false if miss
 func attack(ship1, ship2):
 	# target ship is not in range
-	if !(world_to_map(ship2.position) in range_check(ship1.maxRange, world_to_map(ship1.position))):
+	if !(world_to_map(ship2.position) in range_check(ship1.atkRange, world_to_map(ship1.position))):
 		return false
 
 	# ship must have enough AP
@@ -421,20 +421,29 @@ func comp_turn():
 	for ship in enemyShips:
 		while ship.range > 0:
 			# run individual ship AI
+			var preAP = ship.AP
+			var preRg = ship.range
 			ship.call("PlayTurn")
 
 			# wait for movement and pause
 			yield(get_tree().create_timer(0.4), "timeout")
 			#No moves left attacks
-			var contAtk = true
-			while(ship.AP > 0 && contAtk):
-				var preAP = ship.AP
-				ship.call("PlayTurn")
-				yield(get_tree().create_timer(0.4), "timeout")
-				#make sure the attack actually happened
-				if(preAP == ship.AP):
-					contAtk = false
-					
+			if(preAP == ship.AP && preRg == ship.range):
+				break
+				#print("ERR MV")
+		var contAtk = true
+		
+		while(ship.AP > 0 && contAtk == true):
+			var preAP = ship.AP
+			ship.call("PlayTurn")
+			yield(get_tree().create_timer(0.4), "timeout")
+			#make sure the attack actually happened
+			#print("CTRL ATK")
+			if(preAP == ship.AP):
+				contAtk = false
+				#print("ERR ATK")
+				
+
 	# let parent function know it can continue
 	emit_signal("computer_done")
 

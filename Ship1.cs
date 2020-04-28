@@ -119,6 +119,18 @@ public class Ship1 : Node2D
 	
 	[Export]
 	public int range {get; set;} = 3;
+	
+	public int atkRange {
+		get{
+			if (type == Type.Lite)
+				return 4;
+			else
+				return 3;
+		}
+		set{
+			this.atkRange = value;
+		}
+	}
 
 	public Projectile weapon1 { 
 		get{
