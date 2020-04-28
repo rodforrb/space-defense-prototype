@@ -20,7 +20,7 @@ public class level_select : Node2D
 		Sprite arrow = (Sprite) this.GetNode("Grid/Selected/Arrow");
 		TileMap grid = (TileMap) this.GetNode("TileMap");
 		curr.SetText("Currency: " +  (Loot.Loot.getValue()).ToString());
-		int l = State.maxLevel;
+//		int l = State.maxLevel;
 		if(l == 1){
 			diff.SetText("Current Difficulty:\n 1");
 			selected.SetText("Current Selected Level:\n Gala");
@@ -40,15 +40,15 @@ public class level_select : Node2D
 			selected.SetText("Current Selected Level:\n NULL");
 			arrow.SetGlobalPosition(new Vector2 (254,222));
 		}
-		if(m == 1){
+		if(l == 1){
 			grid.SetCellv(new Vector2 (3,6), 43);
 			grid.SetCellv(new Vector2 (14,9), 60);
 			grid.SetCellv(new Vector2 (25,4), 61);
-		}else if (m == 2){
+		}else if (l == 2){
 			grid.SetCellv(new Vector2 (3,6), 43);
 			grid.SetCellv(new Vector2 (14,9), 44);
 			grid.SetCellv(new Vector2 (25,4), 61);
-		}else if (m == 3){
+		}else if (l == 3){
 			grid.SetCellv(new Vector2 (3,6), 43);
 			grid.SetCellv(new Vector2 (14,9), 44);
 			grid.SetCellv(new Vector2 (25,4), 45);
