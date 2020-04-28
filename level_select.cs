@@ -73,6 +73,9 @@ public class level_select : Node2D
 			case 5:
 				GetTree().ChangeScene("res://Level5.tscn");
 				break;
+			case 6:
+				GetTree().ChangeScene("res://Level6.tscn");
+				break;
 			default:
 				GetTree().ChangeScene("res://Level0.tscn");
 				break;
