@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Level0.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Ship1.tscn" type="PackedScene" id=2]
 [ext_resource path="res://CompShip.tscn" type="PackedScene" id=3]
 [ext_resource path="res://HeavyShipB.tscn" type="PackedScene" id=4]
+[ext_resource path="res://MediumShipR.tscn" type="PackedScene" id=5]
+[ext_resource path="res://MediumShipB.tscn" type="PackedScene" id=6]
 
 [node name="Game" instance=ExtResource( 1 )]
 
@@ -17,34 +19,34 @@ position = Vector2( 320, 448 )
 position = Vector2( 448.815, 449.741 )
 
 [node name="Ship3" parent="Grid" index="2" instance=ExtResource( 2 )]
-position = Vector2( 512, 384 )
+position = Vector2( 576.599, 449.549 )
 
-[node name="Ship4" parent="Grid" index="3" instance=ExtResource( 2 )]
-position = Vector2( 384, 384 )
+[node name="MediumShipB" parent="Grid" index="3" instance=ExtResource( 6 )]
+position = Vector2( 512.996, 384.797 )
 
-[node name="Ship5" parent="Grid" index="4" instance=ExtResource( 2 )]
-position = Vector2( 576, 448 )
+[node name="MediumShipB2" parent="Grid" index="4" instance=ExtResource( 6 )]
+position = Vector2( 385.747, 384.747 )
 
-[node name="CompShip" parent="Grid" index="5" instance=ExtResource( 3 )]
-position = Vector2( 160, 64 )
+[node name="HeavyShipB" parent="Grid" index="5" instance=ExtResource( 4 )]
+position = Vector2( 449.282, 352.28 )
 
-[node name="CompShip2" parent="Grid" index="6" instance=ExtResource( 3 )]
-position = Vector2( 864, 64 )
+[node name="CompShip" parent="Grid" index="6" instance=ExtResource( 3 )]
+position = Vector2( 480.147, 159.949 )
 
-[node name="CompShip4" parent="Grid" index="7" instance=ExtResource( 3 )]
+[node name="CompShip2" parent="Grid" index="7" instance=ExtResource( 3 )]
+position = Vector2( 415.604, 159.949 )
+
+[node name="CompShip4" parent="Grid" index="8" instance=ExtResource( 3 )]
 position = Vector2( 896, 128 )
 
-[node name="CompShip3" parent="Grid" index="8" instance=ExtResource( 3 )]
+[node name="CompShip3" parent="Grid" index="9" instance=ExtResource( 3 )]
 position = Vector2( 448, 192 )
 
-[node name="CompShip6" parent="Grid" index="9" instance=ExtResource( 3 )]
-position = Vector2( 480, 160 )
+[node name="MediumShipR" parent="Grid" index="10" instance=ExtResource( 5 )]
+position = Vector2( 160.599, 160.549 )
 
-[node name="CompShip7" parent="Grid" index="10" instance=ExtResource( 3 )]
-position = Vector2( 416, 160 )
+[node name="MediumShipR2" parent="Grid" index="11" instance=ExtResource( 5 )]
+position = Vector2( 160.649, 65.5495 )
 
-[node name="CompShip5" parent="Grid" index="11" instance=ExtResource( 3 )]
-position = Vector2( 160, 160 )
-
-[node name="HeavyShipB" parent="Grid" index="12" instance=ExtResource( 4 )]
-position = Vector2( 449.282, 352.28 )
+[node name="CompShip5" parent="Grid" index="12" instance=ExtResource( 3 )]
+position = Vector2( 864.593, 64.5995 )

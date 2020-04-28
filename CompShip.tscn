@@ -16,9 +16,12 @@ load_path = "res://.import/hpbar.png-4f27aad5e9aeef79805035e1f79cdc6a.stex"
 
 [node name="CompShip" type="Area2D"]
 script = ExtResource( 1 )
-range = 5
+range = 4
+AP = 3
 type = 1
-maxRange = 5
+maxRange = 4
+maxAP = 3
+firepower = 3
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 16, 16 )

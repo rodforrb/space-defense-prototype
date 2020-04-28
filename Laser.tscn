@@ -7,7 +7,7 @@
 script = ExtResource( 2 )
 proj = 2
 firepower = 5
-penetration = 2
+penetration = 1
 cost = 1
 
 [node name="Sprite" type="Sprite" parent="."]

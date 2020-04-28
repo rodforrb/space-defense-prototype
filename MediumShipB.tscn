@@ -2,11 +2,10 @@
 
 [ext_resource path="res://Ship1.cs" type="Script" id=1]
 
-[sub_resource type="StreamTexture" id=3]
+[sub_resource type="StreamTexture" id=1]
 load_path = "res://.import/mediumshipB.png-3edc7addcbd3a0f93fc82200e2369067.stex"
 
-[sub_resource type="Animation" id=1]
-resource_name = "Move"
+[sub_resource type="Animation" id=2]
 length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:offset")
@@ -21,8 +20,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 32 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "MoveUp"
+[sub_resource type="Animation" id=3]
 length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:offset")
@@ -50,14 +48,15 @@ load_path = "res://.import/hpbar.png-4f27aad5e9aeef79805035e1f79cdc6a.stex"
 
 [node name="MediumShipB" type="Area2D"]
 script = ExtResource( 1 )
+penetration = 6
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 16, 16 )
-texture = SubResource( 3 )
+texture = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Move = SubResource( 1 )
-anims/MoveUp = SubResource( 2 )
+anims/Move = SubResource( 2 )
+anims/MoveUp = SubResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 16.0906, 17.5146 )

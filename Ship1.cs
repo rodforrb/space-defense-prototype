@@ -21,8 +21,10 @@ public class Ship1 : Node2D
 {
 	
 	[Export]
-	public int maxHP {get;} = 10;//maximum hp
-	public int HP { get; set;} = 10;//current hp
+	public int maxHP = 10;//maximum hp
+	
+	[Export]
+	public int HP = 10;//current hp
 
 	[Export]
 	public Team team {get;} = Team.Player;
@@ -30,12 +32,32 @@ public class Ship1 : Node2D
 	[Export]
 	public Type type {get; set; } = Type.Medium;
    
-
-	public int firepower { get; set; } = 5;//the ships firepower multiplier
-	public int penetration { 
+	[Export]
+	public int firepower = 5;//the ships firepower multiplier
+	[Export]
+	public int penetration = 5;
+	[Export]
+	public int armour = 5;
+	
+	public string name {
 		get{
 			if (type == Type.Destroyer) 
-				return 9; 
+				return "Destroyer"; 
+			else if (type == Type.Heavy) 
+				return "Heavy"; 
+			else if (type == Type.Lite) 
+				return "Scout"; 
+			else 
+				return "Medium";
+		}
+		set{
+			this.name = value;
+		}
+	}
+	/*public int penetration { 
+		get{
+			if (type == Type.Destroyer) 
+				return 7; 
 			else if (type == Type.Lite) 
 				return 3; 
 			else 
@@ -48,7 +70,7 @@ public class Ship1 : Node2D
 	public int armour { 
 		get{
 			if (type == Type.Heavy) 
-				return 9; 
+				return 6; 
 			else if (type == Type.Lite) 
 				return 3; 
 			else 
@@ -58,6 +80,7 @@ public class Ship1 : Node2D
 			this.armour = value;
 		}
 	}//the ships resistance to damage
+	*/
 	public int accuracy { 
 		get{
 			if (type == Type.Destroyer) 
@@ -211,7 +234,7 @@ public class Ship1 : Node2D
 	public void take_hit(int damage, int pen)
 	{
 		//HP = Math.Max(0, HP-damage);
-		HP = Math.Max(0, HP - ( (damage) / (1+(Math.Max(0, ((armour) - pen) ) ))) );
+		HP = Math.Max(0, HP - ( Math.Max(1, (damage) / ((Math.Max(1, ((armour) - pen) ) ))) ));
 		var bar = (TextureProgress)GetNode("HPbar");
 
 		bar.Value = (int)((double) HP / maxHP * 100.0);
