@@ -294,6 +294,10 @@ public class CompShip : Ship1
 				//GD.Print("\nShip position: (", shipCell.x, ", ", shipCell.y, ") Move0: ", movePath[0], "Target: (", targetCell.x, ", ", targetCell.y, ")" );
 				//this.moveStep = i;
 			}
+			//stop ship from entering player ship
+			else if(movePath.Length == 1){
+				//GetGrid().Call("move", this, movePath[0]);
+			}			
 			//"just in case" rando movement
 			else{
 				//set for random movement
