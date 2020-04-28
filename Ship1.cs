@@ -33,9 +33,6 @@ public class Ship1 : Node2D
 	public Type type {get; set; } = Type.Medium;
 
 	[Export]
-	public Team team {get;} = Team.Player;
-
-	[Export]
 	public bool hasDoneUpgrade {get;set;} = false;//has the ship taken its upgrade turn
 	
 	[Export]

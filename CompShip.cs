@@ -489,16 +489,7 @@ public class CompShip : Ship1
 					contAtk = false;
 					//GD.Print("SHOULD BREAK?");
 
-		//update ship position
-		shipCell = (Vector2)GetGrid().Call("world_to_map",this.GetPosition());			
-		Vector2 finalDifference = (targetCell - shipCell);
-		if((Math.Abs(finalDifference.x)+Math.Abs(finalDifference.y)) <= maxRange){
-			while(target.HP > 0 && this.AP > 0){
-				var preAP = this.AP;
-				GetGrid().Call("attack", this, target);
-				//No AP change indicates invalid attack, avoids infinite loop.
-				//GD.Print("Attack Loop");
-				if (preAP == this.AP) break;
+				}
 			}
 
 		}
