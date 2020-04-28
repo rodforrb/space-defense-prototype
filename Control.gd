@@ -34,17 +34,10 @@ func _ready():
 			playerShips.append(ship)
 		else:
 			enemyShips.append(ship)
-	# upgrade_turn()
 	draw_moves()
 
 
-# func upgrade_turn():
-# 	var upMenu = get_node("../UpgradeMenu")
-# 	for ship in playerShips:
-# 		upMenu.call("addShip",ship)
-# 	upMenu.call("printShips")
-	
-# 	return
+
 
 # calculates and updates available movement tiles
 # should be called whenever ship selection or the grid is updated
@@ -59,6 +52,11 @@ func draw_moves():
 
 	# if ship is selected, draw movement range
 	if selectedShip != null:
+		#If ship has not had the change to upgrade, show upgrade menu
+		if selectedShip.hasDoneUpgrade == false:
+			selectedShip.hasDoneUpgrade = true;
+			var upMenu = get_node("../UpgradeMenu");
+			upMenu.call("showMenu", selectedShip);
 		# draw selected ship movement range tiles
 		selectedRange = range_check(selectedShip.range, world_to_map(selectedShip.position))
 		add_range(selectedRange, "YellowTransparency")
@@ -174,6 +172,7 @@ func move(ship, target):
 # Ship ship2, attacked ship
 # return true if hit, false if miss
 func attack(ship1, ship2):
+	
 	# target ship is not in range
 	if !(world_to_map(ship2.position) in range_check(ship1.maxRange, world_to_map(ship1.position))):
 		return false
@@ -326,6 +325,8 @@ func check_victory():
 
 		# update the global state
 		State.nextLevel()
+		for ship in playerShips:
+			ship.call("refundCurr");
 
 		# end and return to level select
 		yield(get_tree().create_timer(2), "timeout")
