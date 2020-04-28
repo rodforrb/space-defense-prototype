@@ -8,6 +8,13 @@ public class UpgradeMenu : WindowDialog
 	// private string b = "text";
 
 	// Called when the node enters the scene tree for the first time.
+	private Button atkP;
+	private Button atkM;
+	private Button rangeP;
+	private Button rangeM;
+	private Button healthP;
+	private Button healthM;
+
 	private Ship1 currentShip;
 	private Label curr;
 
@@ -27,6 +34,12 @@ public class UpgradeMenu : WindowDialog
 		atk = (Label) GetNode("currentATK");
 		range = (Label) GetNode("currentRANGE");
 		grid = (TileMap) GetNode("../Grid");
+		atkP = (Button) GetNode("ATK+");
+		atkM = (Button) GetNode("ATK-");
+		rangeP = (Button) GetNode("RANGE+");
+		rangeM = (Button) GetNode("RANGE-");
+		healthP = (Button) GetNode("HEALTH+");
+		healthM = (Button) GetNode("HEALTH-");
 	}
 
 	//called fromt he grid, shows the menu and updates all information
@@ -38,7 +51,49 @@ public class UpgradeMenu : WindowDialog
 		atk.Text = "Current HP: " + currentShip.firepower;
 		range.Text = "Current HP: " + currentShip.maxRange;
 		curr.Text = "Currency: " + Loot.Loot.getValue();
+		checkButtons();
 		
+		
+		
+		
+	}
+	private void checkButtons(){
+		int currentCurr = Loot.Loot.getValue();
+		if (currentCurr < ATKcost){
+			atkP.Visible = false;
+		}else{
+			atkP.Visible = true;
+		}
+
+		if (currentCurr < RANGEcost){
+			rangeP.Visible = false;
+		}else{
+			rangeP.Visible = true;
+		}
+
+		if (currentCurr < HPcost){
+			healthP.Visible = false;
+		}else{
+			healthP.Visible = true;
+		}
+
+		if (currentShip.firepower <= 5){
+			atkM.Visible = false;
+		}else{
+			atkM.Visible = true;
+		}
+
+		if (currentShip.maxRange <= 3){
+			rangeM.Visible = false;
+		}else{
+			rangeM.Visible = true;
+		}
+
+		if (currentShip.maxHP <= 10){
+			healthM.Visible = false;
+		}else{
+			healthM.Visible = true;
+		}
 	}
 
 	//runs on the attack increse button pressed
@@ -51,6 +106,8 @@ public class UpgradeMenu : WindowDialog
 			Loot.Loot.spendCurrency(ATKcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested +=ATKcost;
+			checkButtons();
+			
 		}
 	}
 
@@ -64,6 +121,7 @@ public class UpgradeMenu : WindowDialog
 			Loot.Loot.giveCurrency(ATKcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested -=ATKcost;
+			checkButtons();
 		}
 	}
 
@@ -78,6 +136,7 @@ public class UpgradeMenu : WindowDialog
 			Loot.Loot.spendCurrency(RANGEcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested += RANGEcost;
+			checkButtons();
 		}
 	}
 
@@ -92,6 +151,7 @@ public class UpgradeMenu : WindowDialog
 			Loot.Loot.giveCurrency(RANGEcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested -=RANGEcost;
+			checkButtons();
 		}
 	}
 
@@ -106,6 +166,7 @@ public class UpgradeMenu : WindowDialog
 			Loot.Loot.spendCurrency(HPcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested += HPcost;
+			checkButtons();
 		}
 	}
 
@@ -120,6 +181,7 @@ public class UpgradeMenu : WindowDialog
 			Loot.Loot.giveCurrency(HPcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested -= HPcost;
+			checkButtons();
 		}
 	}
 
@@ -131,16 +193,6 @@ public class UpgradeMenu : WindowDialog
 		grid.SetProcessInput(visible);
 		visible = !visible;
 	}
-
-	// private void _on_UpgradeMenu_hide()
-	// {
-	//     grid.SetProcessInput(true);
-	// }
-
-	// private void _on_UpgradeMenu_about_to_show()
-	// {
-	//     grid.SetProcessInput(false);
-	// }
 
 	
 
