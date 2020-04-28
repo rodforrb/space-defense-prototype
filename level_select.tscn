@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://level_select.cs" type="Script" id=1]
 [ext_resource path="res://resources/graphics/levelselect/levelselect.png" type="Texture" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://resources/graphics/UI/labels/label_options.png" type="Texture" id=8]
 [ext_resource path="res://resources/graphics/UI/labels/label_exit.png" type="Texture" id=9]
 [ext_resource path="res://resources/graphics/levelselect/levelselectgrey.png" type="Texture" id=10]
+[ext_resource path="res://resources/audio/music/space_defense_select_atmos.wav" type="AudioStream" id=11]
 
 [sub_resource type="TileSet" id=1]
 43/name = "levelselect.png 43"
@@ -497,9 +498,17 @@ margin_right = 403.0
 margin_bottom = 50.0
 mouse_default_cursor_shape = 2
 texture = ExtResource( 9 )
+
+[node name="Music" type="Node2D" parent="."]
+
+[node name="default_level_select_music" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource( 11 )
+autoplay = true
+
 [connection signal="gui_input" from="selectGala" to="." method="_on_selectGala_gui_input"]
 [connection signal="gui_input" from="selectKeplar" to="." method="_on_selectKeplar_gui_input"]
 [connection signal="gui_input" from="selectGliese" to="." method="_on_selectGliese_gui_input"]
+
 [connection signal="pressed" from="Panel/Start" to="." method="_on_Start_pressed"]
 [connection signal="pressed" from="Panel/Save" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="Panel/Exit" to="." method="_on_Exit_pressed"]
