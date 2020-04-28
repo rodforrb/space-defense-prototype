@@ -41,10 +41,11 @@ func _ready():
 			playerShips.append(ship)
 		else:
 			enemyShips.append(ship)
-		
-	
 	draw_moves()
-	
+
+
+
+
 # calculates and updates available movement tiles
 # should be called whenever ship selection or the grid is updated
 func draw_moves():
@@ -58,6 +59,11 @@ func draw_moves():
 
 	# if ship is selected, draw movement range
 	if selectedShip != null:
+		#If ship has not had the change to upgrade, show upgrade menu
+		if selectedShip.hasDoneUpgrade == false:
+			selectedShip.hasDoneUpgrade = true;
+			var upMenu = get_node("../UpgradeMenu");
+			upMenu.call("showMenu", selectedShip);
 		# draw selected ship movement range tiles
 		selectedRange = range_check(selectedShip.range, world_to_map(selectedShip.position))
 		add_range(selectedRange, "YellowTransparency")
@@ -191,6 +197,7 @@ func move(ship, target):
 # Ship ship2, attacked ship
 # return true if hit, false if miss
 func attack(ship1, ship2):
+	
 	# target ship is not in range
 	if !(world_to_map(ship2.position) in range_check(ship1.maxRange, world_to_map(ship1.position))):
 		return false
@@ -236,6 +243,7 @@ func attack(ship1, ship2):
 			playerShips.remove(playerShips.find(ship2))
 		else:
 			enemyShips.remove(enemyShips.find(ship2))
+			ship2.call("DropLoot")
 
 		# remove from grid
 		remove_child(ship2)
@@ -354,6 +362,8 @@ func check_victory():
 
 		# update the global state
 		State.nextLevel()
+		for ship in playerShips:
+			ship.call("refundCurr");
 
 		# end and return to level select
 		yield(get_tree().create_timer(1), "timeout")
@@ -436,10 +446,28 @@ func comp_turn():
 	for ship in enemyShips:
 		while ship.range > 0:
 			# run individual ship AI
+			var preAP = ship.AP
+			var preRg = ship.range
 			ship.call("PlayTurn")
 
 			# wait for movement and pause
 			yield(get_tree().create_timer(0.4), "timeout")
+			#No moves left attacks
+			if(preAP == ship.AP && preRg == ship.range):
+				break
+				#print("ERR MV")
+		var contAtk = true
+		
+		while(ship.AP > 0 && contAtk == true):
+			var preAP = ship.AP
+			ship.call("PlayTurn")
+			yield(get_tree().create_timer(0.4), "timeout")
+			#make sure the attack actually happened
+			#print("CTRL ATK")
+			if(preAP == ship.AP):
+				contAtk = false
+				#print("ERR ATK")
+				
 
 	# let parent function know it can continue
 	emit_signal("computer_done")

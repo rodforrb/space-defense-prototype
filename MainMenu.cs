@@ -41,7 +41,7 @@ public class MainMenu : MarginContainer
 		{
 			AudioStreamPlayer menu_select = (AudioStreamPlayer) GetNode("SoundEffect/menu_select");
 			menu_select.Play();
-			sceneDest = "";
+			sceneDest = "res://OptionsMenu.tscn";
 		}
 	}
 	//leaves game

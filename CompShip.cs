@@ -22,10 +22,6 @@ public class CompShip : Ship1
 	new public int accuracy { get; set; } = 5;//odds of hitting an opponent
 	new public int evasion { get; set; } = 5;//odds of dodging an attack
 
-	private int targX = -1;//used for avoiding move deadlock
-	private int targY = -1;
-	private Vector2[] oldMoves;
-	private int moveStep = 0;
 	
 	/* Used to get instantiated Grid object
 	 * Unfortunately GetNode cannot be used by a static class.
@@ -42,24 +38,15 @@ public class CompShip : Ship1
 			
 	}
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
-
-	// requests the ship's actions to the grid
-	//Todo:
-	//public void PlayTurn(Array of player ships)
-	//also: make this a bool
-	//that returns true when the turn is complete
-	//this could be useful for switching turns
-	//KNOWN ISSUE:
-	//SOMETIMES SHIPS GET STUCK PINGING THEMSELVES UP AND DOWN OVER AND OVER
-	//WE'LL FILE THIS UNDER "KNOWN BUGS" FOR NOW
-	//FOR THE SAKE OF GETTING SOME LEVEL OF AI LOGIC PUSHED TO MASTER
-	//BUG: I think the ship tries to attack over an asteroid
-	//ie if
+	public void DropLoot()
+	{
+		Loot.Loot.giveCurrency(1);
+	}
+  
+	//Exhibits strange diagonal movement
+	//The calling loop in grid and this code
+	//interact in an odd manner
+	//
 	public void PlayTurn()
 	{
 		Godot.Collections.Array PlayerShips = GetGrid().Get("playerShips") as Godot.Collections.Array;
@@ -71,6 +58,8 @@ public class CompShip : Ship1
 			return;
 		}
 
+		//GD.Print("Comp Move Called");
+		
 		Ship1 target = (Ship1)PlayerShips[0];
 		float distance = 10000000;
 		//may need to switch targetting?
@@ -195,7 +184,6 @@ public class CompShip : Ship1
 					addY = 0;					
 				}								
 				if(((0 <= (activeStep[0] + addX) && (activeStep[0] + addX) < v) && (0 <= (activeStep[1] + addY) && (activeStep[1] + addY)< v) ) && (visited[activeStep[0] + addX, activeStep[1]+addY] == false)){
-					//obst check todo
 					bool freeTile = true;
 					Godot.Collections.Array tiles = GetGrid().Get("obstacle_tiles") as Godot.Collections.Array;
 					foreach (int obs in tiles){
@@ -203,6 +191,16 @@ public class CompShip : Ship1
 								freeTile = false;
 						}
 					}
+					//Avoid "passing through" other comp ships
+					Godot.Collections.Array compships = GetGrid().Get("enemyShips") as Godot.Collections.Array;
+					foreach (Ship1 obs in compships){
+						Vector2 tempV = new Vector2((activeStep[0] + addX), (activeStep[1] + addY));
+						if(tempV == (Vector2)GetGrid().Call("world_to_map", obs.Position)){
+								freeTile = false;
+								//GD.Print("COMP SHIP COLLISON");
+						}
+					}					
+
 					if(freeTile){
 						visited[activeStep[0] + addX, activeStep[1]+addY] = true;
 						dist[activeStep[0] + addX, activeStep[1]+addY] = dist[activeStep[0], activeStep[1]] + 1;
@@ -233,13 +231,28 @@ public class CompShip : Ship1
 		if (reachDest){
 			int currentX = (int)targetCell[0];
 			int currentY = (int)targetCell[1];
+
 			for(int i = pathDist-1; i>= 0; i--){
 				int crawlPred = pred[currentX, currentY];
 				//GD.Print("Crawl: ", crawlPred);
 				Vector2 moveToAdd = new Vector2();
+
+				moveNorth.x =  currentX;
+				moveNorth.y = currentY;
+
+				moveEast.x = currentX;
+				moveEast.y =  currentY;
+
+				moveSouth.x =  currentX;
+				moveSouth.y = currentY;
+
+				moveWest.x =  currentX;
+				moveWest.y = currentY;
+
+
 				if(crawlPred == 0){
 					moveToAdd = moveNorth;
-					currentY += 1;				
+					currentY += 1;			
 				}
 				if(crawlPred == 1){
 					moveToAdd = moveEast;	
@@ -247,39 +260,55 @@ public class CompShip : Ship1
 				}
 				if(crawlPred == 2){
 					moveToAdd = moveSouth;
-					currentY += -1;										
+					currentY += -1;											
 				}	
 				if(crawlPred == 3){
 					moveToAdd = moveWest;
 					currentX += 1;				
 				}
+				//GD.Print("\n Step ", i, "(", currentX, ", ", currentY, "),  Move added: ", moveToAdd);
 				movePath[i] = moveToAdd;
+
 			}
 		}
 		else{
-			//Currently no logic for unreachable target
+			//No logic for unreachable target
 			fight = 0;
-		}	
+		}
+			
 		Random r = new Random();
 
-
-		for (int i = 0; i < maxRange; i++){
-
-			Vector2 difference = (targetCell - shipCell);
-			if(fight==1){
-				if((Math.Abs(difference.x)+Math.Abs(difference.y)) <= range){
-					// GetGrid().Attack(this, target, new Projectile(ProjectileType.Gun));
-					GetGrid().Call("attack", this, target);
-				}
-				else{
-					if(i <= movePath.Length - 1){
-						GetGrid().Call("move", this, movePath[i]);
-						this.moveStep = i;
-					}
-				}
+		//movement control
+		Vector2 difference = (targetCell - shipCell);
+		if(fight==1){
+			//needs to check for valid attack
+			if(this.AP != 0 && (Math.Abs(difference.x)+Math.Abs(difference.y)) <= maxRange){
+				// GetGrid().Attack(this, target, new Projectile(ProjectileType.Gun));
+				GetGrid().Call("attack", this, target);
 			}
-			else if(fight == 0){
-				
+			if(movePath.Length > 0){
+				//Might need to add a last move check to stop ships from ending up inside each other
+				//Godot.Collections.Array ship = GetGrid().Get("enemy_ships") as Godot.Collections.Array;
+				GetGrid().Call("move", this, movePath[0]);
+				//GD.Print(movePath[0]);
+				//GD.Print("\nShip position: (", shipCell.x, ", ", shipCell.y, ") Move0: ", movePath[0], "Target: (", targetCell.x, ", ", targetCell.y, ")" );
+				//this.moveStep = i;
+			}
+			//"just in case" rando movement
+			else{
+				//set for random movement
+				moveNorth.x =  shipCell.x;
+				moveNorth.y = shipCell.y - 1;
+
+				moveEast.x =  shipCell.x + 1;
+				moveEast.y =  shipCell.y;
+
+				moveSouth.x =  shipCell.x;
+				moveSouth.y = shipCell.y + 1;
+
+				moveWest.x =  shipCell.x - 1;
+				moveWest.y = shipCell.y;
+			
 				int randDirection = r.Next(0, 4); //0 = north, 1 east, 2 south, 3 west						
 				switch (randDirection){
 					case 0:
@@ -294,68 +323,65 @@ public class CompShip : Ship1
 					case 3:
 						GetGrid().Call("move", this, moveWest);
 						break;
-				}								
-			}			
+				}
+
+			}
+			
+		}
+		else if(fight == 0){
+
+			//set for random movement
+			moveNorth.x =  shipCell.x;
+			moveNorth.y = shipCell.y - 1;
+
+			moveEast.x =  shipCell.x + 1;
+			moveEast.y =  shipCell.y;
+
+			moveSouth.x =  shipCell.x;
+			moveSouth.y = shipCell.y + 1;
+
+			moveWest.x =  shipCell.x - 1;
+			moveWest.y = shipCell.y;
+		
+			int randDirection = r.Next(0, 4); //0 = north, 1 east, 2 south, 3 west						
+			switch (randDirection){
+				case 0:
+					GetGrid().Call("move", this, moveNorth);	
+					break;			
+				case 1:
+					GetGrid().Call("move", this, moveEast);
+					break;
+				case 2:
+					GetGrid().Call("move", this, moveSouth);
+					break;			
+				case 3:
+					GetGrid().Call("move", this, moveWest);
+					break;
+			}								
 		}
 
-		this.oldMoves = new Vector2[movePath.Length -  this.moveStep];
-		Array.Copy(movePath, this.moveStep, this.oldMoves,  this.oldMoves.GetLowerBound(0), movePath.Length -  this.moveStep );
-		this.targX = (int)targetCell[0];
-		this.targY = (int)targetCell[1];	
-		/*
-		foreach(int number in GetGrid().obst){
-			GD.Print(number);
-		}*/
-		
-
-		/* old algo		
-		for (int i = 0; i < maxRange; i++){
-		
+		//post-move attacking
 
 
-
-			Vector2 difference = (targetCell - shipCell);
-			if(fight==1){
-				if((Math.Abs(difference.x)+Math.Abs(difference.y)) <= range){
-					GetGrid().Attack(this, target, new Projectile(ProjectileType.Gun));
-				}
-				else if(Math.Abs(difference.x) < Math.Abs(difference.y) ){
-					if(difference.y > 0){
-						GetGrid().Move(this, moveSouth);
-					}
-					else{
-						GetGrid().Move(this, moveNorth);
-					}
-				}
-				else if(Math.Abs(difference.x) >= Math.Abs(difference.y) ){
-					if(difference.x > 0){
-						GetGrid().Move(this, moveEast);
-					}
-					else{
-						GetGrid().Move(this, moveWest);
-					}
+		//update ship position
+		shipCell = (Vector2)GetGrid().Call("world_to_map",this.GetPosition());			
+		Vector2 finalDifference = (targetCell - shipCell);
+		bool contAtk = true;
+		if((Math.Abs(finalDifference.x)+Math.Abs(finalDifference.y)) <= maxRange){
+			while(target.HP > 0 && this.AP > 0 && contAtk == true){
+				var preAP = this.AP;
+				GetGrid().Call("attack", this, target);
+				//No AP change indicates invalid attack, avoids infinite loop.
+				//GD.Print("Attack Loop, PREAP:", preAP, "POST AP:", this.AP);
+				if (preAP == this.AP){
+					contAtk = false;
+					//GD.Print("SHOULD BREAK?");
 
 				}
 			}
-			else if(fight == 0){
-				if(Math.Abs(difference.x) <= Math.Abs(difference.y) ){
-					if(difference.y > 0){
-						GetGrid().Move(this, moveNorth);
-					}
-					else{
-						GetGrid().Move(this, moveSouth);
-					}
-				}
-				else if(Math.Abs(difference.x) > Math.Abs(difference.y) ){
-					if(difference.x > 0){
-						GetGrid().Move(this, moveWest);
-					}
-					else{
-						GetGrid().Move(this, moveEast);
-					}
-				}				
-			}			
-		}*/
+
+		}
+	//GD.Print("TEST");
 	}
 	
 }

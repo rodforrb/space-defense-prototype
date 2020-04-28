@@ -15,6 +15,8 @@
 [node name="MainMenu" type="MarginContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_right = 80.0
+margin_bottom = -1.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -24,7 +26,6 @@ __meta__ = {
 margin_right = 1104.0
 margin_bottom = 608.0
 texture = ExtResource( 11 )
-expand = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_right = 1104.0
@@ -85,6 +86,9 @@ texture = ExtResource( 7 )
 margin_left = 604.0
 margin_right = 1104.0
 margin_bottom = 608.0
+
+rect_pivot_offset = Vector2( -446.831, 369 )
+
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
