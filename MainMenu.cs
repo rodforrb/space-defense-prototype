@@ -31,7 +31,7 @@ public class MainMenu : MarginContainer
 		{
 			AudioStreamPlayer menu_select = (AudioStreamPlayer) GetNode("SoundEffect/menu_select");
 			menu_select.Play();
-			sceneDest = "res://Level1.tscn";
+			sceneDest = "res://Tutorial.tscn";
 			//GetTree().ChangeScene("res://Level1.tscn");
 		}
 	}

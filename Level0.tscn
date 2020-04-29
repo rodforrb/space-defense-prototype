@@ -36,7 +36,6 @@ __meta__ = {
 }
 
 [node name="DefeatEnd" type="Popup" parent="."]
-visible = true
 margin_left = 400.0
 margin_top = 173.0
 margin_right = 719.0
