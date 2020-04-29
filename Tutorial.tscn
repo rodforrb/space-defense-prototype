@@ -12,18 +12,6 @@
 
 [node name="Game" instance=ExtResource( 1 )]
 
-[node name="SniperB" parent="Background" index="0" instance=ExtResource( 9 )]
-position = Vector2( 160.002, 32.0004 )
-
-[node name="MediumShipB" parent="Background" index="1" instance=ExtResource( 6 )]
-position = Vector2( 65.001, 64.0004 )
-
-[node name="HeavyShipB" parent="Background" index="2" instance=ExtResource( 8 )]
-position = Vector2( 128.001, 64.0004 )
-
-[node name="DestroyerB" parent="Background" index="3" instance=ExtResource( 7 )]
-position = Vector2( 97.0012, 32.0004 )
-
 [node name="Label" parent="Panel/Stats" index="0"]
 margin_top = 488.65
 margin_bottom = 513.65
@@ -32,22 +20,34 @@ margin_bottom = 513.65
 tile_data = PoolIntArray( -65536, 13, 0, -65535, 13, 0, -65534, 13, 0, -65533, 13, 0, -65532, 13, 0, -65531, 13, 0, -65530, 13, 0, -65529, 13, 0, -65528, 13, 0, -65527, 13, 0, -65526, 13, 0, -65525, 13, 0, -65524, 13, 0, -65523, 13, 0, -65522, 13, 0, -65521, 13, 0, -65520, 13, 0, -65519, 13, 0, -65518, 13, 0, -65517, 13, 0, -65516, 13, 0, -65515, 13, 0, -65514, 13, 0, -65513, 13, 0, -65512, 13, 0, -65511, 13, 0, -65510, 13, 0, -65509, 13, 0, -65508, 13, 0, -65507, 13, 0, -65506, 13, 0, -65505, 13, 0, 65535, 13, 0, 32, 13, 0, 131071, 13, 0, 65560, 12, 0, 65565, 12, 0, 65568, 13, 0, 196607, 13, 0, 131089, 12, 0, 131104, 13, 0, 262143, 13, 0, 196624, 12, 0, 196640, 13, 0, 327679, 13, 0, 262147, 10, 0, 262176, 13, 0, 393215, 13, 0, 327682, 10, 0, 327683, 10, 0, 327684, 10, 0, 327712, 13, 0, 458751, 13, 0, 393217, 10, 0, 393218, 10, 0, 393219, 10, 0, 393220, 10, 0, 393221, 10, 0, 393245, 10, 0, 393248, 13, 0, 524287, 13, 0, 458754, 10, 0, 458755, 10, 0, 458756, 10, 0, 458775, 12, 0, 458780, 12, 0, 458781, 10, 0, 458782, 10, 0, 458784, 13, 0, 589823, 13, 0, 524291, 10, 0, 524307, 12, 0, 524315, 12, 0, 524316, 10, 0, 524317, 10, 0, 524318, 10, 0, 524319, 12, 0, 524320, 13, 0, 655359, 13, 0, 589845, 12, 0, 589850, 10, 0, 589851, 10, 0, 589852, 10, 0, 589853, 10, 0, 589854, 10, 0, 589856, 13, 0, 720895, 13, 0, 655363, 9, 0, 655375, 12, 0, 655387, 10, 0, 655388, 10, 0, 655389, 10, 0, 655392, 13, 0, 786431, 13, 0, 720924, 10, 0, 720928, 13, 0, 851967, 13, 0, 786464, 13, 0, 917503, 13, 0, 851971, 10, 0, 851998, 12, 0, 852000, 13, 0, 983039, 13, 0, 917518, 12, 0, 917536, 13, 0, 983040, 13, 0, 983041, 13, 0, 983042, 13, 0, 983043, 13, 0, 983044, 13, 0, 983045, 13, 0, 983046, 13, 0, 983047, 13, 0, 983048, 13, 0, 983049, 13, 0, 983050, 13, 0, 983051, 13, 0, 983052, 13, 0, 983053, 13, 0, 983054, 13, 0, 983055, 13, 0, 983056, 13, 0, 983057, 13, 0, 983058, 13, 0, 983059, 13, 0, 983060, 13, 0, 983061, 13, 0, 983062, 13, 0, 983063, 13, 0, 983064, 13, 0, 983065, 13, 0, 983066, 13, 0, 983067, 13, 0, 983068, 13, 0, 983069, 13, 0, 983070, 13, 0, 983071, 13, 0, 1048576, 13, 0, 1048577, 13, 0, 1048578, 13, 0, 1048579, 13, 0, 1048580, 13, 0, 1048581, 13, 0, 1048582, 13, 0, 1048583, 13, 0, 1048584, 13, 0, 1048585, 13, 0, 1048586, 13, 0, 1048587, 13, 0, 1048588, 13, 0, 1048589, 13, 0, 1048590, 13, 0, 1048591, 13, 0, 1048592, 13, 0, 1048593, 13, 0, 1048594, 13, 0, 1048595, 13, 0, 1048596, 13, 0, 1048597, 13, 0, 1048598, 13, 0, 1048599, 13, 0, 1048600, 13, 0, 1048601, 13, 0, 1048602, 13, 0, 1048603, 13, 0, 1048604, 13, 0, 1048605, 13, 0, 1048606, 13, 0, 1048607, 13, 0, 1114112, 13, 0, 1114113, 13, 0, 1114114, 13, 0, 1114115, 13, 0, 1114116, 13, 0, 1114117, 13, 0, 1114118, 13, 0, 1114119, 13, 0, 1114120, 13, 0, 1114121, 13, 0, 1114122, 13, 0, 1114123, 13, 0, 1114124, 13, 0, 1114125, 13, 0, 1114126, 13, 0, 1114127, 13, 0, 1114128, 13, 0, 1114129, 13, 0, 1114130, 13, 0, 1114131, 13, 0, 1114132, 13, 0, 1114133, 13, 0, 1114134, 13, 0, 1114135, 13, 0, 1114136, 13, 0, 1114137, 13, 0, 1114138, 13, 0, 1114139, 13, 0, 1114140, 13, 0, 1114141, 13, 0, 1114142, 13, 0, 1114143, 13, 0, 1179648, 13, 0, 1179649, 13, 0, 1179650, 13, 0, 1179651, 13, 0, 1179652, 13, 0, 1179653, 13, 0, 1179654, 13, 0, 1179655, 13, 0, 1179656, 13, 0, 1179657, 13, 0, 1179658, 13, 0, 1179659, 13, 0, 1179660, 13, 0, 1179661, 13, 0, 1179662, 13, 0, 1179663, 13, 0, 1179664, 13, 0, 1179665, 13, 0, 1179666, 13, 0, 1179667, 13, 0, 1179668, 13, 0, 1179669, 13, 0, 1179670, 13, 0, 1179671, 13, 0, 1179672, 13, 0, 1179673, 13, 0, 1179674, 13, 0, 1179675, 13, 0, 1179676, 13, 0, 1179677, 13, 0, 1179678, 13, 0, 1179679, 13, 0 )
 script = ExtResource( 2 )
 
-[node name="Laser" parent="Grid" index="0" instance=ExtResource( 3 )]
+[node name="SniperB" parent="Grid" index="0" instance=ExtResource( 9 )]
+position = Vector2( 160.002, 32.0004 )
+
+[node name="MediumShipB" parent="Grid" index="1" instance=ExtResource( 6 )]
+position = Vector2( 64.001, 64.0004 )
+
+[node name="MediumShipB2" parent="Grid" index="2" instance=ExtResource( 6 )]
+position = Vector2( 96.001, 192 )
+
+[node name="HeavyShipB" parent="Grid" index="3" instance=ExtResource( 8 )]
+position = Vector2( 128.001, 64.0004 )
+
+[node name="DestroyerB" parent="Grid" index="4" instance=ExtResource( 7 )]
+position = Vector2( 96.0012, 32.0004 )
+
+[node name="Laser" parent="Grid" index="5" instance=ExtResource( 3 )]
 position = Vector2( 96.0012, 376.003 )
 
-[node name="Ship1" parent="Grid" index="1" instance=ExtResource( 4 )]
+[node name="Ship1" parent="Grid" index="6" instance=ExtResource( 4 )]
 position = Vector2( 31.6195, 32.3968 )
 
-[node name="Ship2" parent="Grid" index="2" instance=ExtResource( 4 )]
-position = Vector2( 96.4387, 195.438 )
-
-[node name="Ship4" parent="Grid" index="3" instance=ExtResource( 4 )]
+[node name="Ship4" parent="Grid" index="7" instance=ExtResource( 4 )]
 position = Vector2( 96.4387, 418.439 )
 
-[node name="Ship3" parent="Grid" index="4" instance=ExtResource( 4 )]
+[node name="Ship3" parent="Grid" index="8" instance=ExtResource( 4 )]
 position = Vector2( 897.444, 258.437 )
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Grid" index="5"]
+[node name="RichTextLabel" type="RichTextLabel" parent="Grid" index="9"]
 margin_left = 198.0
 margin_top = 38.2749
 margin_right = 428.0
@@ -62,7 +62,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RichTextLabel4" type="RichTextLabel" parent="Grid" index="6"]
+[node name="RichTextLabel4" type="RichTextLabel" parent="Grid" index="10"]
 margin_left = 645.0
 margin_top = 104.0
 margin_right = 875.0
@@ -75,7 +75,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RichTextLabel6" type="RichTextLabel" parent="Grid" index="7"]
+[node name="RichTextLabel6" type="RichTextLabel" parent="Grid" index="11"]
 margin_left = 644.0
 margin_top = 292.0
 margin_right = 874.0
@@ -85,7 +85,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RichTextLabel2" type="RichTextLabel" parent="Grid" index="8"]
+[node name="RichTextLabel2" type="RichTextLabel" parent="Grid" index="12"]
 margin_left = 198.0
 margin_top = 196.721
 margin_right = 428.0
@@ -96,7 +96,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RichTextLabel3" type="RichTextLabel" parent="Grid" index="9"]
+[node name="RichTextLabel3" type="RichTextLabel" parent="Grid" index="13"]
 margin_left = 198.0
 margin_top = 325.0
 margin_right = 413.0
@@ -109,7 +109,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RichTextLabel5" type="RichTextLabel" parent="Grid" index="10"]
+[node name="RichTextLabel5" type="RichTextLabel" parent="Grid" index="14"]
 margin_left = 644.0
 margin_top = 355.0
 margin_right = 859.0
@@ -122,7 +122,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RichTextLabel7" type="RichTextLabel" parent="Grid" index="11"]
+[node name="RichTextLabel7" type="RichTextLabel" parent="Grid" index="15"]
 margin_left = 645.0
 margin_top = 259.0
 margin_right = 860.0
