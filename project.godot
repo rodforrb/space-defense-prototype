@@ -17,7 +17,7 @@ _global_script_class_icons={
 
 config/name="space-defense-prototype"
 run/main_scene="res://MainMenu.tscn"
-config/icon="res://icon.png"
+config/icon="res://resources/graphics/sprites/ship1/ship1.png"
 
 [autoload]
 

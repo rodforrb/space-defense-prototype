@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://MediumShipB.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Level0.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://CompShip.tscn" type="PackedScene" id=7]
 [ext_resource path="res://HeavyShipB.tscn" type="PackedScene" id=8]
 [ext_resource path="res://HeavyShipR.tscn" type="PackedScene" id=9]
+[ext_resource path="res://resources/audio/music/space_defense_battle_1.wav" type="AudioStream" id=10]
 
 [node name="Game" instance=ExtResource( 2 )]
 
@@ -84,3 +85,6 @@ position = Vector2( 544.244, 417.896 )
 
 [node name="HeavyShipR4" parent="Grid" index="15" instance=ExtResource( 9 )]
 position = Vector2( 960.54, 289.947 )
+
+[node name="default_battle_music" parent="Music" index="0"]
+stream = ExtResource( 10 )

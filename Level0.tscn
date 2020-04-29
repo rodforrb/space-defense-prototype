@@ -21,7 +21,7 @@
 [ext_resource path="res://resources/graphics/UI/bars/yellow_bar.png" type="Texture" id=19]
 [ext_resource path="res://resources/graphics/backgrounds/bg/space_03.png" type="Texture" id=20]
 [ext_resource path="res://UpgradeMenu.cs" type="Script" id=21]
-[ext_resource path="res://resources/audio/music/space_defense_battle_1.wav" type="AudioStream" id=22]
+[ext_resource path="res://resources/audio/music/space_defense_select_atmos.wav" type="AudioStream" id=22]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
