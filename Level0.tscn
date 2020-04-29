@@ -182,10 +182,10 @@ scale = Vector2( 0.375, 0.25 )
 texture = ExtResource( 3 )
 
 [node name="PanelContainer" type="PanelContainer" parent="Panel"]
-margin_left = 32.0
-margin_top = 32.0
-margin_right = 96.0
-margin_bottom = 96.0
+margin_left = 32.8574
+margin_top = 21.9518
+margin_right = 96.8574
+margin_bottom = 85.9518
 theme = ExtResource( 4 )
 custom_styles/panel = ExtResource( 5 )
 __meta__ = {
@@ -508,18 +508,20 @@ __meta__ = {
 
 [node name="Name" type="RichTextLabel" parent="Panel/Stats"]
 margin_left = 32.0
-margin_top = 493.0
-margin_right = 97.0
-margin_bottom = 519.0
+margin_top = 485.0
+margin_right = 174.0
+margin_bottom = 502.0
+grow_horizontal = 2
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="OpenUpgrade" type="Button" parent="Panel"]
-margin_left = 206.0
-margin_top = 96.455
-margin_right = 304.0
-margin_bottom = 122.455
+margin_left = 15.4171
+margin_top = 90.8562
+margin_right = 113.417
+margin_bottom = 116.856
 text = "Upgrade Ship"
 clip_text = true
 __meta__ = {
@@ -664,10 +666,10 @@ __meta__ = {
 }
 
 [node name="ATK+" type="Button" parent="UpgradeMenu"]
-margin_left = 125.432
-margin_top = 11.5993
-margin_right = 165.432
-margin_bottom = 31.5993
+margin_left = 128.432
+margin_top = 42.5995
+margin_right = 168.432
+margin_bottom = 62.5995
 mouse_filter = 1
 text = "+"
 __meta__ = {
@@ -675,115 +677,115 @@ __meta__ = {
 }
 
 [node name="ATK-" type="Button" parent="UpgradeMenu"]
-margin_left = 15.6199
-margin_top = 12.7974
-margin_right = 55.6199
-margin_bottom = 32.7974
+margin_left = 13.6198
+margin_top = 42.7976
+margin_right = 53.6198
+margin_bottom = 62.7976
 text = "-"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ATK" type="Label" parent="UpgradeMenu"]
-margin_left = 74.56
-margin_top = 15.5694
-margin_right = 114.56
-margin_bottom = 29.5694
-text = "ATK"
+margin_left = 67.9999
+margin_top = 46.0002
+margin_right = 118.0
+margin_bottom = 60.0002
+text = "ATK (1)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RANGE+" type="Button" parent="UpgradeMenu"]
-margin_left = 127.434
-margin_top = 67.5744
-margin_right = 167.434
-margin_bottom = 87.5744
+margin_left = 128.434
+margin_top = 100.575
+margin_right = 168.434
+margin_bottom = 120.575
 text = "+"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RANGE-" type="Button" parent="UpgradeMenu"]
-margin_left = 12.8753
-margin_top = 65.9841
-margin_right = 52.8753
-margin_bottom = 86.9841
+margin_left = 13.8753
+margin_top = 100.984
+margin_right = 53.8753
+margin_bottom = 122.0
 text = "-"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RANGE" type="Label" parent="UpgradeMenu"]
-margin_left = 69.5176
-margin_top = 69.6748
-margin_right = 113.518
-margin_bottom = 83.6748
-text = "RANGE"
+margin_left = 61.0
+margin_top = 105.0
+margin_right = 135.0
+margin_bottom = 119.0
+text = "RANGE (3)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HEALTH+" type="Button" parent="UpgradeMenu"]
 margin_left = 128.632
-margin_top = 129.499
+margin_top = 158.499
 margin_right = 168.632
-margin_bottom = 149.499
+margin_bottom = 179.0
 text = "+"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HEALTH-" type="Button" parent="UpgradeMenu"]
-margin_left = 11.8526
-margin_top = 127.659
-margin_right = 51.8526
-margin_bottom = 148.659
+margin_left = 13.8526
+margin_top = 158.659
+margin_right = 53.8526
+margin_bottom = 179.659
 text = "-"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HEALTH" type="Label" parent="UpgradeMenu"]
-margin_left = 64.1711
-margin_top = 132.328
-margin_right = 114.171
-margin_bottom = 146.328
-text = "HEALTH"
+margin_left = 74.0
+margin_top = 162.0
+margin_right = 133.0
+margin_bottom = 176.0
+text = "HP (1)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Currency" type="Label" parent="UpgradeMenu"]
-margin_left = 24.0474
-margin_top = 186.234
-margin_right = 160.047
-margin_bottom = 200.234
-text = "Currency: NULL"
+margin_left = 55.0476
+margin_top = 15.2329
+margin_right = 191.047
+margin_bottom = 29.2329
+text = "Currency: 0"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="currentATK" type="Label" parent="UpgradeMenu"]
-margin_left = 19.95
-margin_top = 41.8
-margin_right = 59.95
-margin_bottom = 55.8
-text = "Current Attack: NULL"
+margin_left = 30.9999
+margin_top = 70.0002
+margin_right = 167.0
+margin_bottom = 84.0002
+text = "Attack Damage: 00"
 
 [node name="currentHEALTH" type="Label" parent="UpgradeMenu"]
-margin_left = 23.7499
-margin_top = 157.7
-margin_right = 156.75
-margin_bottom = 171.7
-text = "Current Health: NULL"
+margin_left = 57.0
+margin_top = 188.0
+margin_right = 154.0
+margin_bottom = 202.0
+text = "Max HP: 00"
 
 [node name="currentRANGE" type="Label" parent="UpgradeMenu"]
-margin_left = 20.9
-margin_top = 100.7
-margin_right = 153.9
-margin_bottom = 114.7
-text = "Current Range: NULL"
+margin_left = 23.0
+margin_top = 131.0
+margin_right = 168.0
+margin_bottom = 145.0
+text = "Movement Range: 00"
 [connection signal="pressed" from="DefeatEnd/DefeatConfirm" to="Grid" method="_on_DefeatConfirm_pressed"]
 [connection signal="pressed" from="VictoryEnd/VictoryConfirm" to="Grid" method="_on_VictoryConfirm_pressed"]
 [connection signal="pressed" from="Panel/EndTurn" to="Grid" method="_on_end_turn"]

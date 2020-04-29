@@ -42,58 +42,117 @@ public class UpgradeMenu : WindowDialog
 		healthM = (Button) GetNode("HEALTH-");
 	}
 
-	//called fromt he grid, shows the menu and updates all information
+	//called from the grid, shows the menu and updates all information
 	public void showMenu(Ship1 ship)
 	{
 		Show();
 		currentShip = ship;
-		mhp.Text = "Current HP: " + currentShip.maxHP;
-		atk.Text = "Current HP: " + currentShip.firepower;
-		range.Text = "Current HP: " + currentShip.maxRange;
+		mhp.Text = "Max HP: " + currentShip.maxHP;
+		atk.Text = "Attack Damage: " + currentShip.firepower;
+		range.Text = "Movement Range: " + currentShip.maxRange;
 		curr.Text = "Currency: " + Loot.Loot.getValue();
 		checkButtons();
-		
-		
-		
-		
 	}
+
+	// private void checkButtons(){
+	// 	int currentCurr = Loot.Loot.getValue();
+	// 	if (currentCurr < ATKcost){
+	// 		atkP.Visible = false;
+	// 	}else{
+	// 		atkP.Visible = true;
+	// 	}
+
+	// 	if (currentCurr < RANGEcost){
+	// 		rangeP.Visible = false;
+	// 	}else{
+	// 		rangeP.Visible = true;
+	// 	}
+
+	// 	if (currentCurr < HPcost){
+	// 		healthP.Visible = false;
+	// 	}else{
+	// 		healthP.Visible = true;
+	// 	}
+
+	// 	if (currentShip.firepower <= 5){
+	// 		atkM.Visible = false;
+	// 	}else{
+	// 		atkM.Visible = true;
+	// 	}
+
+	// 	if (currentShip.maxRange <= 3){
+	// 		rangeM.Visible = false;
+	// 	}else{
+	// 		rangeM.Visible = true;
+	// 	}
+
+	// 	if (currentShip.maxHP <= 10){
+	// 		healthM.Visible = false;
+	// 	}else{
+	// 		healthM.Visible = true;
+	// 	}
+	// }
+
 	private void checkButtons(){
 		int currentCurr = Loot.Loot.getValue();
 		if (currentCurr < ATKcost){
-			atkP.Visible = false;
+			disable(atkP);
 		}else{
-			atkP.Visible = true;
+			enable(atkP);
 		}
 
 		if (currentCurr < RANGEcost){
-			rangeP.Visible = false;
+			disable(rangeP);
 		}else{
-			rangeP.Visible = true;
+			enable(rangeP);
 		}
 
 		if (currentCurr < HPcost){
-			healthP.Visible = false;
+			disable(healthP);
 		}else{
-			healthP.Visible = true;
+			enable(healthP);
 		}
 
 		if (currentShip.firepower <= 5){
-			atkM.Visible = false;
+			disable(atkM);
 		}else{
-			atkM.Visible = true;
+			enable(atkM);
 		}
 
 		if (currentShip.maxRange <= 3){
-			rangeM.Visible = false;
+			disable(rangeM);
 		}else{
-			rangeM.Visible = true;
+			enable(rangeM);
 		}
 
 		if (currentShip.maxHP <= 10){
-			healthM.Visible = false;
+			disable(healthM);
 		}else{
-			healthM.Visible = true;
+			enable(healthM);
 		}
+	}
+
+
+	/* disables a button (greys it out)
+	 * @param button, a GD Button
+	*/
+	private void disable(Button button)
+	{
+		// turn off the button
+		button.Disabled = true;
+		// turn it grey
+		button.Modulate = new Color(.9f, .6f, .6f, 1);
+	}
+
+	/* enables a disabled button
+	 * @param button, a GD Button
+	*/
+	private void enable(Button button)
+	{
+		// turn off the button
+		button.Disabled = false;
+		// turn it grey
+		button.Modulate = new Color(1, 1, 1, 1);
 	}
 
 	//runs on the attack increse button pressed
@@ -102,7 +161,7 @@ public class UpgradeMenu : WindowDialog
 		if (Loot.Loot.getValue() >= ATKcost)
 		{
 			currentShip.firepower +=1;
-			atk.Text = "Current Attack: " + currentShip.firepower;
+			atk.Text = "Attack Damage: " + currentShip.firepower;
 			Loot.Loot.spendCurrency(ATKcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested +=ATKcost;
@@ -117,7 +176,7 @@ public class UpgradeMenu : WindowDialog
 		if (currentShip.firepower > 5)
 		{
 			currentShip.firepower -=1;
-			atk.Text = "Current Attack: " + currentShip.firepower;
+			atk.Text = "Attack Damage: " + currentShip.firepower;
 			Loot.Loot.giveCurrency(ATKcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested -=ATKcost;
@@ -132,7 +191,7 @@ public class UpgradeMenu : WindowDialog
 		{
 			currentShip.maxRange +=1;
 			currentShip.range = currentShip.maxRange;
-			range.Text = "Current Range: " + currentShip.maxRange;
+			range.Text = "Movement Range: " + currentShip.maxRange;
 			Loot.Loot.spendCurrency(RANGEcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested += RANGEcost;
@@ -147,7 +206,7 @@ public class UpgradeMenu : WindowDialog
 		{
 			currentShip.maxRange -=1;
 			currentShip.range = currentShip.maxRange;
-			range.Text = "Current Range: " + currentShip.maxRange;
+			range.Text = "Movement Range: " + currentShip.maxRange;
 			Loot.Loot.giveCurrency(RANGEcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested -=RANGEcost;
@@ -162,7 +221,7 @@ public class UpgradeMenu : WindowDialog
 		{
 			currentShip.maxHP +=10;
 			currentShip.HP = currentShip.maxHP;
-			mhp.Text = "Current HP: " + currentShip.maxHP;
+			mhp.Text = "Max HP: " + currentShip.maxHP;
 			Loot.Loot.spendCurrency(HPcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested += HPcost;
@@ -177,7 +236,7 @@ public class UpgradeMenu : WindowDialog
 		{
 			currentShip.maxHP -=10;
 			currentShip.HP = currentShip.maxHP;
-			mhp.Text = "Current HP: " + currentShip.maxHP;
+			mhp.Text = "Max HP: " + currentShip.maxHP;
 			Loot.Loot.giveCurrency(HPcost);
 			curr.Text = "Currency: " + Loot.Loot.getValue();
 			currentShip.CurrInvested -= HPcost;

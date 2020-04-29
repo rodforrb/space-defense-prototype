@@ -168,7 +168,6 @@ func move(ship, target):
 		return false
 	
 	if ship.hasDoneUpgrade == false:
-		print('predded')
 		var up_button = get_node("../Panel/OpenUpgrade")
 		up_button.visible = false
 		ship.hasDoneUpgrade = true
@@ -271,6 +270,7 @@ func attack(ship1, ship2):
 	# cleanup projectile animation and return to player
 	remove_child(projectile)
 	
+	update_interface()
 	
 
 # handles all user input and consequently the player's turn
@@ -302,8 +302,9 @@ func _input(event):
 			playerTurn = true
 			# update movement tiles
 			draw_moves()
-			# update interface
-			get_node("../Panel").update()
+			
+			# update interface (good comment)
+			update_interface()
 
 	# gridCS._Input(event)
 
@@ -313,8 +314,16 @@ func _input(event):
 func on_mouse_moved(tile):
 	# update attackable cells
 	draw_attack(tile)
+	update_interface(tile)
 
-	# hover over enemy ship to see stats
+# updates the interface panel
+# @param tile, possible given grid coordinates of a mouseovered cell
+func update_interface(tile = null):
+	# if no position is given, grab the mouse position
+	if tile == null:
+		tile = world_to_map(get_viewport().get_mouse_position())
+		
+	# default to selected ship, can be null
 	var hover = selectedShip
 	# find if any ship is hovered
 	for ship in enemyShips + playerShips:

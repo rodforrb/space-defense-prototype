@@ -48,11 +48,15 @@ func update(selected = get_node("../Grid").selectedShip):
 		armour.text = ""
 		penetration.text = ""
 
-
+	# draw the selected ship
 	else:
 		sprite.texture = selected.get_node("Sprite").texture
 
 		name.text = selected.name
+		# label if the ship is selected by click (vs by hover)
+		if selected == get_node("../Grid").selectedShip:
+			name.text += " (selected)"
+
 		hp_bar.value = (100*selected.HP)/selected.maxHP
 		if selected.HP < 10: hp.text = "  "
 		else: hp.text = ""
