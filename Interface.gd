@@ -25,9 +25,13 @@ func update(selected = get_node("../Grid").selectedShip):
 	var armour = get_node("Stats/L4")
 	var penetration = get_node("Stats/L5")
 
+	var upgrade_button = get_node("OpenUpgrade")
+
 	# no ship selected; clear interface
 	if selected == null:
 		sprite.texture = null
+
+		upgrade_button.disabled = true
 
 		name.text = ""
 		hp_bar.value = 0
@@ -51,6 +55,7 @@ func update(selected = get_node("../Grid").selectedShip):
 	# draw the selected ship
 	else:
 		sprite.texture = selected.get_node("Sprite").texture
+		upgrade_button.disabled = false
 
 		name.text = selected.name
 		# label if the ship is selected by click (vs by hover)

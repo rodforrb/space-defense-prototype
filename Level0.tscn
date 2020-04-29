@@ -522,6 +522,7 @@ margin_left = 15.4171
 margin_top = 90.8562
 margin_right = 113.417
 margin_bottom = 116.856
+disabled = true
 text = "Upgrade Ship"
 clip_text = true
 __meta__ = {
