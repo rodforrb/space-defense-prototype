@@ -133,9 +133,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CompShip" parent="." index="13" instance=ExtResource( 5 )]
+[node name="CompShip" parent="Grid" index="16" instance=ExtResource( 5 )]
 position = Vector2( 864.656, 97.8009 )
 
-[node name="CompShip2" parent="." index="14" instance=ExtResource( 5 )]
+[node name="CompShip2" parent="Grid" index="17" instance=ExtResource( 5 )]
 position = Vector2( 96.0013, 321.002 )
 [connection signal="pressed" from="Panel/EndTurn" to="Grid" method="_on_EndTurn_pressed"]
