@@ -251,6 +251,9 @@ public class UpgradeMenu : WindowDialog
 		//allows input when closed
 		grid.SetProcessInput(visible);
 		visible = !visible;
+		
+		// grey out the background when input is disabled
+		(GetNode("../Grey") as Panel).Visible = visible;
 	}
 
 	

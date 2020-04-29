@@ -786,6 +786,15 @@ margin_top = 131.0
 margin_right = 168.0
 margin_bottom = 145.0
 text = "Movement Range: 00"
+
+[node name="Grey" type="Panel" parent="."]
+visible = false
+modulate = Color( 1, 1, 1, 0.7 )
+margin_right = 1024.0
+margin_bottom = 607.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="DefeatEnd/DefeatConfirm" to="Grid" method="_on_DefeatConfirm_pressed"]
 [connection signal="pressed" from="VictoryEnd/VictoryConfirm" to="Grid" method="_on_VictoryConfirm_pressed"]
 [connection signal="pressed" from="Panel/EndTurn" to="Grid" method="_on_end_turn"]
