@@ -63,9 +63,12 @@ func draw_moves():
 	if selectedShip != null:
 		#If ship has not had the change to upgrade, show upgrade menu
 		if selectedShip.hasDoneUpgrade == false:
-			selectedShip.hasDoneUpgrade = true;
-			var upMenu = get_node("../UpgradeMenu");
-			upMenu.call("showMenu", selectedShip);
+			# selectedShip.hasDoneUpgrade = true;
+			# var upMenu = get_node("../UpgradeMenu");
+			# upMenu.call("showMenu", selectedShip);
+			var up_button = get_node("../Panel/OpenUpgrade")
+			up_button.visible = true
+		
 		# draw selected ship movement range tiles
 		selectedRange = range_check(selectedShip.range, world_to_map(selectedShip.position))
 		add_range(selectedRange, "YellowTransparency")
@@ -158,9 +161,17 @@ func del_range(moves, top = false):
 # Vector2 target, target space coordinates
 # return true if moved, false if blocked
 func move(ship, target):
+	
+		
 	# target is not in range
 	if !target in range_check(ship.range, world_to_map(ship.position)):
 		return false
+	
+	if ship.hasDoneUpgrade == false:
+		print('predded')
+		var up_button = get_node("../Panel/OpenUpgrade")
+		up_button.visible = false
+		ship.hasDoneUpgrade = true
 	
 	# calculate movement
 	var vector = target - world_to_map(ship.position)
@@ -489,3 +500,8 @@ func _on_DefeatConfirm_pressed():
 
 func _on_VictoryConfirm_pressed():
 	victoryConfirm = true
+
+
+func _on_OpenUpgrade_pressed():
+	var upMenu = get_node("../UpgradeMenu")
+	upMenu.call("showMenu",selectedShip)
