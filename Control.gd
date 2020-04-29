@@ -1,7 +1,8 @@
 extends TileMap
 
-# projectile scene
+# projectile scenes
 var laser
+#var missile
 
 # board state information
 var validShips = []	 # array of grid positions of movable ships
@@ -30,6 +31,7 @@ var victoryConfirm = false
 # runs when node (grid) is loaded
 func _ready():
 	laser = preload("Laser.tscn")
+	#laser = preload("Missile.tscn")
 	var ships = get_children()
 	for ship in ships:
 		# round pixel positions to grid
@@ -114,7 +116,7 @@ func draw_attack(tile = null):
 		tile = world_to_map(selectedShip.position)
 	
 	# get array of cells which can be attacked
-	var attackRange = range_check(selectedShip.maxRange, tile)
+	var attackRange = range_check(selectedShip.atkRange, tile)
 	attackRange.append(tile)
 
 	# iterate enemy ships to find ones in range
@@ -210,7 +212,7 @@ func move(ship, target):
 func attack(ship1, ship2):
 	
 	# target ship is not in range
-	if !(world_to_map(ship2.position) in range_check(ship1.maxRange, world_to_map(ship1.position))):
+	if !(world_to_map(ship2.position) in range_check(ship1.atkRange, world_to_map(ship1.position))):
 		return false
 
 	# ship must have enough AP
@@ -224,6 +226,10 @@ func attack(ship1, ship2):
 
 	# create the projectile
 	var projectile = laser.instance()
+	
+	#if ship1.Type == Destroyer: projectile = missile.instance()
+	#if ship1.weapon1.type == "missile": projectile = missile.instance()
+	
 	add_child(projectile)
 	projectile.position = ship1.position
 	
@@ -241,7 +247,8 @@ func attack(ship1, ship2):
 	yield(tween, "tween_completed")
 
 	# apply damage
-	ship2.call("take_hit", projectile.firepower)
+	#ship2.call("take_hit", projectile.firepower)
+	ship2.call("take_hit", ship1.firepower, ship1.penetration)
 	ship1.AP = max(0, ship1.AP-projectile.cost)
 
 	# handle destroyed ship

@@ -10,18 +10,125 @@ public class CompShip : Ship1
 	/*
 	name or id?
 	*/
-	private int maxRange = 3;
+	
+	[Export]
+	new public int maxRange = 3;
+	[Export]
 	new public int range {get; set;} = 3;
-	private int maxAP = 5;
-	new public int AP {get; set;} = 5;
+	
+	[Export]
+	public int maxAP = 2;
+	[Export]
+	new public int AP {get; set;} = 2;
 	
 	[Export]
 	new public Team team {get;} = Team.Computer;
-	new public int penetration { get; set; } = 5;//the ships ability to ignore armour
-	new public int armour { get; set; } = 5;//the ships resistance to damage
-	new public int accuracy { get; set; } = 5;//odds of hitting an opponent
-	new public int evasion { get; set; } = 5;//odds of dodging an attack
+	[Export]
+	new public Type type {get; set; } = Type.Medium;
+	
+	[Export]
+	public int firepower = 5;//the ships firepower multiplier
+	
+	[Export]
+	new public int penetration = 5;
+	[Export]
+	new public int armour = 5;
+	
+	public int atkRange {
+		get{
+			if (type == Type.Lite)
+				return 4;
+			else
+				return 3;
+		}
+		set{
+			this.atkRange = value;
+		}
+	}//the range the ship can attack from
+	
+	new public string name {
+		get{
+			if (type == Type.Destroyer) 
+				return "Destroyer"; 
+			else if (type == Type.Heavy) 
+				return "Heavy"; 
+			else if (type == Type.Lite) 
+				return "Scout"; 
+			else 
+				return "Medium";
+		}
+		set{
+			this.name = value;
+		}
+	}
+	
+	/*public int penetration { 
+		get{
+			if (type == Type.Destroyer) 
+				return 8; 
+			else if (type == Type.Lite) 
+				return 3; 
+			else 
+				return 5;
+		} 
+		set{
+			this.penetration = value;
+		}
+	}//the ships ability to ignore armour
+	public int armour { 
+		get{
+			if (type == Type.Heavy) 
+				return 6; 
+			else if (type == Type.Lite) 
+				return 3; 
+			else 
+				return 5;
+		} 
+		set{
+			this.armour = value;
+		}
+	}//the ships resistance to damage
+	public int accuracy { 
+		get{
+			if (type == Type.Destroyer) 
+				return 10; 
+			else if (type == Type.Sniper) 
+				return 20; 
+			else 
+				return 15;
+		} 
+		set{
+			this.accuracy = value;
+		}
+	}//odds of hitting an opponent
+	public int evasion { 
+		get{
+			if (type == Type.Heavy) 
+				return 3; 
+			else if (type == Type.Lite) 
+				return 10; 
+			else 
+				return 5;
+		} 
+		set{
+			this.evasion = value;
+		}
+	}//odds of dodging an attack
+	*/
+	public void take_hit(int damage, int pen)
+	{
+		//HP = Math.Max(0, HP-damage);
+		HP = Math.Max(0, HP - ( Math.Max(1, (damage) / ((Math.Max(1, ((armour) - pen) ) ))) ));
+		var bar = (TextureProgress)GetNode("HPbar");
 
+		bar.Value = (int)((double) HP / maxHP * 100.0);
+	}
+	
+	/*private int targX = -1;//used for avoiding move deadlock
+	private int targY = -1;
+	private Vector2[] oldMoves;
+	private int moveStep = 0;
+	*/
 	
 	/* Used to get instantiated Grid object
 	 * Unfortunately GetNode cannot be used by a static class.
@@ -366,6 +473,7 @@ public class CompShip : Ship1
 
 		//post-move attacking
 
+		//post-move attacking
 
 		//update ship position
 		shipCell = (Vector2)GetGrid().Call("world_to_map",this.GetPosition());			

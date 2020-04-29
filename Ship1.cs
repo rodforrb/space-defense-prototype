@@ -7,15 +7,30 @@ public enum Team
 	Computer
 }
 
+public enum Type
+{
+	Medium,
+	Lite,
+	Heavy,
+	Destroyer,
+	Sniper,
+	Support
+}
+
 public class Ship1 : Node2D
 {
 	
 	[Export]
-	public int maxHP {get;set;} = 10;//maximum hp
-	public int HP { get; set;} = 10;//current hp
+	public int maxHP = 10;//maximum hp
+	
+	[Export]
+	public int HP = 10;//current hp
 
 	[Export]
 	public Team team {get;} = Team.Player;
+	
+	[Export]
+	public Type type {get; set; } = Type.Medium;
 
 	[Export]
 	public bool hasDoneUpgrade {get;set;} = false;//has the ship taken its upgrade turn
@@ -23,16 +38,105 @@ public class Ship1 : Node2D
 	[Export]
 	public int CurrInvested {get;set;} = 0;//how much currency is invested
    
-
-	public int firepower { get; set; } = 5;//the ships firepower multiplier
-	public int penetration { get; set; } = 5;//the ships ability to ignore armour
-	public int armour { get; set; } = 5;//the ships resistance to damage
-	public int accuracy { get; set; } = 5;//odds of hitting an opponent
-	public int evasion { get; set; } = 5;//odds of dodging an attack
+	[Export]
+	public int firepower = 5;//the ships firepower multiplier
+	[Export]
+	public int penetration = 5;
+	[Export]
+	public int armour = 5;
+	
+	public string name {
+		get{
+			if (type == Type.Destroyer) 
+				return "Destroyer"; 
+			else if (type == Type.Heavy) 
+				return "Heavy"; 
+			else if (type == Type.Lite) 
+				return "Scout"; 
+			else 
+				return "Medium";
+		}
+		set{
+			this.name = value;
+		}
+	}
+	/*public int penetration { 
+		get{
+			if (type == Type.Destroyer) 
+				return 7; 
+			else if (type == Type.Lite) 
+				return 3; 
+			else 
+				return 5;
+		} 
+		set{
+			this.penetration = value;
+		}
+	}//the ships ability to ignore armour
+	public int armour { 
+		get{
+			if (type == Type.Heavy) 
+				return 6; 
+			else if (type == Type.Lite) 
+				return 3; 
+			else 
+				return 5;
+		} 
+		set{
+			this.armour = value;
+		}
+	}//the ships resistance to damage
+	*/
+	public int accuracy { 
+		get{
+			if (type == Type.Destroyer) 
+				return 10; 
+			else if (type == Type.Sniper) 
+				return 20; 
+			else 
+				return 15;
+		} 
+		set{
+			this.accuracy = value;
+		}
+	}//odds of hitting an opponent
+	public int evasion { 
+		get{
+			if (type == Type.Heavy) 
+				return 3; 
+			else if (type == Type.Lite) 
+				return 10; 
+			else 
+				return 5;
+		} 
+		set{
+			this.evasion = value;
+		}
+	}//odds of dodging an attack
+	
+	[Export]
 	public int AP { get; set; } = 2;//The current action points of a ship, how many times it may use it's weapons or skill in a turn
-	public int maxAP {get;}= 2;//the maximum action points of a ship, it will reset to this value at the start of every turn
-	public int maxRange {get;set;} = 3;//the range it can move
+	
+	[Export]
+	public int maxAP = 2;//the maximum action points of a ship, it will reset to this value at the start of every turn
+	
+	[Export]
+	public int maxRange = 3;//the range it can move
+	
+	[Export]
 	public int range {get; set;} = 3;
+	
+	public int atkRange {
+		get{
+			if (type == Type.Lite)
+				return 4;
+			else
+				return 3;
+		}
+		set{
+			this.atkRange = value;
+		}
+	}//the range the ship can attack from
 
 	
 
@@ -110,27 +214,33 @@ public class Ship1 : Node2D
 		Random random = new Random();
 		int result = random.Next(0, 100);
 		
-		// removed randomness for now
-		// if (result <= chance)
-		// {
-		// 	HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
-		// }
+		
 		
 		var hpb = (TextureProgress)GetNode("HPbar");
 		
+		// we can remove randomness if we want to, I just left it in to test the results
+		if (result <= chance)
+		{
+			HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
+		}
+		
 		//first calculate the actual hp
-		HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
+		//HP = Math.Max(0, HP - ( (fp) / (1 + Math.Max(0, ((armour * 2) - pen) ) )) );
 		//then calculate it as a percentage for the HPbar
 		double fraction = ((double) HP / maxHP) * 100.0;
 		hpb.Value = (int)(fraction);
+
+		GD.Print(HP);
+		GD.Print(hpb.Value);
 	 
 		// ship is removed by Grid if dead
 		// the hpbar naturally is removed too since it is a child node 
 	}
 
-	public void take_hit(int damage)
+	public void take_hit(int damage, int pen)
 	{
-		HP = Math.Max(0, HP-damage);
+		//HP = Math.Max(0, HP-damage);
+		HP = Math.Max(0, HP - ( Math.Max(1, (damage) / ((Math.Max(1, ((armour) - pen) ) ))) ));
 		var bar = (TextureProgress)GetNode("HPbar");
 
 		bar.Value = (int)((double) HP / maxHP * 100.0);

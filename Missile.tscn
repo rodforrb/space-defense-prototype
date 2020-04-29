@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Projectile.cs" type="Script" id=1]
+
+[sub_resource type="StreamTexture" id=1]
+load_path = "res://.import/Missile.png-026aa35c91ffedb0236834c784b67765.stex"
+
+[node name="Missile" type="Area2D"]
+script = ExtResource( 1 )
+proj = 3
+firepower = 5
+penetration = 10
+cost = 2
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 16, 16 )
+texture = SubResource( 1 )
+
+[node name="Tween" type="Tween" parent="."]

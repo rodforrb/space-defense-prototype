@@ -48,6 +48,14 @@ load_path = "res://.import/hpbar.png-4f27aad5e9aeef79805035e1f79cdc6a.stex"
 
 [node name="Ship1" type="Area2D"]
 script = ExtResource( 1 )
+type = 1
+AP = 3
+range = 4
+maxHP = 9
+HP = 9
+firepower = 3
+maxAP = 3
+maxRange = 4
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 16, 16 )

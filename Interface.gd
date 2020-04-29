@@ -9,6 +9,7 @@ func update(selected = get_node("../Grid").selectedShip):
 	var hp_bar = get_node("HPLabel/HPBar")
 	var hp = get_node("HPLabel/HP")
 	var hp0 = get_node("HPLabel/HPMax")
+	var name = get_node("Stats/Name")
 
 	var range_bar = get_node("RangeLabel/RangeBar")
 	var rng = get_node("RangeLabel/Range")
@@ -21,11 +22,14 @@ func update(selected = get_node("../Grid").selectedShip):
 	var alignment = get_node("Stats/L1")
 	var atkRange = get_node("Stats/L2")
 	var damage = get_node("Stats/L3")
+	var armour = get_node("Stats/L4")
+	var penetration = get_node("Stats/L5")
 
 	# no ship selected; clear interface
 	if selected == null:
 		sprite.texture = null
 
+		name.text = ""
 		hp_bar.value = 0
 		hp.text = "  0"
 		hp0.text = "0"
@@ -41,11 +45,14 @@ func update(selected = get_node("../Grid").selectedShip):
 		alignment.text = ""
 		atkRange.text = ""
 		damage.text = ""
+		armour.text = ""
+		penetration.text = ""
 
 
 	else:
 		sprite.texture = selected.get_node("Sprite").texture
 
+		name.text = selected.name
 		hp_bar.value = (100*selected.HP)/selected.maxHP
 		if selected.HP < 10: hp.text = "  "
 		else: hp.text = ""
@@ -69,8 +76,12 @@ func update(selected = get_node("../Grid").selectedShip):
 		else:
 			alignment.text = "Hostile"
 
-		atkRange.text = str(selected.maxRange)
+		atkRange.text = str(selected.atkRange)
 
 		damage.text = str(selected.firepower)
+
+		armour.text = str(selected.armour)
+
+		penetration.text = str(selected.penetration)
 
 
