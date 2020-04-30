@@ -388,11 +388,12 @@ public class CompShip : Ship1
 		//movement control
 		Vector2 difference = (targetCell - shipCell);
 		if(fight==1){
-			//needs to check for valid attack
+			//needs to check for valid attack, removed b/c attack stack
+			/*
 			if(this.AP != 0 && (Math.Abs(difference.x)+Math.Abs(difference.y)) <= maxRange){
 				// GetGrid().Attack(this, target, new Projectile(ProjectileType.Gun));
 				GetGrid().Call("attack", this, target);
-			}
+			}*/
 			if(movePath.Length > 1){
 				//Might need to add a last move check to stop ships from ending up inside each other
 				//Godot.Collections.Array ship = GetGrid().Get("enemy_ships") as Godot.Collections.Array;
@@ -483,6 +484,8 @@ public class CompShip : Ship1
 			while(target.HP > 0 && this.AP > 0 && contAtk == true){
 				var preAP = this.AP;
 				GetGrid().Call("attack", this, target);
+				//Stops attacks from stacking
+				contAtk = false;
 				//No AP change indicates invalid attack, avoids infinite loop.
 				//GD.Print("Attack Loop, PREAP:", preAP, "POST AP:", this.AP);
 				if (preAP == this.AP){
